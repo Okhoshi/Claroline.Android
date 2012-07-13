@@ -40,6 +40,7 @@ public class DataOpenHelper extends SQLiteOpenHelper
 			 
 	/**
 	 * Création de la base
+	 * Appelée si la base n'existe pas encore
 	 */
 	@Override	
 	public void onCreate(SQLiteDatabase db) 
@@ -49,6 +50,7 @@ public class DataOpenHelper extends SQLiteOpenHelper
 			 
 	/**
 	 * Mise à jour de la base
+	 * Appelée quand la base existe déjà
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
