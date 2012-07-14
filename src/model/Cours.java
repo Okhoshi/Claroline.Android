@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Cours 
 {
@@ -12,9 +13,9 @@ public class Cours
 	
 	private Date isLoaded; 
 	
-	private EntitySet<Annonce> Annonces;
-	private EntitySet<Documents> Documents;
-	private EntitySet<Notification> Notifications;
+	private List<Annonce> Annonces;
+	private List<Documents> Documents;
+	private List<Notification> Notifications;
 	
 	private boolean annNotif;
 	private boolean dnlNotif;
@@ -37,15 +38,15 @@ public class Cours
 	{
 		return this.isLoaded;
 	}
-	public EntitySet<Annonce> getAnnonces()
+	public List<Annonce> getAnnonces()
 	{
 		return this.Annonces;
 	}
-	public EntitySet<Documents> getDocuments()
+	public List<Documents> getDocuments()
 	{
 		return this.Documents;
 	}
-	public EntitySet<Notification> getNotifications()
+	public List<Notification> getNotifications()
 	{
 		return this.Notifications;
 	}
@@ -106,15 +107,15 @@ public class Cours
 	{
 		this.isLoaded=isLoaded;
 	}
-	public void setAnnonces(EntitySet<Annonce> Annonces)
+	public void setAnnonces(List<Annonce> Annonces)
 	{
 		this.Annonces=Annonces;
 	}
-	public void setDocuments(EntitySet<Documents> Documents)
+	public void setDocuments(List<Documents> Documents)
 	{
 		this.Documents=Documents;
 	}
-	public void setNotifications(EntitySet<Notification> Notifications)
+	public void setNotifications(List<Notification> Notifications)
 	{
 		this.Notifications=Notifications;
 	}
