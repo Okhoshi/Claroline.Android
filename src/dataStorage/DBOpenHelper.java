@@ -192,7 +192,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	
 	
 	// Constructeur
-	public DBOpenHelper(Context context, String name, CursorFactory factory, int version) 
+	public DBOpenHelper(Context context, CursorFactory factory) 
 	{
 		super(context, BASE_NAME, factory, DATABASE_VERSION);
 	}
