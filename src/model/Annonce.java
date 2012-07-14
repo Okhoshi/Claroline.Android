@@ -1,13 +1,13 @@
 package model;
 
-import java.util.Date;
+//import java.util.Date;
 
 public class Annonce 
 {
 	// Variables globales : propriétés
 	
-	private Cours Cours;
-	private Date date; 
+	private String Cours;
+	private String date; 
 	
 	private int Id;
 	private int ressourceId;
@@ -21,11 +21,11 @@ public class Annonce
 	
 	
 	// Methodes get
-	public Cours getCours()
+	public String getCours()
 	{
 		return this.Cours;	
 	}
-	public Date getDate()
+	public String getDate()
 	{
 		return this.date;
 	}
@@ -64,11 +64,11 @@ public class Annonce
 	
 	// Méthodes set
 	
-	public void setCours(Cours Cours)
+	public void setCours(String Cours)
 	{
 		this.Cours=Cours;
 	}
-	public void setDate(Date date)
+	public void setDate(String date)
 	{
 		this.date=date;
 	}

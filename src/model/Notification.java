@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Date;
+//import java.util.Date;
 
 public class Notification 
 {
@@ -13,8 +13,8 @@ public class Notification
 	
 	// Variables globales : propriétés
 	
-	private Cours Cours;
-	private Date date;
+	private String Cours;
+	private String date;
 	private ValidTypes ressourceType;
 	
 	private String Text;
@@ -29,11 +29,11 @@ public class Notification
 
 	// Méthodes get
 	
-	public Cours getCours()
+	public String getCours()
 	{
 		return this.Cours;	
 	}
-	public Date getDate()
+	public String getDate()
 	{
 		return this.date;
 	}
@@ -71,11 +71,11 @@ public class Notification
 	
 	// Méthodes set
 	
-	public void setCours(Cours Cours)
+	public void setCours(String Cours)
 	{
 		this.Cours=Cours;
 	}
-	public void setDate(Date date)
+	public void setDate(String date)
 	{
 		this.date=date;
 	}

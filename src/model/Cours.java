@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Date;
+//import java.util.Date;
 import java.util.List;
 
 public class Cours 
@@ -11,7 +11,7 @@ public class Cours
 	
 	// Variables globales : propriétés
 	
-	private Date isLoaded; 
+	private String isLoaded; 
 	
 	private List<Annonce> Annonces;
 	private List<Documents> Documents;
@@ -34,7 +34,7 @@ public class Cours
 	
 	// Méthodes get
 	
-	public Date getIsLoaded()
+	public String getIsLoaded()
 	{
 		return this.isLoaded;
 	}
@@ -103,7 +103,7 @@ public class Cours
 	
 	// Méthodes set
 	
-	public void setIsLoaded(Date isLoaded)
+	public void setIsLoaded(String isLoaded)
 	{
 		this.isLoaded=isLoaded;
 	}
