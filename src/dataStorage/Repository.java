@@ -1,3 +1,7 @@
+/**
+ * @author Dim
+ * @version 1
+ */
 package dataStorage;
 
 import android.database.sqlite.SQLiteDatabase;

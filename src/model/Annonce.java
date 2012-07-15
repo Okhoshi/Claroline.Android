@@ -1,3 +1,7 @@
+/**
+ * @author Dim
+ * @version 1
+ */
 package model;
 
 //import java.util.Date;
@@ -19,6 +23,19 @@ public class Annonce
 	private String title;
 	private String content;
 	
+	
+	// Construteur // Sans boolean et sans Id et RessourceId 
+	public  Annonce(String Cours, String date, String title, String content)
+	{
+		this.Cours=Cours;
+		this.date=date;
+		this.notified=true;
+		this.Updated=true;
+		this.visibility=true;
+		this.title=title;
+		this.content=content;
+		
+	}
 	
 	// Methodes get
 	public String getCours()

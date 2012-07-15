@@ -1,3 +1,7 @@
+/**
+ * @author Dim
+ * @version 1
+ */
 package dataStorage;
 
 import java.util.ArrayList;
@@ -16,7 +20,7 @@ public class CoursRepository extends Repository<Cours> {
 		sqLiteOpenHelper = new DBOpenHelper(context, null);
 	}
 
-	public List GetAll() {
+	public List<Cours> GetAll() {
 		// Récupération de la liste des cours
 		Cursor cursor = maBDD.query(DBOpenHelper.COURS_TABLE,
 		            new String[] {  DBOpenHelper.COURS_COLUMN_ID ,
@@ -99,8 +103,8 @@ public class CoursRepository extends Repository<Cours> {
 		         new String[] { String.valueOf(id) });
 	}
 
-	public List ConvertCursorToListObject(Cursor c) {
-		List liste = new ArrayList();
+	public List<Cours> ConvertCursorToListObject(Cursor c) {
+		List<Cours> liste = new ArrayList<Cours>();
 		 
 	    // Si la liste est vide
 		if (c.getCount() == 0)
@@ -124,14 +128,30 @@ public class CoursRepository extends Repository<Cours> {
 	}
 
 	public Cours ConvertCursorToObject(Cursor c) {
-		/*Cours cours = new Cours(
-		   c.getString(DBOpenHelper.COURS_NUM_COLUMN_PRODUIT),
-	       c.getInt(DBOpenHelper.COURS_NUM_COLUMN_QUANTITE));
+		Cours cours = new Cours(
+									c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED),
+									null, 
+									null, 
+									null,
+									c.getString(DBOpenHelper.COURS_NUM_COLUMN_OFFICIALEMAIL),
+									c.getString(DBOpenHelper.COURS_NUM_COLUMN_SYSCODE),
+									c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITLE),
+									c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITULAR)
+									// TODO
+									//c.getAnnonces(DBOpenHelper.COURS_NUM_COLUMN_ANNONCE)
+									//c.getDocuments(DBOpenHelper.COURS_NUM_COLUMN_DOCUMENTS)
+									//c.getNotifications(DBOpenHelper.COURS_NUM_COLUMN_NOTIFICATION)
+							   );
+		
 		   cours.setId(c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ID));
-		   cours.setAchete((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ACHETE) != 0));
+		   cours.setAnnNotif((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ANNNOTIF) != 0));
+		   cours.setDnlNotif((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_DNLNOTIF) != 0));
+		   cours.setAnn((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ISANN) 		   != 0));
+		   cours.setDnL((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ISDNL) 		   != 0));
+		   cours.setNotified((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_NOTIFIED) != 0));
+		   cours.setUpdated((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_UPDATED)   != 0));
 				 
- return cours;*/
-		return null;
+		   return cours;
 	}
 
 	public Cours ConvertCursorToOneObject(Cursor c) {

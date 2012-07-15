@@ -1,3 +1,7 @@
+/**
+ * @author Dim
+ * @version 1
+ */
 package model;
 
 //import java.util.Date;
@@ -22,6 +26,22 @@ public class Documents
 	
 	private int Id;
 	private double size;
+	
+	// Constructeur
+	public Documents(String Cours, String date, String Description, String Extension, String name, String path, String url)
+	{
+		this.Cours=Cours;
+		this.date=date;
+		this.IsFolder=false;
+		this.notified=true;
+		this.Updated=true;
+		this.visibility=true;
+		this.Description=Description;
+		this.Extension=Extension;
+		this.name=name;
+		this.path=path;
+		this.url=url;
+	}
 	
 	// Methodes get
 	

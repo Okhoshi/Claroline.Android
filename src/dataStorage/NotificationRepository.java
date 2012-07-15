@@ -1,3 +1,7 @@
+/**
+ * @author Dim
+ * @version 1
+ */
 package dataStorage;
 
 import java.util.ArrayList;
@@ -15,7 +19,7 @@ public class NotificationRepository extends Repository<Notification> {
 		sqLiteOpenHelper = new DBOpenHelper(context, null);
 	}
 
-	public List GetAll() {
+	public List<Notification> GetAll() {
 		// Récupération de la liste des notifications
 		Cursor cursor = maBDD.query(DBOpenHelper.NOTIFICATION_TABLE,
 	                new String[] {  DBOpenHelper.NOTIFICATION_COLUMN_ID ,
@@ -53,7 +57,7 @@ public class NotificationRepository extends Repository<Notification> {
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_COURSID, entite.getCours()); 
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ISOLDRESSOURCE,entite.isOldRessource());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_NOTIFIED, entite.isNotified());
-		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); // Changer le type aussi en String ? --> bizarre
+		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); //TODO Changer le type aussi en String ? --> bizarre
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, entite.getDate());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_TEXT,entite.getText());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_UPDATED, entite.isUpdated());
@@ -68,7 +72,7 @@ public class NotificationRepository extends Repository<Notification> {
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_COURSID, entite.getCours()); 
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ISOLDRESSOURCE,entite.isOldRessource());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_NOTIFIED, entite.isNotified());
-		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); // Changer le type aussi en String ? --> bizarre
+		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); //TODO Changer le type aussi en String ? --> bizarre
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, entite.getDate());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_TEXT,entite.getText());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_UPDATED, entite.isUpdated());
@@ -84,8 +88,8 @@ public class NotificationRepository extends Repository<Notification> {
 		         new String[] { String.valueOf(id) });	
 	}
 
-	public List ConvertCursorToListObject(Cursor c) {
-		List liste = new ArrayList();
+	public List<Notification> ConvertCursorToListObject(Cursor c) {
+		List<Notification> liste = new ArrayList<Notification>();
 			 
 	    // Si la liste est vide
 		if (c.getCount() == 0)
@@ -109,14 +113,20 @@ public class NotificationRepository extends Repository<Notification> {
 	}
 
 	public Notification ConvertCursorToObject(Cursor c) {
-		/*Notification notification = new Notification(
-			   c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_PRODUIT),
-		       c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_QUANTITE));
+		Notification notification = new Notification(	
+														c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_COURSID),
+														c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_DATE),
+														null,//c.getValidTypes(DBOpenHelper.NOTIFICATION_NUM_COLUMN_RESSOURCETYPE), //TODO
+														c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_TEXT)
+												 	);
+		
 			   notification.setId(c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_ID));
-			   notification.setAchete((c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_ACHETE) != 0));
+			   notification.setRessourceId((c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_RESSOURCEID)));
+			   notification.setOldRessource((c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_ISOLDRESSOURCE) != 0));
+			   notification.setNotified((c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_NOTIFIED) != 0));
+			   notification.setUpdated((c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_UPDATED) != 0));
 					 
-	    return notification;*/
-		return null;
+	    return notification;
 	}
 
 	public Notification ConvertCursorToOneObject(Cursor c) {

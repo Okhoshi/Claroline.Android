@@ -1,3 +1,7 @@
+/**
+ * @author Dim
+ * @version 1
+ */
 package model;
 
 //import java.util.Date;
@@ -30,6 +34,26 @@ public class Cours
 	private String titular;
 		
 	private int Id;
+	
+	
+	// Contructeur
+	public Cours(String isLoaded, List<Annonce> Annonces, List<model.Documents> Documents, List<Notification> Notifications, String officialEmail, String sysCode, String title, String titular)
+	{
+		this.isLoaded=isLoaded;
+		this.Annonces=Annonces;
+		this.Documents=Documents;
+		this.Notifications=Notifications;
+		this.annNotif=true;
+		this.dnlNotif=true;
+		this.isAnn=false;
+		this.isDnL=false;
+		this.notified=true;
+		this.Updated=true;
+		this.officialEmail=officialEmail;
+		this.sysCode=sysCode;
+		this.title=title;
+		this.titular=titular;
+	}
 	
 	
 	// Méthodes get

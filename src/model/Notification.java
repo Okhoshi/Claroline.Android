@@ -1,3 +1,7 @@
+/**
+ * @author Dim
+ * @version 1
+ */
 package model;
 
 //import java.util.Date;
@@ -26,6 +30,18 @@ public class Notification
 	private int Id;
 	private int ressourceId;
 	
+	
+	// Constructeur
+	public Notification(String Cours, String date, ValidTypes ressourceType, String Text)
+	{
+		this.Cours=Cours;
+		this.date=date;
+		this.ressourceType=ressourceType;
+		this.Text=Text;
+		this.isOldRessource=false;
+		this.notified=true;
+		this.Updated=true;
+	}
 
 	// Méthodes get
 	

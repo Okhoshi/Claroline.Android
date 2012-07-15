@@ -1,3 +1,8 @@
+/**
+ * @author Dim
+ * @version 1
+ */
+
 package dataStorage;
 
 import java.util.ArrayList;
@@ -16,7 +21,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 		sqLiteOpenHelper = new DBOpenHelper(context, null);
 	}
 
-	public List GetAll() {
+	public List<Annonce> GetAll() {
 		// Récupération de la liste des annonces
 		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
 	                new String[] {  DBOpenHelper.ANNONCE_COLUMN_ID ,
@@ -87,8 +92,8 @@ public class AnnonceRepository extends Repository<Annonce> {
 		         new String[] { String.valueOf(id) });
 	}
 
-	public List ConvertCursorToListObject(Cursor c) {
-		List liste = new ArrayList();
+	public List<Annonce> ConvertCursorToListObject(Cursor c) {
+		List<Annonce> liste = new ArrayList<Annonce>();
 		 
 	    // Si la liste est vide
 		if (c.getCount() == 0)
@@ -112,14 +117,20 @@ public class AnnonceRepository extends Repository<Annonce> {
 	}
 
 	public Annonce ConvertCursorToObject(Cursor c) {
-		/*Annonce annonce = new Annonce(
-		   c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_PRODUIT),
-	       c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_QUANTITE));
-		   Annonce.setId(c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_ID));
-		   Annonce.setAchete((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_ACHETE) != 0));
+		Annonce annonce = new Annonce(
+										c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_COURSID),
+										c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_DATE),
+										c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_TITLE), 
+										c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_CONTENT)
+									  );
+		
+		   annonce.setId(c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_ID));
+		   annonce.setRessourceId(c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_RESSOURCEID));
+		   annonce.setNotified((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_NOTIFIED) != 0));
+		   annonce.setUpdated((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_UPDATED) != 0));
+		   annonce.setVisible((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_VISIBILITY) != 0));
 				 
- return annonce;*/
-		return null;
+		return annonce;
 	}
 
 	public Annonce ConvertCursorToOneObject(Cursor c) {
