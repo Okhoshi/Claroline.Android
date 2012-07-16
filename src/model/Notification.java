@@ -10,16 +10,16 @@ public class Notification
 {
 	// Enumeration
 	
-	private enum ValidTypes
-	{
-		DOCUMENTS,ANNONCES;
-	}
+	//private enum ValidTypes
+	//{
+	//	DOCUMENTS,ANNONCES;
+	//}
 	
 	// Variables globales : propriétés
 	
 	private String Cours;
 	private String date;
-	private ValidTypes ressourceType;
+	private int ressourceType;
 	
 	private String Text;
 	
@@ -32,7 +32,7 @@ public class Notification
 	
 	
 	// Constructeur
-	public Notification(String Cours, String date, ValidTypes ressourceType, String Text)
+	public Notification(String Cours, String date, int ressourceType, String Text)
 	{
 		this.Cours=Cours;
 		this.date=date;
@@ -53,7 +53,7 @@ public class Notification
 	{
 		return this.date;
 	}
-	public ValidTypes getRessourceType()
+	public int getRessourceType()
 	{
 		return this.ressourceType;
 	}
@@ -95,7 +95,7 @@ public class Notification
 	{
 		this.date=date;
 	}
-	public void setValidTypes(ValidTypes ressourceType)
+	public void setValidTypes(int ressourceType)
 	{
 		this.ressourceType=ressourceType;
 	}

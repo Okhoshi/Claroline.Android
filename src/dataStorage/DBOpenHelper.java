@@ -1,6 +1,9 @@
 /**
  * @author Dim
  * @version 1
+ * 
+ * @description The benefit is that you don't have to determine in your code when exactly to create or update the database;
+ * 			     Android will call the methods which you have defined at the correct moment. 
  */
 package dataStorage;
 
@@ -173,7 +176,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 				   DOCUMENTS_COLUMN_NAME 		+" TEXT NOT NULL," +
 				   DOCUMENTS_COLUMN_NOTIFIED 	+" INTEGER NOT NULL," +
 				   DOCUMENTS_COLUMN_PATH 		+" TEXT NOT NULL," +
-				   DOCUMENTS_COLUMN_SIZE 		+" INTEGER NOT NULL," +   // on met INTEGER meme si c'est de type DOUBLE ?
+				   DOCUMENTS_COLUMN_SIZE 		+" TEXT NOT NULL," +   // on met INTEGER meme si c'est de type DOUBLE ?
 				   DOCUMENTS_COLUMN_UPDATED 	+" INTEGER NOT NULL," +
 				   DOCUMENTS_COLUMN_URL 		+" TEXT NOT NULL," +
 				   DOCUMENTS_COLUMN_VISIBILITY 	+" INTEGER NOT NULL," +

@@ -1,6 +1,8 @@
 /**
  * @author Dim
  * @version 1
+ * 
+ * @description : Repository commonly refers to a location for storage
  */
 package dataStorage;
 
@@ -57,7 +59,7 @@ public class NotificationRepository extends Repository<Notification> {
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_COURSID, entite.getCours()); 
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ISOLDRESSOURCE,entite.isOldRessource());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_NOTIFIED, entite.isNotified());
-		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); //TODO Changer le type aussi en String ? --> bizarre
+		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); 
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, entite.getDate());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_TEXT,entite.getText());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_UPDATED, entite.isUpdated());
@@ -72,7 +74,7 @@ public class NotificationRepository extends Repository<Notification> {
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_COURSID, entite.getCours()); 
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ISOLDRESSOURCE,entite.isOldRessource());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_NOTIFIED, entite.isNotified());
-		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); //TODO Changer le type aussi en String ? --> bizarre
+		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); 
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, entite.getDate());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_TEXT,entite.getText());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_UPDATED, entite.isUpdated());
@@ -92,8 +94,9 @@ public class NotificationRepository extends Repository<Notification> {
 		List<Notification> liste = new ArrayList<Notification>();
 			 
 	    // Si la liste est vide
-		if (c.getCount() == 0)
-		return liste;
+		if (c.getCount() == 0){
+			c.close();
+		return liste;}
 			 
 		// position sur le premier item
 		c.moveToFirst();
@@ -116,7 +119,7 @@ public class NotificationRepository extends Repository<Notification> {
 		Notification notification = new Notification(	
 														c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_COURSID),
 														c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_DATE),
-														null,//c.getValidTypes(DBOpenHelper.NOTIFICATION_NUM_COLUMN_RESSOURCETYPE), //TODO
+														c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_RESSOURCETYPE),
 														c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_TEXT)
 												 	);
 		

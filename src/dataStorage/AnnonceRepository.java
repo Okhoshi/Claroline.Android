@@ -1,6 +1,8 @@
 /**
  * @author Dim
  * @version 1
+ * 
+ * @description : Repository commonly refers to a location for storage
  */
 
 package dataStorage;
@@ -96,8 +98,9 @@ public class AnnonceRepository extends Repository<Annonce> {
 		List<Annonce> liste = new ArrayList<Annonce>();
 		 
 	    // Si la liste est vide
-		if (c.getCount() == 0)
-		return liste;
+		if (c.getCount() == 0){
+			c.close();
+		return liste;}
 			 
 		// position sur le premier item
 		c.moveToFirst();
