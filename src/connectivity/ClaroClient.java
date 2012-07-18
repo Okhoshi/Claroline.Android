@@ -4,34 +4,25 @@
 package connectivity;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.params.ClientPNames;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.ByteArrayBuffer;
 
+import android.text.format.DateUtils;
 import android.util.Log;
 
 
@@ -39,19 +30,17 @@ import android.util.Log;
  * @author Quentin
  *
  */
-/**
- * @author Quentin
- *
- */
-public class ClaroClient {
+public class ClaroClient implements Runnable {
 	
 	private HttpClient client;
 	private HttpContext httpContext;
 	
-	private Thread backgroundWork;
-	
 	private CookieStore cookies;
 	private Date cookieCreation;
+	
+	private AllowedOperations op = AllowedOperations.authenticate;
+	private Object reqCours = "";
+	private int resID = -1;
 	
 	public ClaroClient(){
 		
@@ -63,7 +52,7 @@ public class ClaroClient {
 		client = new DefaultHttpClient();
 	}
 	
-	public HttpPost getClient(boolean forAuth) throws UnsupportedEncodingException{
+	public HttpPost getClient(boolean forAuth, CallbackArgs args) throws UnsupportedEncodingException{
 		HttpPost postMessage;
 		if(forAuth){
 			postMessage = new HttpPost("http://10.0.2.2/claroline/claroline/auth/login.php");
@@ -71,46 +60,94 @@ public class ClaroClient {
 			postMessage = new HttpPost("http://10.0.2.2/claroline/module/MOBILE/");
 		}
 		postMessage.addHeader("Content-Type", "application/x-www-form-urlencoded");
+		postMessage.setEntity(args.entity);
 		HttpClientParams.setRedirecting(postMessage.getParams(), false);
 		return postMessage;
 	}
 	
-	public void makeOperation(AllowedOperations op, Object reqCours, int resID){
+	public ClaroClient makeOperation(AllowedOperations op, Object reqCours, int resID){
+		this.op = op;
+		this.reqCours = reqCours;
+		this.resID = resID;
+		return this;
+	}
+	
+	public ClaroClient makeOperation(AllowedOperations op){
+		return this.makeOperation(op, null, -1);
+	}
+	
+	public ClaroClient makeOperation(AllowedOperations op, Object reqCours){
+		return this.makeOperation(op, reqCours, -1);
+	}
+	
+	public void run(){
 		CallbackArgs args;
-		switch (op) {
+		switch(op){
 		case authenticate:
-			
+			args = new CallbackArgs("admin", "elegie24", AllowedOperations.authenticate);
+			getSessionCookie(args);
 			break;
-
-		default:
+		case getSingleAnnounce:
+			if(resID < 0 || reqCours == "")
+				return;
+			args = new CallbackArgs(reqCours, resID, op);
+			Execute(args);
+			break;
+		case getCourseToolList:
+		case getDocList:
+		case getAnnounceList:
+		case updateCompleteCourse:
+			if(reqCours == "")
+				return;
+			args = new CallbackArgs(reqCours, op);
+			Execute(args);
+			break;
+		case getCourseList:
+		case getUserData:
+		case getUpdates:
+			args = new CallbackArgs(op);
+			Execute(args);
 			break;
 		}
 	}
 	
-	public void makeOperation(AllowedOperations op){
-		this.makeOperation(op, null, -1);
+	public void Execute(CallbackArgs args){
+		if(isExpired() && !getSessionCookie(args))
+			return;
+		
+		setProgressIndicator(true);
+		
+		if(args.operation == AllowedOperations.updateCompleteCourse){
+			Execute(new CallbackArgs(args.cidReq,AllowedOperations.getCourseToolList));
+			Execute(new CallbackArgs(args.cidReq, AllowedOperations.getDocList));
+			Execute(new CallbackArgs(args.cidReq, AllowedOperations.getAnnounceList));
+			//TODO update the "isLoaded" property of args.cidReq
+		} else {
+			try {
+				HttpResponse response = client.execute(getClient(false, args), httpContext);
+				String JSONresponse = readResponse(response);
+				Log.e(this.toString(), JSONresponse);
+				
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		setProgressIndicator(false);
 	}
 	
-	public void makeOperation(AllowedOperations op, Object reqCours){
-		this.makeOperation(op, reqCours, -1);
-	}
-	
-	public void Execute(){
+	private void old(){
 		try {
-			client.execute(getClient(true), httpContext);
-			HttpResponse response = client.execute(getClient(false), httpContext);
-			InputStream is = response.getEntity().getContent();
-			BufferedInputStream bis = new BufferedInputStream(is);
-			ByteArrayBuffer baf = new ByteArrayBuffer(10000000);
-
-            int current = 0;
-            while((current = bis.read()) != -1){
-                baf.append((byte)current);
-            }
-
-            /* Convert the Bytes read to a String. */
-            String html = new String(baf.toByteArray());
-			Log.e("HTTPRESPONSE", html);
+			client.execute(getClient(true, null), httpContext);
+			HttpResponse response = client.execute(getClient(false, null), httpContext);
+			Log.e("HTTPRESPONSE", readResponse(response));
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -129,6 +166,50 @@ public class ClaroClient {
 		Date temp = cookieCreation;
 		temp.setHours(cookieCreation.getHours()+1);
 		return cookieCreation.after(temp);
+	}
+	
+	public boolean getSessionCookie(CallbackArgs args){
+		setProgressIndicator(true);
+		try {
+			HttpResponse response = client.execute(getClient(true, args), httpContext);
+			boolean empty =  readResponse(response).isEmpty();
+			if(empty){
+				cookieCreation = new Date();
+			}
+			setProgressIndicator(false);
+			return empty;
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		setProgressIndicator(false);
+		return false;
+	}
+	
+	private void setProgressIndicator(boolean visible){
+		
+	}
+	
+	private String readResponse(HttpResponse response) throws IllegalStateException, IOException{
+		InputStream is = response.getEntity().getContent();
+		BufferedInputStream bis = new BufferedInputStream(is);
+		ByteArrayBuffer baf = new ByteArrayBuffer(10000000);
+
+        int current = 0;
+        while((current = bis.read()) != -1){
+            baf.append((byte)current);
+        }
+
+        /* Convert the Bytes read to a String. */
+        return new String(baf.toByteArray());
 	}
 	
 }
