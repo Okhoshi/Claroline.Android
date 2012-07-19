@@ -4,14 +4,16 @@
  */
 package model;
 
+import java.util.Date;
+
 //import java.util.Date;
 
 public class Documents 
 {
 	// Variables globales : propriétés
 	
-	private String Cours;
-	private String date; 
+	private Cours Cours;
+	private Date date; 
 	
 	private boolean IsFolder;
 	private boolean notified;
@@ -28,7 +30,7 @@ public class Documents
 	private double size;
 	
 	// Constructeur
-	public Documents(String Cours, String date, String Description, String Extension, String name, String path, String url)
+	public Documents(Cours Cours, Date date, String Description, String Extension, String name, String path, String url)
 	{
 		this.Cours=Cours;
 		this.date=date;
@@ -45,11 +47,11 @@ public class Documents
 	
 	// Methodes get
 	
-		public String getCours()
+		public Cours getCours()
 		{
 			return this.Cours;	
 		}
-		public String getDate()
+		public Date getDate()
 		{
 			return this.date;
 		}
@@ -105,11 +107,11 @@ public class Documents
 		
 		// Méthodes set
 		
-		public void setCours(String Cours)
+		public void setCours(Cours Cours)
 		{
 			this.Cours=Cours;
 		}
-		public void setDate(String date)
+		public void setDate(Date date)
 		{
 			this.date=date;
 		}

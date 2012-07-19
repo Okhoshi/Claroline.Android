@@ -8,10 +8,11 @@
 package dataStorage;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import model.Annonce;
-//import model.Notification;
+import dataStorage.CoursRepository;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -58,13 +59,13 @@ public class AnnonceRepository extends Repository<Annonce> {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,entite.getRessourceId());
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours()); // Changeons nous le type du return du getCours() en String à la place de Cours
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours().getId()); // Changeons nous le type du return du getCours() en String à la place de Cours
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_TITLE,entite.getTitle());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_CONTENT, entite.getContent());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_NOTIFIED,entite.isNotified());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_UPDATED, entite.isUpdated());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,entite.isVisible());
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, entite.getDate());
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, entite.getDate().toString());
 			 
 		maBDD.insert(DBOpenHelper.ANNONCE_TABLE, null, contentValues);
 		
@@ -74,13 +75,13 @@ public class AnnonceRepository extends Repository<Annonce> {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,entite.getRessourceId());
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours()); // Changeons nous le type du return du getCours() en String à la place de Cours
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours().getId()); // Changeons nous le type du return du getCours() en String à la place de Cours
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_TITLE,entite.getTitle());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_CONTENT, entite.getContent());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_NOTIFIED,entite.isNotified());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_UPDATED, entite.isUpdated());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,entite.isVisible());
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, entite.getDate());
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, entite.getDate().toString());
 		
 		maBDD.update(DBOpenHelper.ANNONCE_TABLE, contentValues,	
 			     DBOpenHelper.ANNONCE_COLUMN_ID + "=?",
@@ -121,8 +122,8 @@ public class AnnonceRepository extends Repository<Annonce> {
 
 	public Annonce ConvertCursorToObject(Cursor c) {
 		Annonce annonce = new Annonce(
-										c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_COURSID),
-										c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_DATE),
+										CoursRepository.GetByCoursId(c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_COURSID)), //TODO
+										new Date(c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_DATE)),
 										c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_TITLE), 
 										c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_CONTENT)
 									  );

@@ -15,9 +15,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 public abstract class Repository<T> implements IRepository<T> 
 {
 	    // Base de données
-	    protected SQLiteDatabase maBDD;
+	    protected static SQLiteDatabase maBDD;
 	 
-	    protected SQLiteOpenHelper sqLiteOpenHelper;
+	    protected static SQLiteOpenHelper sqLiteOpenHelper;
 	 
 	    /**
 	     * Constructeur par défaut
@@ -30,7 +30,7 @@ public abstract class Repository<T> implements IRepository<T>
 	    /**
 	     * Ouverture de la connexion
 	     */
-	    public void Open() 
+	    public static void Open() 
 	    {
 	        maBDD = sqLiteOpenHelper.getWritableDatabase();
 	    }
@@ -38,7 +38,7 @@ public abstract class Repository<T> implements IRepository<T>
 	    /**
 	     * Fermeture de la connexion
 	     */
-	    public void Close() 
+	    public static void Close() 
 	    {
 	        maBDD.close();
 	    }

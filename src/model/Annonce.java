@@ -4,14 +4,16 @@
  */
 package model;
 
+import java.util.Date;
+
 //import java.util.Date;
 
 public class Annonce 
 {
 	// Variables globales : propriétés
 	
-	private String Cours;
-	private String date; 
+	private Cours Cours;
+	private Date date; 
 	
 	private int Id;
 	private int ressourceId;
@@ -25,7 +27,7 @@ public class Annonce
 	
 	
 	// Construteur // Sans boolean et sans Id et RessourceId 
-	public  Annonce(String Cours, String date, String title, String content)
+	public  Annonce(Cours Cours, Date date, String title, String content)
 	{
 		this.Cours=Cours;
 		this.date=date;
@@ -38,11 +40,11 @@ public class Annonce
 	}
 	
 	// Methodes get
-	public String getCours()
+	public Cours getCours()
 	{
 		return this.Cours;	
 	}
-	public String getDate()
+	public Date getDate()
 	{
 		return this.date;
 	}
@@ -81,11 +83,11 @@ public class Annonce
 	
 	// Méthodes set
 	
-	public void setCours(String Cours)
+	public void setCours(Cours Cours)
 	{
 		this.Cours=Cours;
 	}
-	public void setDate(String date)
+	public void setDate(Date date)
 	{
 		this.date=date;
 	}

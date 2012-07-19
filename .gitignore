@@ -1,4 +1,6 @@
 bin
+
 .metadata
-gen
-.settings
+
+/gen
+/.settings

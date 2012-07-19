@@ -1,7 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Nom de l'application --> 
     <string name="hello">Hello World, home!</string>
     <string name="app_name">ClarolineMobile</string>
+    
+    <string name="button_cours1">Cours1</string>
+    <string name="button_cours2">Cours2</string>
+    <string name="button_cours3">Cours3</string>
+    <string name="button_cours4">Cours4</string>
+    <string name="button_cours5">Cours5</string>
+    <string name="button_cours6">Cours6</string>
+    <string name="button_cours7">Cours7</string>
+    <string name="button_cours8">Cours8</string>
+    <string name="button_cours9">Cours9</string>
+    <string name="button_cours10">Cours10</string>
+    
+    
+    <!-- TextView's de l'activite about_us --> 
+    <string name="about_us_authors">Author : Devos Quentin, Uytterhoeven Dimitri</string>
+    <string name="about_us_version">Version 1.0</string>
+    <string name="about_us_contact_us">Contacter nous via #8230</string>
+    
+    
+    <!-- Boutons de l'action bar --> 
+    <string name="menu_about">About us</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_settings">Settings</string>
+    
+    
+    <!-- String concernant la searchView -->
+    <string name="search_hint">Search a course</string>
+    
+    
+     <!-- Shown above search results when we receive a search request. -->
+    <plurals name="search_results">
+      <item quantity="one">%1$d result for \"%2$s\": </item>
+      <item quantity="other">%1$d results for \"%2$s\": </item>
+    </plurals>
+
+    <!-- Search failure message. -->
+    <string name="no_results">No results found for \"%s\"</string>
+    
 
 </resources>
