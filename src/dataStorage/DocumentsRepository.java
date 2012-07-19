@@ -7,6 +7,7 @@
 package dataStorage;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import model.Documents;
@@ -64,8 +65,8 @@ return ConvertCursorToObject(cursor);
 	public void Save(Documents entite) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_ID, entite.getId());
-		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_COURSID,entite.getCours());
-		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, entite.getDate()); 
+		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_COURSID,entite.getCours().getId());
+		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, entite.getDate().toString()); 
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION,entite.getDescription());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION, entite.getExtension());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER,entite.isFolder());
@@ -83,8 +84,8 @@ return ConvertCursorToObject(cursor);
 	public void Update(Documents entite) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_ID, entite.getId());
-		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_COURSID,entite.getCours());
-		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, entite.getDate()); 
+		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_COURSID,entite.getCours().getId());
+		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, entite.getDate().toString()); 
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION,entite.getDescription());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION, entite.getExtension());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER,entite.isFolder());
@@ -135,8 +136,8 @@ return ConvertCursorToObject(cursor);
 
 	public Documents ConvertCursorToObject(Cursor c) {
 		Documents documents = new Documents(
-												c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_COURSID),
-												c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_DATE),
+												CoursRepository.GetByCoursId(c.getInt(DBOpenHelper.DOCUMENTS_NUM_COLUMN_COURSID)),
+												new Date(c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_DATE)),
 												c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_DESCRIPTION),
 												c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_EXTENSION),
 												c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_NAME),

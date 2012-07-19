@@ -4,8 +4,10 @@
  */
 package model;
 
+import java.util.Date;
 //import java.util.Date;
 import java.util.List;
+
 
 public class Cours 
 {
@@ -15,7 +17,7 @@ public class Cours
 	
 	// Variables globales : propriétés
 	
-	private String isLoaded; 
+	private Date isLoaded; 
 	
 	private List<Annonce> Annonces;
 	private List<Documents> Documents;
@@ -37,7 +39,7 @@ public class Cours
 	
 	
 	// Contructeur
-	public Cours(String isLoaded, List<Annonce> Annonces, List<model.Documents> Documents, List<Notification> Notifications, String officialEmail, String sysCode, String title, String titular)
+	public Cours(Date isLoaded, List<Annonce> Annonces, List<model.Documents> Documents, List<Notification> Notifications, String officialEmail, String sysCode, String title, String titular)
 	{
 		this.isLoaded=isLoaded;
 		this.Annonces=Annonces;
@@ -58,7 +60,7 @@ public class Cours
 	
 	// Méthodes get
 	
-	public String getIsLoaded()
+	public Date getIsLoaded()
 	{
 		return this.isLoaded;
 	}
@@ -127,7 +129,7 @@ public class Cours
 	
 	// Méthodes set
 	
-	public void setIsLoaded(String isLoaded)
+	public void setIsLoaded(Date isLoaded)
 	{
 		this.isLoaded=isLoaded;
 	}

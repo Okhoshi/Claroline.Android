@@ -7,6 +7,7 @@
 package dataStorage;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import model.Cours;
@@ -66,7 +67,7 @@ public class CoursRepository extends Repository<Cours> {
 		contentValues.put(DBOpenHelper.COURS_COLUMN_DNLNOTIF, entite.isDnlNotif()); 
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ISANN,entite.isAnn());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ISDNL, entite.isDnL());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,entite.getIsLoaded());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,entite.getIsLoaded().toString());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_NOTIFIED, entite.isNotified());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL,entite.getOfficialEmail());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_SYSCODE, entite.getSysCode());
@@ -85,7 +86,7 @@ public class CoursRepository extends Repository<Cours> {
 		contentValues.put(DBOpenHelper.COURS_COLUMN_DNLNOTIF, entite.isDnlNotif()); 
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ISANN,entite.isAnn());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ISDNL, entite.isDnL());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,entite.getIsLoaded());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,entite.getIsLoaded().toString());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_NOTIFIED, entite.isNotified());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL,entite.getOfficialEmail());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_SYSCODE, entite.getSysCode());
@@ -130,9 +131,9 @@ public class CoursRepository extends Repository<Cours> {
 		return liste;
 	}
 
-	public Cours ConvertCursorToObject(Cursor c) {
+	public  Cours ConvertCursorToObject(Cursor c) {
 		Cours cours = new Cours(
-									c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED),
+									new Date(c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED)),
 									null, 
 									null, 
 									null,
@@ -165,5 +166,53 @@ public class CoursRepository extends Repository<Cours> {
 		c.close();
 		return cours;
 	}
-
+	
+	// On definit deux methodes static qui font exactement la meme chose que deux autres mais dans
+	// le but de pouvoir les utiliser dans d'autres classes Repository
+	
+	public static Cours CoursConvertCursorToObject(Cursor c) {
+		Cours cours = new Cours(
+									new Date(c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED)),
+									null, 
+									null, 
+									null,
+									c.getString(DBOpenHelper.COURS_NUM_COLUMN_OFFICIALEMAIL),
+									c.getString(DBOpenHelper.COURS_NUM_COLUMN_SYSCODE),
+									c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITLE),
+									c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITULAR)
+									// TODO
+									//c.getAnnonces(DBOpenHelper.COURS_NUM_COLUMN_ANNONCE)
+									//c.getDocuments(DBOpenHelper.COURS_NUM_COLUMN_DOCUMENTS)
+									//c.getNotifications(DBOpenHelper.COURS_NUM_COLUMN_NOTIFICATION)
+							   );
+		
+		   cours.setId(c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ID));
+		   cours.setAnnNotif((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ANNNOTIF) != 0));
+		   cours.setDnlNotif((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_DNLNOTIF) != 0));
+		   cours.setAnn((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ISANN) 		   != 0));
+		   cours.setDnL((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ISDNL) 		   != 0));
+		   cours.setNotified((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_NOTIFIED) != 0));
+		   cours.setUpdated((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_UPDATED)   != 0));
+				 
+		   return cours;
+	}
+	
+	public static Cours GetByCoursId(int id) {
+		Cursor cursor = maBDD.query(DBOpenHelper.COURS_TABLE,
+	            new String[] {  DBOpenHelper.COURS_COLUMN_ID ,
+			 				    DBOpenHelper.COURS_COLUMN_ANNNOTIF ,
+		                        DBOpenHelper.COURS_COLUMN_DNLNOTIF ,
+		                        DBOpenHelper.COURS_COLUMN_ISANN ,
+		                        DBOpenHelper.COURS_COLUMN_ISDNL ,
+		                        DBOpenHelper.COURS_COLUMN_ISLOADED ,
+		                        DBOpenHelper.COURS_COLUMN_NOTIFIED ,
+		                        DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL ,
+		                        DBOpenHelper.COURS_COLUMN_SYSCODE ,
+		                        DBOpenHelper.COURS_COLUMN_TITLE ,
+		                        DBOpenHelper.COURS_COLUMN_TITULAR ,
+		                        DBOpenHelper.COURS_COLUMN_UPDATED  }, 
+		        DBOpenHelper.COURS_COLUMN_ID + "=?",
+		        new String[] { String.valueOf(id) }, null, null, null);
+		return CoursConvertCursorToObject(cursor);
+	}
 }

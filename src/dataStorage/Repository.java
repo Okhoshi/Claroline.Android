@@ -15,7 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public abstract class Repository<T> implements IRepository<T> 
 {
 	    // Base de données
-	    protected SQLiteDatabase maBDD;
+	    protected static SQLiteDatabase maBDD;
 	 
 	    protected SQLiteOpenHelper sqLiteOpenHelper;
 	 

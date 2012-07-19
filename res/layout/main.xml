@@ -1,56 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
 
-    <TabHost
-        android:id="@android:id/tabhost"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="40dp" >
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	>
 
-            </TabWidget>
+     <LinearLayout 
+         xmlns:android="http://schemas.android.com/apk/res/android"
+         android:id="@+id/tab1"
+		 android:layout_width="fill_parent"
+		 android:layout_height="wrap_content"
+		 android:orientation="vertical"
+		 		 		 
+         >
+        
+         
+       <LinearLayout 
+     	    android:id="@+id/tableRow1"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:padding="5dip"  
+        	android:gravity="center"
+        	android:orientation="horizontal"
 
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-
-                <LinearLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/hello" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-                </LinearLayout>
-            </FrameLayout>
+           	>  
+         	<Button 
+            	android:id="@+id/but1"
+            	android:layout_height="wrap_content"
+     			android:text="@+string/button_cours1"
+     			android:layout_width="fill_parent"
+     			android:height="150dp"
+     			android:layout_weight="1"
+     			
+     	       
+             />
+         	
+         	
+         	
+         	<Button
+            	android:id="@+id/but2" 
+            	android:layout_height="wrap_content"
+    			android:layout_width="fill_parent"
+     			android:text="@+string/button_cours2"
+     			android:height="150dp"
+     			android:layout_weight="1"
+     			
+             
+             />
+         
         </LinearLayout>
-    </TabHost>
+         
+       
+       <LinearLayout 
+        	android:id="@+id/tableRow2"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:padding="5dip"  
+        	android:gravity="center"
+        	android:orientation="horizontal"
 
-</LinearLayout>
+        >
+        	 <Button 
+            	android:id="@+id/but3"
+            	android:layout_height="wrap_content"
+    			android:layout_width="fill_parent"
+     			android:text="@+string/button_cours3"
+     			android:layout_weight="1"
+     			android:height="150dp"
+     			
+             
+             />
+         
+         	<Button 
+            	android:id="@+id/but4"
+            	android:layout_height="wrap_content"
+    			android:layout_width="fill_parent"
+     			android:text="@+string/button_cours4"
+     			android:layout_weight="1"
+     			android:height="150dp"
+     			
+             
+             />
+        </LinearLayout>
+        
+       <LinearLayout 
+        	android:id="@+id/tableRow3"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:padding="5dip"
+        	android:gravity="center"
+        	android:orientation="horizontal"
+        >
+        	 <Button 
+           	 	android:id="@+id/but5"
+            	android:layout_height="wrap_content"
+    			android:layout_width="fill_parent"
+     			android:text="@+string/button_cours5"
+     			android:layout_weight="1"
+     			android:height="150dp"
+     			
+             
+             />
+         
+         	<Button 
+            	android:id="@+id/but6"
+            	android:layout_height="wrap_content"
+    			android:layout_width="fill_parent"
+     			android:text="@+string/button_cours6"
+     			android:layout_weight="1"
+     			android:height="150dp"
+     			
+             
+             />
+        </LinearLayout >
+        
+       <LinearLayout 
+        	android:id="@+id/tableRow4"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:padding="5dip"
+        	android:gravity="center"
+        	android:orientation="horizontal"
+
+        >
+        	 <Button 
+           	 	android:id="@+id/but7"
+            	android:layout_height="wrap_content"
+    			android:layout_width="fill_parent"
+     			android:text="@+string/button_cours7"
+     			android:layout_weight="1"
+     			android:height="150dp"
+     			
+             
+             />
+         
+         	<Button 
+            	android:id="@+id/but8"
+            	android:layout_height="wrap_content"
+    			android:layout_width="fill_parent"
+     			android:text="@+string/button_cours8"
+     			android:layout_weight="1"
+     			android:height="150dp"
+     			
+             
+             />
+        </LinearLayout >
+        
+       <LinearLayout 
+        	android:id="@+id/tableRow5"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:padding="5dip"
+        	android:gravity="center"
+        	android:orientation="horizontal"
+        	
+        >
+        	 <Button 
+           	 	android:id="@+id/but9"
+            	android:layout_height="wrap_content"
+    			android:layout_width="fill_parent"
+     			android:text="@+string/button_cours9"
+     			android:layout_weight="1"
+     			android:height="150dp"
+     			
+             
+             />
+         
+         	<Button 
+            	android:id="@+id/but10"
+            	android:layout_height="wrap_content"
+    			android:layout_width="fill_parent"
+     			android:text="@+string/button_cours10"
+     			android:layout_weight="1"
+     			android:height="150dp"
+     			
+             	
+             />
+        </LinearLayout >
+    </LinearLayout>
+</ScrollView>

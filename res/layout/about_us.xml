@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+         
+ <LinearLayout 
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/about_us_tab1"
+	 android:layout_width="fill_parent"
+	 android:layout_height="wrap_content"
+	 android:orientation="vertical"		 		 		 
+ >
+ 
+ <TextView 
+     android:id="@+id/about_us_tv1"
+	 android:layout_width="fill_parent"
+	 android:layout_height="wrap_content"
+	 android:layout_gravity="center"
+	 android:text="@+string/about_us_author"
+     
+  />
+     
+  <TextView 
+     android:id="@+id/about_us_tv2"
+	 android:layout_width="fill_parent"
+	 android:layout_height="wrap_content"
+	 android:layout_gravity="center"
+	 android:text="@+string/about_us_version"	
+     
+  />
+  
+   <TextView 
+     android:id="@+id/about_us_tv3"
+	 android:layout_width="fill_parent"
+	 android:layout_height="wrap_content"
+	 android:layout_gravity="center"
+	 android:text="@+string/about_us_contact_us"
+     
+  />
+     
+ </LinearLayout>

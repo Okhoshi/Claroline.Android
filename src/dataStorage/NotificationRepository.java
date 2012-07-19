@@ -7,6 +7,7 @@
 package dataStorage;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import model.Notification;
@@ -56,11 +57,11 @@ public class NotificationRepository extends Repository<Notification> {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCEID,entite.getRessourceId());
-		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_COURSID, entite.getCours()); 
+		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_COURSID, entite.getCours().getId()); 
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ISOLDRESSOURCE,entite.isOldRessource());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_NOTIFIED, entite.isNotified());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); 
-		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, entite.getDate());
+		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, entite.getDate().toString());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_TEXT,entite.getText());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_UPDATED, entite.isUpdated());
 			 
@@ -71,11 +72,11 @@ public class NotificationRepository extends Repository<Notification> {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCEID,entite.getRessourceId());
-		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_COURSID, entite.getCours()); 
+		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_COURSID, entite.getCours().getId()); 
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ISOLDRESSOURCE,entite.isOldRessource());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_NOTIFIED, entite.isNotified());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); 
-		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, entite.getDate());
+		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, entite.getDate().toString());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_TEXT,entite.getText());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_UPDATED, entite.isUpdated());
 			 
@@ -117,8 +118,8 @@ public class NotificationRepository extends Repository<Notification> {
 
 	public Notification ConvertCursorToObject(Cursor c) {
 		Notification notification = new Notification(	
-														c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_COURSID),
-														c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_DATE),
+														CoursRepository.GetByCoursId(c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_COURSID)),
+														new Date(c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_DATE)),
 														c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_RESSOURCETYPE),
 														c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_TEXT)
 												 	);
