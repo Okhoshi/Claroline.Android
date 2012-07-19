@@ -215,4 +215,47 @@ public class CoursRepository extends Repository<Cours> {
 		        new String[] { String.valueOf(id) }, null, null, null);
 		return CoursConvertCursorToObject(cursor);
 	}
+	
+	public static List<Cours> GetAllCours() {
+		// Récupération de la liste des cours
+		Cursor cursor = maBDD.query(DBOpenHelper.COURS_TABLE,
+		            new String[] {  DBOpenHelper.COURS_COLUMN_ID ,
+				 				    DBOpenHelper.COURS_COLUMN_ANNNOTIF ,
+			                        DBOpenHelper.COURS_COLUMN_DNLNOTIF ,
+			                        DBOpenHelper.COURS_COLUMN_ISANN ,
+			                        DBOpenHelper.COURS_COLUMN_ISDNL ,
+			                        DBOpenHelper.COURS_COLUMN_ISLOADED ,
+			                        DBOpenHelper.COURS_COLUMN_NOTIFIED ,
+			                        DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL ,
+			                        DBOpenHelper.COURS_COLUMN_SYSCODE ,
+			                        DBOpenHelper.COURS_COLUMN_TITLE ,
+			                        DBOpenHelper.COURS_COLUMN_TITULAR ,
+			                        DBOpenHelper.COURS_COLUMN_UPDATED  }, null, null, null, null, null);			 
+		return CoursRepository.CoursConvertCursorToListObject(cursor);
+	}
+	
+	public static List<Cours> CoursConvertCursorToListObject(Cursor c) {
+		List<Cours> liste = new ArrayList<Cours>();
+		 
+	    // Si la liste est vide
+		if (c.getCount() == 0){
+			c.close();
+		return liste;}
+			 
+		// position sur le premier item
+		c.moveToFirst();
+			 
+		// Pour chaque item
+		do {
+			 
+			Cours cours = CoursRepository.CoursConvertCursorToObject(c);
+			 
+			liste.add(cours);
+		   } while (c.moveToNext());
+			 
+		// Fermeture du curseur
+		c.close();
+			 
+		return liste;
+	}
 }

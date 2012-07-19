@@ -10,22 +10,29 @@ package model;
 
 import java.util.List;
 
+import mobile.claroline.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class CoursAdapter extends BaseAdapter {
 
 	private List<Cours> listeCours;
 	private LayoutInflater inflater;
 	private Context context;
+	private int resource;
+	
+	
 
-	public CoursAdapter(Context context, List<Cours> listeCours) {
-		this.listeCours=listeCours;
+	public CoursAdapter(Context context, int _resource, List<Cours> listeCours) {
 		this.context=context;
 		this.inflater=LayoutInflater.from(context);
+		this.listeCours=listeCours;
+		this.resource=_resource;
 	}
 	
 	public void setCours(List<Cours> listeCours)
@@ -38,7 +45,7 @@ public class CoursAdapter extends BaseAdapter {
 		return listeCours.size();
 	}
 	
-	public Object getItem(int position)
+	public Cours getItem(int position)
 	{
 		return listeCours.get(position);
 	}
@@ -48,11 +55,37 @@ public class CoursAdapter extends BaseAdapter {
 		return listeCours.get(position).getId();
 	}
 	
+	public Context getContext()
+	{
+		return this.context;
+	}
 	
 	public View getView(final int position, View view, ViewGroup viewGroup) 
 	{
-		return null;
-		//TODO
+		LinearLayout newView=null;
+		Cours Cours1   		 = getItem(position);
+		String CoursText   		 = Cours1.getTitle()+"\n"+Cours1.getTitular()+"\n"+Cours1.getOfficialEmail();
+		
+		if(view==null)
+		{
+			newView = new LinearLayout(getContext());
+			String inflater1 = Context.LAYOUT_INFLATER_SERVICE;
+			this.inflater = (LayoutInflater) getContext().getSystemService(inflater1);
+			this.inflater.inflate(resource, newView, true);
+			
+			TextView textView = (TextView) newView.findViewById(R.id.grid_item_label);
+			textView.setText(CoursText);
+		}
+		else
+		{
+			newView=(LinearLayout) view;
+		}
+		// RECUPERER LES VIEW A REMPLIR
+		
+		// REMPLIR LES VIEW AVEC LES PROPRIETES DE L'OBJET
+		
+		return newView;
 	}
+	 
 
 }

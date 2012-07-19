@@ -1,8 +1,14 @@
 package activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import connectivity.AllowedOperations;
 import connectivity.ClaroClient;
+import dataStorage.CoursRepository;
 import mobile.claroline.R;
+import model.Cours;
+import model.CoursAdapter;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
@@ -17,92 +23,34 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 
 
-public class home extends Activity implements OnClickListener,OnTouchListener{
+public class home extends Activity implements OnItemClickListener, OnClickListener,OnTouchListener{
 	
 	
 	
-	Button button1;
-	Button button2;
-	Button button3;
-	Button button4;
-	Button button5;
-	Button button6;
-	Button button7;
-	Button button8;
-	Button button9;
-	Button button10;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false); // Mettre true pour pouvoir faire un return vers une ancienne activité !
-        
-        
-        String cours1 = getString(R.string.button_cours1);
-        String cours2 = getString(R.string.button_cours2);
-        String cours3 = getString(R.string.button_cours3);
-        String cours4 = getString(R.string.button_cours4);
-        String cours5 = getString(R.string.button_cours5);
-        String cours6 = getString(R.string.button_cours6);
-        String cours7 = getString(R.string.button_cours7);
-        String cours8 = getString(R.string.button_cours8);
-        String cours9 = getString(R.string.button_cours9);
-        String cours10 = getString(R.string.button_cours10);
-        
-        
-        button1 = (Button) findViewById(R.id.but1);
-        button1.setOnClickListener(this);
-        button1.setText(cours1);
-        button1.setBackgroundColor(Color.BLACK);
-        button2 = (Button) findViewById(R.id.but2);
-        button2.setOnClickListener(this);
-        button2.setText(cours2);
-        button2.setBackgroundColor(Color.BLACK);
-        button3 = (Button) findViewById(R.id.but3);
-        button3.setOnClickListener(this);
-        button3.setText(cours3);
-        button3.setBackgroundColor(Color.BLACK);
-        button4 = (Button) findViewById(R.id.but4);
-        button4.setOnClickListener(this);
-        button4.setText(cours4);
-        button4.setBackgroundColor(Color.BLACK);
-        button5 = (Button) findViewById(R.id.but5);
-        button5.setOnClickListener(this);
-        button5.setText(cours5);
-        button5.setBackgroundColor(Color.BLACK);
-        button6 = (Button) findViewById(R.id.but6);
-        button6.setOnClickListener(this);
-        button6.setText(cours6);
-        button6.setBackgroundColor(Color.BLACK);
-        button7 = (Button) findViewById(R.id.but7);
-        button7.setOnClickListener(this);
-        button7.setText(cours7);
-        button7.setBackgroundColor(Color.BLACK);
-        button8 = (Button) findViewById(R.id.but8);
-        button8.setOnClickListener(this);
-        button8.setText(cours8);
-        button8.setBackgroundColor(Color.BLACK);
-        button9 = (Button) findViewById(R.id.but9);
-        button9.setOnClickListener(this);
-        button9.setText(cours9);
-        button9.setBackgroundColor(Color.BLACK);
-        button10 = (Button) findViewById(R.id.but10);
-        button10.setOnClickListener(this);
-        button10.setText(cours10);
-        button10.setBackgroundColor(Color.BLACK);
-        
+       
+        setContentView(R.layout.main);     
+        setActionBar();
+        setGridView();
+            
         Log.e("MO", AllowedOperations.authenticate.name());
     }
+    
+    
+    
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -115,6 +63,9 @@ public class home extends Activity implements OnClickListener,OnTouchListener{
         searchView.setSubmitButtonEnabled(true);
         return true;
     }
+    
+    
+    
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -145,77 +96,7 @@ public class home extends Activity implements OnClickListener,OnTouchListener{
     public void onClick(View v) 
     {
     		 
-    	// Vérification de la vue cliquée
-    		 
-    	if(v == button1) 
-    	{
-    		button1.setBackgroundColor(Color.RED); 
-    		Toast.makeText(this, "Coucou n°1", Toast.LENGTH_SHORT).show();
-    		 
-    	}
     	
-    	if(v == button2) 
-    	{
-    		button2.setBackgroundColor(Color.RED); 
-    		Toast.makeText(this, "Coucou n°2", Toast.LENGTH_SHORT).show();
-
-    	}
-    	
-    	if(v == button3) 
-    	{
-    		button3.setBackgroundColor(Color.RED); 
-    		Toast.makeText(this, "Coucou n°1", Toast.LENGTH_SHORT).show();
-    		 
-    	}
-    	
-    	if(v == button4) 
-    	{
-    		button4.setBackgroundColor(Color.RED); 
-    		Toast.makeText(this, "Coucou n°2", Toast.LENGTH_SHORT).show();
-
-    	}
-    	
-    	if(v == button5) 
-    	{
-    		button5.setBackgroundColor(Color.RED); 
-    		Toast.makeText(this, "Coucou n°1", Toast.LENGTH_SHORT).show();
-    		 
-    	}
-    	
-    	if(v == button6) 
-    	{
-    		button6.setBackgroundColor(Color.RED); 
-    		Toast.makeText(this, "Coucou n°2", Toast.LENGTH_SHORT).show();
-
-    	}
-    	
-    	if(v == button7) 
-    	{
-    		button7.setBackgroundColor(Color.RED); 
-    		Toast.makeText(this, "Coucou n°1", Toast.LENGTH_SHORT).show();
-    		 
-    	}
-    	
-    	if(v == button8) 
-    	{
-    		button8.setBackgroundColor(Color.RED); 
-    		Toast.makeText(this, "Coucou n°2", Toast.LENGTH_SHORT).show();
-
-    	}
-    	
-    	if(v == button9) 
-    	{
-    		button9.setBackgroundColor(Color.RED); 
-    		Toast.makeText(this, "Coucou n°1", Toast.LENGTH_SHORT).show();
-    		 
-    	}
-    	
-    	if(v == button10) 
-    	{
-    		button10.setBackgroundColor(Color.RED); 
-    		Toast.makeText(this, "Coucou n°2", Toast.LENGTH_SHORT).show();
-
-    	}
     	
     		 
     }
@@ -224,6 +105,51 @@ public class home extends Activity implements OnClickListener,OnTouchListener{
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		// TODO Auto-generated method stub
+		// Pas a faire puisque déjà faite dans la creation des Listener
+		
+	}
+	
+	
+	// Met les propriétés de l'action bar
+	public void setActionBar()
+	{
+		ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false); 
+	}
+	
+	// Place la GridView
+	public void setGridView()
+	{
+		int layoutID = R.layout.cours_view;
+		GridView gridview = (GridView) findViewById(R.id.gridview);
+		// Normalement ca ! -->
+		//List<Cours> Liste = CoursRepository.GetAllCours();
+		// Test avec ca -->
+
+		
+		List<Cours> Liste= new ArrayList<Cours>();
+		Cours Cours1= new Cours(null, null, null, null,"ives.smeers@uclouvain.be" , null, "Economie d'entreprise", "Ives Smeers");
+		Cours Cours2= new Cours(null, null, null, null, "peter.vanroy@uclouvain.be", null, "Informatique : Oz", "Peter Van Roy");
+		Cours Cours3= new Cours(null, null, null, null, "francois.remacle@uclouvain.be", null, "Mathématique Q3", "Francois Remacle");
+		Liste.add(Cours1);
+		Liste.add(Cours2);
+		Liste.add(Cours3);
+        gridview.setAdapter(new CoursAdapter(this,layoutID,Liste));
+        
+
+        gridview.setOnItemClickListener(new OnItemClickListener() 
+        {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id)
+            {
+                Toast.makeText(home.this, "" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+        
+        
 	}
     
 }
