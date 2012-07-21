@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
+import model.Cours;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
@@ -39,7 +41,7 @@ public class ClaroClient implements Runnable {
 	private Date cookieCreation;
 	
 	private AllowedOperations op = AllowedOperations.authenticate;
-	private Object reqCours = "";
+	private Cours reqCours = null;
 	private int resID = -1;
 	
 	public ClaroClient(){
@@ -65,7 +67,7 @@ public class ClaroClient implements Runnable {
 		return postMessage;
 	}
 	
-	public ClaroClient makeOperation(AllowedOperations op, Object reqCours, int resID){
+	public ClaroClient makeOperation(AllowedOperations op, Cours reqCours, int resID){
 		this.op = op;
 		this.reqCours = reqCours;
 		this.resID = resID;
@@ -76,7 +78,7 @@ public class ClaroClient implements Runnable {
 		return this.makeOperation(op, null, -1);
 	}
 	
-	public ClaroClient makeOperation(AllowedOperations op, Object reqCours){
+	public ClaroClient makeOperation(AllowedOperations op, Cours reqCours){
 		return this.makeOperation(op, reqCours, -1);
 	}
 	
@@ -88,7 +90,7 @@ public class ClaroClient implements Runnable {
 			getSessionCookie(args);
 			break;
 		case getSingleAnnounce:
-			if(resID < 0 || reqCours == "")
+			if(resID < 0 || reqCours == null)
 				return;
 			args = new CallbackArgs(reqCours, resID, op);
 			Execute(args);
@@ -97,7 +99,7 @@ public class ClaroClient implements Runnable {
 		case getDocList:
 		case getAnnounceList:
 		case updateCompleteCourse:
-			if(reqCours == "")
+			if(reqCours == null)
 				return;
 			args = new CallbackArgs(reqCours, op);
 			Execute(args);

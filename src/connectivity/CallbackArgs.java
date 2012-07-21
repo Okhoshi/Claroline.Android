@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Cours;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
@@ -11,12 +13,12 @@ import org.apache.http.message.BasicNameValuePair;
 public class CallbackArgs {
 	
 	public String login, password;
-	public Object cidReq;
+	public Cours cidReq;
 	public int resId;
 	public AllowedOperations operation;
 	public UrlEncodedFormEntity entity;
 	
-	public CallbackArgs(String login,String password,Object cidReq, int resId, AllowedOperations operation){
+	public CallbackArgs(String login,String password,Cours cidReq, int resId, AllowedOperations operation){
 		this.login = login;
 		this.password = password;
 		this.cidReq = cidReq;
@@ -34,7 +36,7 @@ public class CallbackArgs {
 		case getAnnounceList:
 		case getCourseToolList:
 		case getDocList:
-			args.add(new BasicNameValuePair("cidReq",cidReq.coursId));
+			args.add(new BasicNameValuePair("cidReq",cidReq.getId() + ""));
 		case getCourseList:
 		case getUpdates:
 		case getUserData:
@@ -51,18 +53,18 @@ public class CallbackArgs {
 	}
 	
 	public CallbackArgs(String login, String password, AllowedOperations operation){
-		this(login, password, "", -1, operation);
+		this(login, password, null, -1, operation);
 	}
 	
-	public CallbackArgs(Object cidReq, int resId, AllowedOperations operation){
+	public CallbackArgs(Cours cidReq, int resId, AllowedOperations operation){
 		this("","",cidReq, resId, operation);
 	}
 
-	public CallbackArgs(Object cidReq, AllowedOperations operation){
+	public CallbackArgs(Cours cidReq, AllowedOperations operation){
 		this("","",cidReq, -1, operation);
 	}
 
 	public CallbackArgs(AllowedOperations operation){
-		this("","","", -1, operation);
+		this("","",null, -1, operation);
 	}
 }
