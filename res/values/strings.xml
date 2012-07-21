@@ -41,6 +41,10 @@
       <item quantity="other">%1$d results for \"%2$s\": </item>
     </plurals>
 
+    
+    <!-- General instructions in the main activity. -->
+    <string name="search_instructions">Use the search box in the Action Bar to look up a course</string>
+    
     <!-- Search failure message. -->
     <string name="no_results">No results found for \"%s\"</string>
     

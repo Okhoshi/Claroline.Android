@@ -17,6 +17,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -24,7 +26,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.SearchView;
@@ -35,7 +39,9 @@ import android.widget.Toast;
 public class home extends Activity implements OnItemClickListener, OnClickListener,OnTouchListener{
 	
 	
-	
+	private static final int MAIL_ID = 1;
+	public static Cours currentCours;
+	GridView gridview = null;
 	
     /** Called when the activity is first created. */
     @Override
@@ -45,6 +51,8 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
         setContentView(R.layout.main);     
         setActionBar();
         setGridView();
+        registerForContextMenu(getGridView());
+        
             
         Log.e("MO", AllowedOperations.authenticate.name());
     }
@@ -83,7 +91,9 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
             return true;
         case R.id.menu_search:
             // Comportement du bouton "Recherche"
-        	onSearchRequested();
+        	Intent monIntent1 = new Intent(this,searchableActivity.class);
+        	startActivity(monIntent1);
+        	//onSearchRequested();
             return true;
         case R.id.menu_settings:
             // Comportement du bouton "Paramètres"
@@ -94,10 +104,7 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
     }
     
     public void onClick(View v) 
-    {
-    		 
-    	
-    	
+    {	
     		 
     }
     
@@ -108,9 +115,7 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
 	}
 
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		// TODO Auto-generated method stub
 		// Pas a faire puisque déjà faite dans la creation des Listener
-		
 	}
 	
 	
@@ -125,13 +130,13 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
 	public void setGridView()
 	{
 		int layoutID = R.layout.cours_view;
-		GridView gridview = (GridView) findViewById(R.id.gridview);
+		gridview = (GridView) findViewById(R.id.gridview);
 		// Normalement ca ! -->
 		//List<Cours> Liste = CoursRepository.GetAllCours();
 		// Test avec ca -->
 
 		
-		List<Cours> Liste= new ArrayList<Cours>();
+		final List<Cours> Liste= new ArrayList<Cours>();
 		Cours Cours1= new Cours(null, null, null, null,"ives.smeers@uclouvain.be" , null, "Economie d'entreprise", "Ives Smeers");
 		Cours Cours2= new Cours(null, null, null, null, "peter.vanroy@uclouvain.be", null, "Informatique : Oz", "Peter Van Roy");
 		Cours Cours3= new Cours(null, null, null, null, "francois.remacle@uclouvain.be", null, "Mathématique Q3", "Francois Remacle");
@@ -141,15 +146,79 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
         gridview.setAdapter(new CoursAdapter(this,layoutID,Liste));
         
 
-        gridview.setOnItemClickListener(new OnItemClickListener() 
+        
+        gridview.setOnItemLongClickListener(new OnItemLongClickListener() 
         {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id)
+            public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id)
             {
-                Toast.makeText(home.this, "" + position, Toast.LENGTH_SHORT).show();
+            	int n = Liste.size();
+            	for(int i = 0;i<n;++i)
+            	{
+            		currentCours=(Cours) gridview.getItemAtPosition(i);
+            		if(Liste.get(position).equals(currentCours))
+            		{		
+            			openContextMenu(gridview);
+            		}
+            		
+            		
+            	}
+				return true;
+                
             }
         });
         
         
+        gridview.setOnItemClickListener(new OnItemClickListener() 
+        {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id)
+            {
+            	int n = Liste.size();
+            	for(int i = 0;i<n;++i)
+            	{
+            		currentCours=(Cours) gridview.getItemAtPosition(i);
+            		if(Liste.get(position).equals(currentCours))
+            		{		
+            			
+            			Intent coursIntent = new Intent(getApplicationContext(), coursActivity.class);
+                    	startActivity(coursIntent);
+            		}
+            		
+            		
+            	}
+                
+            }
+        });
+        
+        
+        
+        
 	}
+	
+	
+	
+	public View getGridView()
+	{
+		return this.gridview;
+	}
+	
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+			super.onCreateContextMenu(menu, v, menuInfo);
+			menu.add(0, MAIL_ID, 0, "Mail to titular");
+	}
+
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		switch (item.getItemId()) 
+		{
+			case MAIL_ID:
+				//TODO send a mail
+			return true;
+			default:
+			return super.onContextItemSelected(item);
+		}
+		
+	}
+	
+	
     
 }
