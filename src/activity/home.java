@@ -92,6 +92,9 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
             return true;
         case R.id.menu_refresh:
             // Comportement du bouton "Rafraichir"
+        	ClaroClient cli = new ClaroClient();
+        	Thread thread = new Thread(cli.makeOperation(AllowedOperations.getCourseList));
+        	thread.start();
             return true;
         case R.id.menu_search:
             // Comportement du bouton "Recherche"
