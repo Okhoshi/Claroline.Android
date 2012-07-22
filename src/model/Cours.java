@@ -190,4 +190,12 @@ public class Cours
 		this.Updated=Updated;
 	}
 	
+	@Override
+	public boolean equals(Object o){
+		if (o instanceof Cours){
+			return (((Cours) o).getSysCode() == this.getSysCode() && ((Cours) o).getId() == this.getId());
+		}
+		return false;
+	}
+	
 }
