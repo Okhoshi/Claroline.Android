@@ -72,13 +72,18 @@ public class coursActivity extends Activity
         case R.id.menu_settings:
             // Comportement du bouton "Paramètres"
             return true;
+        case android.R.id.home:
+        	// Comportement du bouton qui permet de retourner a l'activite precedente
+        	monIntent = new Intent(this,home.class);
+        	startActivity(monIntent);
+        	return true;
         default:
             return super.onOptionsItemSelected(item);
         }
     }
 	
 	
-	
+    
 	
 	public void setTabs()
 	{
@@ -86,13 +91,13 @@ public class coursActivity extends Activity
 		TabHost tabHost=(TabHost)findViewById(R.id.tabHost);
 		tabHost.setup();
 
-		TabSpec spec1=tabHost.newTabSpec("Annonces");
+		TabSpec spec1=tabHost.newTabSpec(getString(R.string.onglet_annonces));
 		spec1.setContent(R.id.tab1);
-		spec1.setIndicator("Annonces");
+		spec1.setIndicator(getString(R.string.onglet_annonces));
 
 
-		TabSpec spec2=tabHost.newTabSpec("Documents");
-		spec2.setIndicator("Documents");
+		TabSpec spec2=tabHost.newTabSpec(getString(R.string.onglet_documents));
+		spec2.setIndicator(getString(R.string.onglet_documents));
 		spec2.setContent(R.id.tab2);
 
 		tabHost.addTab(spec1);
@@ -105,7 +110,7 @@ public class coursActivity extends Activity
 	public void setActionBar()
 	{
 		ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false); 
+        actionBar.setDisplayHomeAsUpEnabled(true); 
 	}
 		
 }

@@ -1,11 +1,13 @@
 package activity;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import connectivity.AllowedOperations;
 import connectivity.ClaroClient;
 import dataStorage.CoursRepository;
+import dataStorage.Repository;
 import mobile.claroline.R;
 import model.Cours;
 import model.CoursAdapter;
@@ -25,6 +27,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewConfiguration;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -39,7 +42,7 @@ import android.widget.Toast;
 public class home extends Activity implements OnItemClickListener, OnClickListener,OnTouchListener{
 	
 	
-	private static final int MAIL_ID = 1;
+	private static final int MAIL_ID = R.string.contextual_mail;
 	public static Cours currentCours;
 	GridView gridview = null;
 	
@@ -50,6 +53,7 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
        
         setContentView(R.layout.main);     
         setActionBar();
+        setOverflowMenu();
         setGridView();
         registerForContextMenu(getGridView());
         
@@ -91,9 +95,11 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
             return true;
         case R.id.menu_search:
             // Comportement du bouton "Recherche"
-        	Intent monIntent1 = new Intent(this,searchableActivity.class);
-        	startActivity(monIntent1);
-        	//onSearchRequested();
+        	//Repository.Open();
+        	onSearchRequested();
+        	//Repository.Close();
+        	//Intent monIntent1 = new Intent(this,searchableActivity.class);
+        	//startActivity(monIntent1);
             return true;
         case R.id.menu_settings:
             // Comportement du bouton "Paramètres"
@@ -203,7 +209,8 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
 	
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 			super.onCreateContextMenu(menu, v, menuInfo);
-			menu.add(0, MAIL_ID, 0, "Mail to titular");
+			menu.setHeaderTitle(getString(R.string.contextual_header));
+			menu.add(0, MAIL_ID, 0, getString(R.string.contextual_mail));
 	}
 
 	public boolean onContextItemSelected(MenuItem item) {
@@ -220,5 +227,20 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
 	}
 	
 	
-    
+    public void setOverflowMenu()
+    {
+    	try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if(menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ex) {
+            // Ignore
+        }
+
+    }
+	
+	
 }
