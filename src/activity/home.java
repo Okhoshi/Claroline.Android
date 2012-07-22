@@ -42,7 +42,7 @@ import android.widget.Toast;
 public class home extends Activity implements OnItemClickListener, OnClickListener,OnTouchListener{
 	
 	
-	private static final int MAIL_ID = R.string.contextual_mail;
+	private static final int MAIL_ID = R.id.itemMails;
 	public static Cours currentCours;
 	GridView gridview = null;
 	
@@ -221,7 +221,14 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
 		switch (item.getItemId()) 
 		{
 			case MAIL_ID:
-				//TODO send a mail
+				//String officialEmail = currentCours.getOfficialEmail();
+				// Pour test
+				String officialEmail = "eldala07@hotmail.com";
+				Intent i = new Intent(Intent.ACTION_SEND);
+				i.putExtra(Intent.EXTRA_EMAIL, new String[] {officialEmail});
+				i.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_titulars));
+				i.setType("message/rfc822");
+				startActivity(Intent.createChooser(i, getString(R.string.choose_activity_mail)));
 			return true;
 			default:
 			return super.onContextItemSelected(item);

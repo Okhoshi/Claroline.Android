@@ -32,6 +32,8 @@
     <!-- Menu contextuel -->
     <string name="contextual_header">Actions</string>
     <string name="contextual_mail">Envoyer un mail aux titulaires</string>
+    <string name="mail_titulars"> \n \n \n Envoyé depuis ClarolineMobile</string>
+    <string name="choose_activity_mail">Envoyez le mail avec :</string>
     
     
     <!-- String concernant la searchView -->

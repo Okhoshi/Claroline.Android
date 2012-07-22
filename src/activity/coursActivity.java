@@ -19,7 +19,7 @@ import android.widget.TabHost.TabSpec;
 public class coursActivity extends Activity 
 {
 	
-	// Permit to update the data of a certain course
+	// Permit to update the data of a certain course with this reference
 	private Cours currentCours = home.currentCours;
 	
 	public void onCreate(Bundle savedInstanceState) {
