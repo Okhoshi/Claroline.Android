@@ -57,9 +57,9 @@ public class ClaroClient implements Runnable {
 	public HttpPost getClient(boolean forAuth, CallbackArgs args) throws UnsupportedEncodingException{
 		HttpPost postMessage;
 		if(forAuth){
-			postMessage = new HttpPost("http://10.0.2.2/claroline/claroline/auth/login.php");
+			postMessage = new HttpPost("http://10.0.2.2/devcampus/claroline/auth/login.php");
 		} else {
-			postMessage = new HttpPost("http://10.0.2.2/claroline/module/MOBILE/");
+			postMessage = new HttpPost("http://10.0.2.2/devcampus/module/MOBILE/");
 		}
 		postMessage.addHeader("Content-Type", "application/x-www-form-urlencoded");
 		postMessage.setEntity(args.entity);
@@ -114,8 +114,12 @@ public class ClaroClient implements Runnable {
 	}
 	
 	public void Execute(CallbackArgs args){
-		if(isExpired() && !getSessionCookie(args))
-			return;
+		if(!isExpired()){
+			if(!getSessionCookie(new CallbackArgs("admin", "elegie24", AllowedOperations.authenticate))){
+				Log.e(this.toString(), "Authentication Failed!");
+				return;
+			}
+		}
 		
 		setProgressIndicator(true);
 		
@@ -128,7 +132,7 @@ public class ClaroClient implements Runnable {
 			try {
 				HttpResponse response = client.execute(getClient(false, args), httpContext);
 				String JSONresponse = readResponse(response);
-				Log.e(this.toString(), JSONresponse);
+				Log.d(this.toString(), JSONresponse);
 				
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
