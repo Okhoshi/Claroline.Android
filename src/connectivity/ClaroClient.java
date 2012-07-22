@@ -7,7 +7,10 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 
 import model.Cours;
 
@@ -23,6 +26,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.ByteArrayBuffer;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -131,8 +137,31 @@ public class ClaroClient implements Runnable {
 		} else {
 			try {
 				HttpResponse response = client.execute(getClient(false, args), httpContext);
-				String JSONresponse = readResponse(response);
-				Log.d(this.toString(), JSONresponse);
+				Log.i(this.toString(), "Status:[" + response.getStatusLine().toString() + "]");
+				JSONArray JSONresponse = new JSONArray(readResponse(response));
+				
+				switch(args.operation){
+				case getCourseList:
+					for (int i = 0; i < JSONresponse.length(); i++) {
+						JSONObject object = JSONresponse.getJSONObject(i);
+						JSONCours.fromJSONObject(object).saveInDB();
+					}
+					break;
+				case getCourseToolList:
+					break;
+				case getAnnounceList:
+					break;
+				case getDocList:
+					break;
+				case getSingleAnnounce:
+					break;
+				case getUpdates:
+					break;
+				case getUserData:
+					break;
+				default:
+					break;
+				}
 				
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
@@ -143,24 +172,16 @@ public class ClaroClient implements Runnable {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
 		setProgressIndicator(false);
-	}
-	
-	private void old(){
-		try {
-			client.execute(getClient(true, null), httpContext);
-			HttpResponse response = client.execute(getClient(false, null), httpContext);
-			Log.e("HTTPRESPONSE", readResponse(response));
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public void invalidateClient(){
@@ -169,9 +190,10 @@ public class ClaroClient implements Runnable {
 	}
 	
 	public boolean isExpired(){
-		Date temp = cookieCreation;
-		temp.setHours(cookieCreation.getHours()+1);
-		return cookieCreation.after(temp);
+		GregorianCalendar temp = new GregorianCalendar();
+		temp.setTime(cookieCreation);
+		temp.add(Calendar.HOUR_OF_DAY, 2);
+		return cookieCreation.after(temp.getTime());
 	}
 	
 	public boolean getSessionCookie(CallbackArgs args){
