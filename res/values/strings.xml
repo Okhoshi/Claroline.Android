@@ -4,49 +4,52 @@
     <!-- Nom de l'application --> 
     <string name="hello">Hello World, home!</string>
     <string name="app_name">ClarolineMobile</string>
-    
-    <string name="button_cours1">Cours1</string>
-    <string name="button_cours2">Cours2</string>
-    <string name="button_cours3">Cours3</string>
-    <string name="button_cours4">Cours4</string>
-    <string name="button_cours5">Cours5</string>
-    <string name="button_cours6">Cours6</string>
-    <string name="button_cours7">Cours7</string>
-    <string name="button_cours8">Cours8</string>
-    <string name="button_cours9">Cours9</string>
-    <string name="button_cours10">Cours10</string>
+
     
     
     <!-- TextView's de l'activite about_us --> 
-    <string name="about_us_authors">Author : Devos Quentin, Uytterhoeven Dimitri</string>
+    <string name="about_us_authors">Auteurs : \n Devos Quentin \n Uytterhoeven Dimitri</string>
     <string name="about_us_version">Version 1.0</string>
-    <string name="about_us_contact_us">Contacter nous via #8230</string>
+    <string name="about_us_contact_us">Contacter nous via mails aux adresses suivantes : q.devos@student.uclouvain.be \n dimitri.uytterhoeven@student.uclouvain.be</string>
+    <string name="about_us_remerciements">Remerciements adressés à \n Sophie Sluymans \n Laura Delvaux \n Pr K. Mens</string>
+    <string name="about_us_mail_quentin">q.devos@student.uclouvain.be</string>
+    <string name="about_us_mail_dimitri">dimitri.uytterhoeven@student.uclouvain.be</string>
     
     
     <!-- Boutons de l'action bar --> 
-    <string name="menu_about">About us</string>
-    <string name="menu_help">Help</string>
-    <string name="menu_refresh">Refresh</string>
-    <string name="menu_search">Search</string>
-    <string name="menu_settings">Settings</string>
+    <string name="menu_about">A propos de</string>
+    <string name="menu_help">Aide</string>
+    <string name="menu_refresh">Rafraîchir</string>
+    <string name="menu_search">Recherche</string>
+    <string name="menu_settings">Paramètres</string>
+    
+    
+    <!-- Strings des onglets Documents et Annonces -->
+    <string name="onglet_documents">Documents</string>
+    <string name="onglet_annonces">Annonces</string>
+    
+    
+    <!-- Menu contextuel -->
+    <string name="contextual_header">Actions</string>
+    <string name="contextual_mail">Envoyer un mail aux titulaires</string>
     
     
     <!-- String concernant la searchView -->
-    <string name="search_hint">Search a course</string>
+    <string name="search_hint">Chercher un cours</string>
     
     
      <!-- Shown above search results when we receive a search request. -->
     <plurals name="search_results">
-      <item quantity="one">%1$d result for \"%2$s\": </item>
-      <item quantity="other">%1$d results for \"%2$s\": </item>
+      <item quantity="one">%1$d réusltat pour \"%2$s\": </item>
+      <item quantity="other">%1$d résultat pour \"%2$s\": </item>
     </plurals>
 
     
     <!-- General instructions in the main activity. -->
-    <string name="search_instructions">Use the search box in the Action Bar to look up a course</string>
+    <string name="search_instructions">Utilisez la boîte de dialogue de la barre d\'action pour trouver un cours</string>
     
     <!-- Search failure message. -->
-    <string name="no_results">No results found for \"%s\"</string>
+    <string name="no_results">Aucun résultat pour \"%s\"</string>
     
 
 </resources>
