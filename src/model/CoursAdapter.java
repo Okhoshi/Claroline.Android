@@ -64,7 +64,7 @@ public class CoursAdapter extends BaseAdapter {
 	{
 		LinearLayout newView=null;
 		Cours Cours1   		 = getItem(position);
-		String CoursText   		 = Cours1.getTitle()+"\n"+Cours1.getTitular()+"\n"+Cours1.getOfficialEmail();
+		String CoursText   		 = Cours1.getTitle()+"\n"+Cours1.getTitular();
 		
 		if(view==null)
 		{
@@ -80,9 +80,7 @@ public class CoursAdapter extends BaseAdapter {
 		{
 			newView=(LinearLayout) view;
 		}
-		// RECUPERER LES VIEW A REMPLIR
 		
-		// REMPLIR LES VIEW AVEC LES PROPRIETES DE L'OBJET
 		
 		return newView;
 	}

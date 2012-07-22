@@ -18,14 +18,14 @@ import android.provider.BaseColumns;
 public class CoursProvider extends ContentProvider {
     String TAG = "CoursProvider";
 
-    public static String AUTHORITY = "activity.home.CoursProvider";
-    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/cours");
+    public static String AUTHORITY = "mobile.claroline.CoursProvider";
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
     // MIME types used for searching words or looking up a single definition
-    public static final String WORDS_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE +
-                                                  "/vnd.example.android.searchabledict";
-    public static final String DEFINITION_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE +
-                                                       "/vnd.example.android.searchabledict";
+    public static final String TITLE_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE +
+                                                  "/vnd.activity.home";
+    public static final String TITULAR_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE +
+                                                       "/vnd.activity.home";
 
 
     // UriMatcher stuff
@@ -156,9 +156,9 @@ public class CoursProvider extends ContentProvider {
     public String getType(Uri uri) {
         switch (sURIMatcher.match(uri)) {
             case SEARCH_COURS:
-                return WORDS_MIME_TYPE;
+                return TITLE_MIME_TYPE;
             case GET_COURS:
-                return DEFINITION_MIME_TYPE;
+                return TITULAR_MIME_TYPE;
             case SEARCH_SUGGEST:
                 return SearchManager.SUGGEST_MIME_TYPE;
             case REFRESH_SHORTCUT:

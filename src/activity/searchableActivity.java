@@ -1,6 +1,5 @@
 package activity;
 
-
 import dataStorage.CoursProvider;
 import dataStorage.DBOpenHelper;
 import mobile.claroline.R;

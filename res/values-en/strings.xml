@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Nom de l'application --> 
+    <string name="hello">Hello World, home!</string>
+    <string name="app_name">ClarolineMobile</string>
+
+    
+    
+    <!-- TextView's de l'activite about_us --> 
+    <string name="about_us_authors">Authors : \n Devos Quentin \n Uytterhoeven Dimitri</string>
+    <string name="about_us_version">Version 1.0</string>
+    <string name="about_us_contact_us">Contact us with mail : q.devos@student.uclouvain.be \n dimitri.uytterhoeven@student.uclouvain.be</string>
+    <string name="about_us_remerciements">Thanks to \n Sophie Sluymans \n Laura Delvaux \n Pr K. Mens</string>
+    <string name="about_us_mail_quentin">q.devos@student.uclouvain.be</string>
+    <string name="about_us_mail_dimitri">dimitri.uytterhoeven@student.uclouvain.be</string>
+    
+    
+    <!-- Boutons de l'action bar --> 
+    <string name="menu_about">About</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_settings">Settings</string>
+    
+    
+    <!-- Strings des onglets Documents et Annonces -->
+    <string name="onglet_documents">Documents</string>
+    <string name="onglet_annonces">Announcements</string>
+    
+    
+    <!-- Menu contextuel -->
+    <string name="contextual_header">Actions</string>
+    <string name="contextual_mail">Send mail to titulars</string>
+    
+    <!-- String concernant la searchView -->
+    <string name="search_hint">Search a course</string>
+    
+    
+     <!-- Shown above search results when we receive a search request. -->
+    <plurals name="search_results">
+      <item quantity="one">%1$d result for \"%2$s\": </item>
+      <item quantity="other">%1$d results for \"%2$s\": </item>
+    </plurals>
+
+    
+    <!-- General instructions in the main activity. -->
+    <string name="search_instructions">Use the search box in the Action Bar to look up a course</string>
+    
+    <!-- Search failure message. -->
+    <string name="no_results">No results found for \"%s\"</string>
+    
+
+</resources>
