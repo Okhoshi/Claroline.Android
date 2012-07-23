@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -110,6 +111,7 @@ public class coursActivity extends Activity
 	public void setActionBar()
 	{
 		ActionBar actionBar = getActionBar();
+		actionBar.setTitle(currentCours.getTitle());	
         actionBar.setDisplayHomeAsUpEnabled(true); 
 	}
 		

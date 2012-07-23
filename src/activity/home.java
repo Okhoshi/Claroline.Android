@@ -18,9 +18,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -28,6 +30,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewConfiguration;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -46,6 +49,7 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
 	public static Cours currentCours;
 	GridView gridview = null;
 	
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,8 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
         setGridView();
         registerForContextMenu(getGridView());
         
+        
+     
             
         Log.e("MO", AllowedOperations.authenticate.name());
     }
@@ -132,6 +138,7 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
 	public void setActionBar()
 	{
 		ActionBar actionBar = getActionBar();
+		actionBar.setTitle(R.string.app_name);
         actionBar.setDisplayHomeAsUpEnabled(false); 
 	}
 	
@@ -160,17 +167,8 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
         {
             public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id)
             {
-            	int n = Liste.size();
-            	for(int i = 0;i<n;++i)
-            	{
-            		currentCours=(Cours) gridview.getItemAtPosition(i);
-            		if(Liste.get(position).equals(currentCours))
-            		{		
-            			openContextMenu(gridview);
-            		}
-            		
-            		
-            	}
+            	currentCours=(Cours) gridview.getItemAtPosition(position);
+            	openContextMenu(gridview);
 				return true;
                 
             }
@@ -181,19 +179,14 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
         {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id)
             {
-            	int n = Liste.size();
-            	for(int i = 0;i<n;++i)
-            	{
-            		currentCours=(Cours) gridview.getItemAtPosition(i);
-            		if(Liste.get(position).equals(currentCours))
-            		{		
-            			
-            			Intent coursIntent = new Intent(getApplicationContext(), coursActivity.class);
-                    	startActivity(coursIntent);
-            		}
+            		
+            		currentCours=(Cours) gridview.getItemAtPosition(position);		
+           			Intent coursIntent = new Intent(getApplicationContext(), coursActivity.class);
+                   	startActivity(coursIntent);
             		
             		
-            	}
+            		
+            	
                 
             }
         });
@@ -212,7 +205,7 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
 	
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 			super.onCreateContextMenu(menu, v, menuInfo);
-			menu.setHeaderTitle(getString(R.string.contextual_header));
+			menu.setHeaderTitle(currentCours.getTitle());
 			menu.add(0, MAIL_ID, 0, getString(R.string.contextual_mail));
 	}
 

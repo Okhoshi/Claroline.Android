@@ -17,7 +17,7 @@
     
     
     <!-- Boutons de l'action bar --> 
-    <string name="menu_about">A propos de</string>
+    <string name="menu_about">A propos</string>
     <string name="menu_help">Aide</string>
     <string name="menu_refresh">Rafraîchir</string>
     <string name="menu_search">Recherche</string>
