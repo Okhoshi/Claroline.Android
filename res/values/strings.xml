@@ -53,5 +53,8 @@
     <!-- Search failure message. -->
     <string name="no_results">Aucun résultat pour \"%s\"</string>
     
+    <!-- Label TextView CoursActivity. -->
+    <string name="label">Nom du Cours ici"</string>
+    
 
 </resources>

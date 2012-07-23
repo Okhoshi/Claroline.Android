@@ -74,8 +74,9 @@ public class CoursAdapter extends BaseAdapter {
 			this.inflater = (LayoutInflater) getContext().getSystemService(inflater1);
 			this.inflater.inflate(resource, newView, true);
 			
-			TextView textView = new TextView(context);// (TextView) newView.findViewById(R.id.grid_item_label);
+			TextView textView =  (TextView) newView.findViewById(R.id.grid_item_label);
 			textView.setText(CoursText);
+			//textView.setGravity(gravity);
 		}
 		else
 		{
