@@ -1,22 +1,23 @@
 package activity;
 
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import connectivity.AllowedOperations;
 import connectivity.ClaroClient;
-import dataStorage.CoursRepository;
-import dataStorage.Repository;
+
 import mobile.claroline.R;
 import model.Cours;
 import model.CoursAdapter;
+import fragments.detailsCoursFragment;
+import fragments.mainCoursFragment.OnItemSelectedListener;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -25,26 +26,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewConfiguration;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
-import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 
+public class home extends Activity implements OnItemSelectedListener,  OnItemClickListener
+{
 
-public class home extends Activity implements OnItemClickListener, OnClickListener,OnTouchListener{
-	
-	
 	private static final int MAIL_ID = R.id.itemMails;
 	public static Cours currentCours;
-	GridView gridview = null;
+	ListView listview = null;
 	
     /** Called when the activity is first created. */
     @Override
@@ -52,10 +48,10 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
         super.onCreate(savedInstanceState);
        
         setContentView(R.layout.main);     
-        setActionBar();
-        setOverflowMenu();
-        setGridView();
-        registerForContextMenu(getGridView());
+     //   setActionBar();
+     //   setOverflowMenu();
+     //   setListView();
+     //   registerForContextMenu(getListView());
         
             
         Log.e("MO", AllowedOperations.authenticate.name());
@@ -136,10 +132,10 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
 	}
 	
 	// Place la GridView
-	public void setGridView()
+	public void setListView()
 	{
 		int layoutID = R.layout.cours_view;
-		gridview = (GridView) findViewById(R.id.gridview);
+		listview = (ListView) findViewById(R.id.list_frag);
 		// Normalement ca ! -->
 		//List<Cours> Liste = CoursRepository.GetAllCours();
 		// Test avec ca -->
@@ -152,21 +148,21 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
 		Liste.add(Cours1);
 		Liste.add(Cours2);
 		Liste.add(Cours3);
-        gridview.setAdapter(new CoursAdapter(this,layoutID,Liste));
+        listview.setAdapter(new CoursAdapter(this,layoutID,Liste));
         
 
         
-        gridview.setOnItemLongClickListener(new OnItemLongClickListener() 
+        listview.setOnItemLongClickListener(new OnItemLongClickListener() 
         {
             public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id)
             {
             	int n = Liste.size();
             	for(int i = 0;i<n;++i)
             	{
-            		currentCours=(Cours) gridview.getItemAtPosition(i);
+            		currentCours=(Cours) listview.getItemAtPosition(i);
             		if(Liste.get(position).equals(currentCours))
             		{		
-            			openContextMenu(gridview);
+            			openContextMenu(listview);
             		}
             		
             		
@@ -175,39 +171,16 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
                 
             }
         });
-        
-        
-        gridview.setOnItemClickListener(new OnItemClickListener() 
-        {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id)
-            {
-            	int n = Liste.size();
-            	for(int i = 0;i<n;++i)
-            	{
-            		currentCours=(Cours) gridview.getItemAtPosition(i);
-            		if(Liste.get(position).equals(currentCours))
-            		{		
-            			
-            			Intent coursIntent = new Intent(getApplicationContext(), coursActivity.class);
-                    	startActivity(coursIntent);
-            		}
-            		
-            		
-            	}
-                
-            }
-        });
-        
-        
+           
         
         
 	}
 	
 	
 	
-	public View getGridView()
+	public View getListView()
 	{
-		return this.gridview;
+		return this.listview;
 	}
 	
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -253,4 +226,31 @@ public class home extends Activity implements OnItemClickListener, OnClickListen
     }
 	
 	
+	
+	
+	/** This is a callback that the list fragment (Fragment A)
+    calls when a list item is selected */
+public void onItemSelected(int position) 
+{
+    detailsCoursFragment displayFrag = (detailsCoursFragment) getFragmentManager()
+                                .findFragmentById(R.id.details_frag);
+    if (displayFrag == null) {
+        // DisplayFragment (Fragment B) is not in the layout (handset layout),
+        // so start DisplayActivity (Activity B)
+        // and pass it the info about the selected item
+        Intent intent = new Intent(this, coursActivity.class);
+        intent.putExtra("position", position);
+        startActivity(intent);
+    } else 
+    {
+        // DisplayFragment (Fragment B) is in the layout (tablet layout),
+        // so tell the fragment to update
+         displayFrag.updateContent(position);
+    }
+}
+
+
+
+
+
 }
