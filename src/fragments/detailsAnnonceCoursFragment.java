@@ -19,6 +19,8 @@ import android.widget.TextView;
 public class detailsAnnonceCoursFragment extends Fragment 
 {
 	
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,7 +38,7 @@ public class detailsAnnonceCoursFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.tab_cours_activity, container, false);
+		View view = inflater.inflate(R.layout.cours_view, container, false);
 		return view;
 	}
 

@@ -13,6 +13,7 @@ import model.Cours;
 import model.CoursAdapter;
 import fragments.detailsAnnonceCoursFragment;
 import fragments.detailsDocumentsCoursFragment;
+import fragments.mainCoursFragment;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -27,22 +28,30 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 
 public class home extends Activity
 {
 	public static Cours currentCours;
+	public static String currentTag;
+	public static String annonce_id = "annonce_id";
+	public static String documents_id = "documents_id";
+	static TextView view ;
 	
 	
 	/** Called when the activity is first created. */
@@ -57,6 +66,7 @@ public class home extends Activity
 		if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
 		setActionBarTabs();
 		setOverflowMenu();
+		view = (TextView) findViewById(R.id.grid_item_label);
 		
 		
 
@@ -93,12 +103,70 @@ public class home extends Activity
 					if (mFragment == null) {
 						// If not, instantiate and add it to the activity
 						mFragment = Fragment.instantiate(mActivity, mClass.getName());
-						ft.add(android.R.id.content, mFragment, mTag);
+
+						
+						if(mTag.equals(annonce_id))
+						currentTag=annonce_id;
+						if(mTag.equals(documents_id))
+						currentTag=documents_id;
+						
+						
+						if(currentCours!=null)
+						{
+							String title = currentCours.getTitle();
+							String titular = currentCours.getTitular();
+						
+							Log.v("MO", home.currentTag);
+						
+							if (home.currentTag.equals(home.annonce_id)) 
+							{
+								view.setText(title);
+							} 
+							if (home.currentTag.equals(home.documents_id))
+							{
+								view.setText(titular);
+							} 
+						}
+						
+						ft.add(android.R.id.content, mFragment, mTag);					
+						
+						
+						
 					} else {
 						// If it exists, simply attach it in order to show it
 						ft.setCustomAnimations(android.R.animator.fade_in,
 								android.R.animator.fade_out);
+
+						
+						if(mTag.equals(annonce_id))
+						currentTag=annonce_id;
+						if(mTag.equals(documents_id))
+						currentTag=documents_id;
+						
+						if(currentCours==null)
+							Log.v("BO", "Cours nulllll ici");
+						
+						if(currentCours!=null)
+						{
+							String title = currentCours.getTitle();
+							String titular = currentCours.getTitular();
+						
+							Log.v("MO", home.currentTag);
+						
+							if (home.currentTag.equals(home.annonce_id)) 
+							{
+								view.setText(title);
+							} 
+							if (home.currentTag.equals(home.documents_id))
+							{
+								view.setText(titular);
+							} 
+						}
+						
 						ft.attach(mFragment);
+						
+
+						
 					}
 				}
 
@@ -106,7 +174,14 @@ public class home extends Activity
 					if (mFragment != null) {
 						ft.setCustomAnimations(android.R.animator.fade_in,
 								android.R.animator.fade_out);
+						
+						if(mTag.equals(annonce_id))
+						currentTag=documents_id;
+						if(mTag.equals(documents_id))	
+						currentTag=annonce_id;
 						ft.detach(mFragment);
+						
+
 					}
 				}
 
@@ -205,15 +280,16 @@ public class home extends Activity
 				Tab tab = actionBar
 						.newTab()
 						.setText(getString(R.string.onglet_annonces))
-						.setTabListener(new MyTabListener<detailsAnnonceCoursFragment>(this, getString(R.string.onglet_annonces),
+						.setTabListener(new MyTabListener<detailsAnnonceCoursFragment>(this, annonce_id,
 										detailsAnnonceCoursFragment.class));
 				actionBar.addTab(tab);
+			
 
 				tab = actionBar
 						.newTab()
 						.setText(getString(R.string.onglet_documents))
-						.setTabListener(new MyTabListener<detailsAnnonceCoursFragment>(this, getString(R.string.onglet_documents),
-								detailsAnnonceCoursFragment.class));
+						.setTabListener(new MyTabListener<detailsDocumentsCoursFragment>(this, documents_id,
+								detailsDocumentsCoursFragment.class));
 				actionBar.addTab(tab);
 			}
 			
@@ -233,7 +309,11 @@ public class home extends Activity
 
 		    }
 			
-			
+			public void onListItemClick(ListView l, View v, int position, long id) 
+			{
+				Cours item = (Cours) l.getAdapter().getItem(position);
+				currentCours=item;
+			}
 			
 			
 

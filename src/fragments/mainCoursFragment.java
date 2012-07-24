@@ -13,6 +13,7 @@ import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -70,17 +71,27 @@ public class mainCoursFragment extends ListFragment
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Cours item = (Cours) getListAdapter().getItem(position);
-		String titre = item.getTitle();
+		home.currentCours=item;
+		String title = item.getTitle();
+		String titular = item.getTitular();
 		
-		detailsAnnonceCoursFragment fragment = (detailsAnnonceCoursFragment) getFragmentManager().findFragmentById(R.id.details_frag);
-		if (fragment != null && fragment.isInLayout()) 
+		detailsAnnonceCoursFragment fragmentAnnonce = (detailsAnnonceCoursFragment) getFragmentManager().findFragmentById(R.id.details_frag);
+		detailsDocumentsCoursFragment fragmentDocs = (detailsDocumentsCoursFragment) getFragmentManager().findFragmentById(R.id.details_frag_docs);
+		
+		//Log.v("MO", home.currentTag);
+		
+		if (fragmentAnnonce != null && fragmentAnnonce.isInLayout() && home.currentTag.equals(home.annonce_id)) 
 		{
-			//fragment.setText(item);
+			fragmentAnnonce.setText(title);
+		} 
+		if (fragmentDocs != null && fragmentDocs.isInLayout() && home.currentTag.equals(home.documents_id))
+		{
+			fragmentAnnonce.setText(titular);
 		} 
 		else 
 		{
 			Intent intent = new Intent(getActivity().getApplicationContext(), activity.coursActivity.class);
-			intent.putExtra("value", titre);
+			intent.putExtra("value", title);
 			startActivity(intent);
 
 		}
