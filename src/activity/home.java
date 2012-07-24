@@ -42,7 +42,9 @@ import android.widget.SearchView;
 
 public class home extends Activity
 {
-
+	public static Cours currentCours;
+	
+	
 	/** Called when the activity is first created. */
 
 	@Override
@@ -56,8 +58,17 @@ public class home extends Activity
 		setActionBarTabs();
 		setOverflowMenu();
 		
+		
 
 	}
+	
+	/**
+	 * 
+	 *   Listeners
+	 * 
+	 * 
+	 */
+	
 
 			public static class MyTabListener<T extends Fragment> implements
 					TabListener {
@@ -107,6 +118,13 @@ public class home extends Activity
 				
 			}
 			
+			
+			/**
+			 * 
+			 *   Menus,tabs,actionBar
+			 * 
+			 * 
+			 */
 			
 			
 			
@@ -214,5 +232,9 @@ public class home extends Activity
 		        }
 
 		    }
+			
+			
+			
+			
 
 }
