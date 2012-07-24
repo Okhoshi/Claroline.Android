@@ -53,5 +53,16 @@
     <!-- Search failure message. -->
     <string name="no_results">No results found for \"%s\"</string>
     
+    
+    <!-- Choisir sa color of background -->
+    <string name="skin">Skins</string>
+    <string name="basic_skin">Basic skins</string>
+    <string name="upload_a_skin">Upload a skin</string>
+    <string name="your_skins">My skins</string>
+    <string name="white">White</string>
+    <string name="yellow">Yellow</string>
+    <string name="green">Green</string>
+    <string name="red">Red</string>
+    <string name="black">Black</string>
 
 </resources>

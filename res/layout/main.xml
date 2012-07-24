@@ -3,13 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:id="@+id/frags" >
+    android:id="@+id/frags" 
+    >
 
     <fragment
         android:id="@+id/list_frag"
         android:layout_width="150dip"
         android:layout_height="match_parent"
-        class="fragments.mainCoursFragment" ></fragment>
+        class="fragments.mainCoursFragment" 
+    ></fragment>
 
     <fragment
         android:id="@+id/details_frag"

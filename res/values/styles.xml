@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <style name="AppTheme" parent="android:Theme.Light" />
+	<style name="AppTheme" parent="android:Theme.Light">
+		<item name="android:windowBackground">@drawable/background_green_1</item>
+	</style>
 </resources>

@@ -56,5 +56,16 @@
     <!-- Label TextView CoursActivity. -->
     <string name="label">Nom du Cours ici"</string>
     
+    
+    <!-- Choisir sa color of background -->
+    <string name="skin">Fonds d\'écran</string>
+    <string name="basic_skin">Couleurs de base</string>
+    <string name="upload_a_skin">Télécharger un fond d\'écran</string>
+    <string name="your_skins">Mes fonds d\'écran</string>
+    <string name="white">Blanc</string>
+    <string name="yellow">Jaune</string>
+    <string name="green">Vert</string>
+    <string name="red">Rouge</string>
+    <string name="black">Noir</string>
 
 </resources>

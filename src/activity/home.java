@@ -9,6 +9,8 @@ import connectivity.AllowedOperations;
 import connectivity.ClaroClient;
 
 import mobile.claroline.R;
+import mobile.claroline.R.drawable;
+import mobile.claroline.R.string;
 import model.Cours;
 import model.CoursAdapter;
 import fragments.detailsAnnonceCoursFragment;
@@ -24,14 +26,17 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -43,6 +48,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class home extends Activity
@@ -212,6 +218,24 @@ public class home extends Activity
 		        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 		        searchView.setIconifiedByDefault(false);     
 		        searchView.setSubmitButtonEnabled(true);
+		       
+		        
+		        
+		        SubMenu settings = menu.addSubMenu(getString(R.string.menu_settings));
+		        //SubMenu skins = settings.addSubMenu(getString(R.string.skin));
+		        SubMenu background_skin = settings.addSubMenu(getString(R.string.basic_skin));
+		        settings.add(getString(R.string.upload_a_skin));
+		        SubMenu your_skins = settings.addSubMenu(getString(R.string.your_skins));
+
+		        
+		        background_skin.add(0,R.id.white,0,getString(R.string.white));
+		        background_skin.add(0,R.id.yellow,1,getString(R.string.yellow));
+		        background_skin.add(0,R.id.green,2,getString(R.string.green));
+		        background_skin.add(0,R.id.red,3,getString(R.string.red));
+		        background_skin.add(0,R.id.black,4,getString(R.string.black));
+
+		        // Permettre un upload ou un choose de skin serait pas mal
+		        
 		        return true;
 		    }
 		    
@@ -243,9 +267,29 @@ public class home extends Activity
 		        	//Intent monIntent1 = new Intent(this,searchableActivity.class);
 		        	//startActivity(monIntent1);
 		            return true;
-		        case R.id.menu_settings:
-		            // Comportement du bouton "Paramètres"
-		            return true;
+		        case R.id.white:
+		        	LinearLayout linLay = (LinearLayout) findViewById(R.id.frags);
+		        	linLay.setBackgroundColor(Color.WHITE);
+		        	// checker portrait ou land et mettre en fonction + pour toutes les activités
+		        	return true;
+		        case R.id.yellow:
+		        	LinearLayout linLay1 = (LinearLayout) findViewById(R.id.frags);
+		        	linLay1.setBackgroundColor(Color.YELLOW);
+		        	return true;
+		        case R.id.green:
+		        	LinearLayout linLay2 = (LinearLayout) findViewById(R.id.frags);
+		        	linLay2.setBackgroundColor(Color.GREEN);
+		        	return true;
+		        case R.id.red:
+		        	LinearLayout linLay3 = (LinearLayout) findViewById(R.id.frags);
+		        	linLay3.setBackgroundColor(Color.RED);
+		        	return true;
+		        case R.id.black:
+		        	LinearLayout linLay4 = (LinearLayout) findViewById(R.id.frags);
+		        	linLay4.setBackgroundColor(Color.BLACK);
+		        	return true;
+		        case R.string.upload_a_skin:
+		        	return true;
 		        default:
 		            return super.onOptionsItemSelected(item);
 		        }
