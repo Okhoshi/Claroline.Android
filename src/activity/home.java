@@ -1,6 +1,7 @@
 package activity;
 
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,14 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -44,6 +51,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Gallery;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -53,14 +62,40 @@ import android.widget.Toast;
 
 public class home extends Activity
 {
+	/**
+	 * 
+	 *  
+	 *  Used to know which course is the current course
+	 *  
+	 *   
+	 */
+	
 	public static Cours currentCours;
 	public static String currentTag;
 	public static String annonce_id = "annonce_id";
 	public static String documents_id = "documents_id";
 	static TextView view ;
 	
+	/**
+	 * 
+	 *  
+	 *  Used to choose an image
+	 *  
+	 *   
+	 */
 	
-	/** Called when the activity is first created. */
+	//variable for selection intent
+	private final int PICKER = 1;
+	String imgPath;
+	
+	
+	
+	/** 
+	 * 
+	 * Called when the activity is first created. 
+	 * 
+	 * 
+	 */
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -76,6 +111,42 @@ public class home extends Activity
 		
 		
 
+	}
+	
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		 
+	if (resultCode == RESULT_OK) 
+	{
+	    //check if we are returning from picture selection
+	    if (requestCode == PICKER) 
+	    {
+	        //import the image
+	    	//the returned picture URI
+	    	Uri pickedUri = data.getData();
+	    	//declare the bitmap
+	    	Bitmap pic = null;    	 
+	    	//declare the path string
+	    	String imgPath = "";
+	    	
+	    	//retrieve the string using media data
+	    	String[] medData = { MediaStore.Images.Media.DATA };
+	    	//query the data
+	    	Cursor picCursor = managedQuery(pickedUri, medData, null, null, null);
+	    	if(picCursor!=null)
+	    	{
+	    	    //get the path string
+	    	    int index = picCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+	    	    picCursor.moveToFirst();
+	    	    imgPath = picCursor.getString(index);
+	    	}
+	    	else
+	    	    imgPath = pickedUri.getPath();
+	             
+	    }
+	}
+	//superclass method
+	super.onActivityResult(requestCode, resultCode, data);
 	}
 	
 	/**
@@ -224,7 +295,7 @@ public class home extends Activity
 		        SubMenu settings = menu.addSubMenu(getString(R.string.menu_settings));
 		        //SubMenu skins = settings.addSubMenu(getString(R.string.skin));
 		        SubMenu background_skin = settings.addSubMenu(getString(R.string.basic_skin));
-		        settings.add(getString(R.string.upload_a_skin));
+		        settings.add(1,R.string.upload_a_skin,1,getString(R.string.upload_a_skin));
 		        SubMenu your_skins = settings.addSubMenu(getString(R.string.your_skins));
 
 		        
@@ -289,6 +360,30 @@ public class home extends Activity
 		        	linLay4.setBackgroundColor(Color.BLACK);
 		        	return true;
 		        case R.string.upload_a_skin:
+		        	
+		        	LinearLayout linLay5 = (LinearLayout) findViewById(R.id.frags);
+					//take the user to their chosen image selection app (gallery or file manager)
+					Intent pickIntent = new Intent();
+					pickIntent.setType("image/*");
+					pickIntent.setAction(Intent.ACTION_GET_CONTENT);
+					
+					//we will handle the returned data in onActivityResult
+					startActivityForResult(Intent.createChooser(pickIntent, getString(R.string.select_a_picture)), PICKER);
+					try {
+						
+						Bitmap bm = BitmapFactory.decodeStream(getResources().getAssets().open(imgPath + ".gif"));
+						BitmapDrawable bmd= new BitmapDrawable(bm);
+			        	linLay5.setBackgroundDrawable(bmd);
+			        	
+			        	// ajouter le stockage de cette image dans une base de donnée pour que celle-ci soit mise par défaut
+			        	// lors du nouveau lancement de l'application
+			        	// aussi, permettre de supprimer les images de la base de donnée
+			        	
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+
 		        	return true;
 		        default:
 		            return super.onOptionsItemSelected(item);
@@ -358,6 +453,7 @@ public class home extends Activity
 				Cours item = (Cours) l.getAdapter().getItem(position);
 				currentCours=item;
 			}
+			
 			
 			
 

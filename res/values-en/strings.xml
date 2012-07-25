@@ -65,4 +65,8 @@
     <string name="red">Red</string>
     <string name="black">Black</string>
 
+    
+    <!-- Choisir une image dans la galerie -->
+    <string name="select_a_picture">Choisissez une image</string>
+    
 </resources>

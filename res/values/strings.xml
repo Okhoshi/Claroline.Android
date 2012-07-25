@@ -67,5 +67,9 @@
     <string name="green">Vert</string>
     <string name="red">Rouge</string>
     <string name="black">Noir</string>
+    
+    <!-- Image a choisir dans la galerie -->
+    <string name="select_a_picture">Choisissez une image</string>
+
 
 </resources>
