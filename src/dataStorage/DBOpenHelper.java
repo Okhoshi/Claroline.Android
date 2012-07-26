@@ -33,6 +33,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	public static final String COURS_TABLE        = "Cours";
 	public static final String DOCUMENTS_TABLE    = "Documents";
 	public static final String NOTIFICATION_TABLE = "Notification";
+	public static final String IMAGE_TABLE 		  = "Image";
 	
 	
 	// Description des colonnes de la table Annonce
@@ -132,6 +133,14 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	public static final int NOTIFICATION_NUM_COLUMN_UPDATED 		= 8;
 	
 	
+	// Description des colonnes de la table Documents
+	public static final String IMAGE_COLUMN_ID 			 = "ID";
+	public static final int IMAGE_NUM_COLUMN_ID 		 = 0;
+	public static final String IMAGE_COLUMN_PATH 		 = "PATH";
+	public static final int IMAGE_NUM_COLUMN_PATH		 = 1;
+	
+	
+	
 	
 	
 	// Requêtes SQL pour la création de la base
@@ -195,7 +204,11 @@ public class DBOpenHelper extends SQLiteOpenHelper
 				   NOTIFICATION_COLUMN_UPDATED 			+ " INTEGER NOT NULL," +
 			");";
 	
-	
+	private static final String CREATE_TABLE_IMAGE =
+			" CREATE TABLE " + IMAGE_TABLE +
+			" (" + IMAGE_COLUMN_ID 				+ " INTEGER PRIMARY KEY AUTOINCREMENT," +
+				   IMAGE_COLUMN_PATH 			+" TEXT NOT NULL," +
+		     ");";
 	
 	
 	// Constructeur
@@ -218,6 +231,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 		db.execSQL(CREATE_TABLE_COURS);
 		db.execSQL(CREATE_TABLE_DOCUMENTS);
 		db.execSQL(CREATE_TABLE_NOTIFICATION);
+		db.execSQL(CREATE_TABLE_IMAGE);
 	}
 		
 	
@@ -237,6 +251,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	    	db.execSQL("DROP TABLE " + COURS_TABLE + ";");
 	    	db.execSQL("DROP TABLE " + DOCUMENTS_TABLE + ";");
 	    	db.execSQL("DROP TABLE " + NOTIFICATION_TABLE + ";");
+	    	db.execSQL("DROP TABLE " + IMAGE_TABLE + ";");
 	    	onCreate(db);
 	    }
 	}
