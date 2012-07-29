@@ -37,6 +37,23 @@ public class NotificationRepository extends Repository<Notification> {
 	return ConvertCursorToListObject(cursor);
 	}
 
+	public List<Notification> GetAllNotificationsByCoursId(int coursId) {
+		// Récupération de la liste des notifications
+		Cursor cursor = maBDD.query(DBOpenHelper.NOTIFICATION_TABLE,
+	                new String[] {  DBOpenHelper.NOTIFICATION_COLUMN_ID ,
+								    DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCEID ,
+			                        DBOpenHelper.NOTIFICATION_COLUMN_COURSID ,
+			                        DBOpenHelper.NOTIFICATION_COLUMN_ISOLDRESSOURCE ,
+			                        DBOpenHelper.NOTIFICATION_COLUMN_NOTIFIED ,
+			                        DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE ,
+			                        DBOpenHelper.NOTIFICATION_COLUMN_DATE ,
+			                        DBOpenHelper.NOTIFICATION_COLUMN_TEXT ,
+			                        DBOpenHelper.NOTIFICATION_COLUMN_UPDATED  },
+			        DBOpenHelper.NOTIFICATION_COLUMN_COURSID + "=?", 
+			        new String[] {String.valueOf(coursId)}, null, null, null);			 
+	return ConvertCursorToListObject(cursor);
+	}
+
 	public Notification GetById(int id) {
 		Cursor cursor = maBDD.query(DBOpenHelper.NOTIFICATION_TABLE,
 									new String[] { DBOpenHelper.NOTIFICATION_COLUMN_ID,

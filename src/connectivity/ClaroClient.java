@@ -7,6 +7,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -29,6 +30,8 @@ import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import dataStorage.CoursRepository;
 
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -148,14 +151,36 @@ public class ClaroClient implements Runnable {
 					}
 					break;
 				case getCourseToolList:
+					for(int i = 0; i < JSONresponse.length(); i++){
+						JSONObject object = JSONresponse.getJSONObject(i);
+						JSONCours cours = (JSONCours) CoursRepository.GetBySysCode(object.optString("sysCode"));
+						cours.setAnn(object.optBoolean("isAnn"));
+						cours.setAnnNotif(object.optBoolean("annNotif"));
+						cours.setDnL(object.optBoolean("isDnL"));
+						cours.setDnlNotif(object.optBoolean("dnlNotif"));
+						cours.saveInDB();
+					}
 					break;
 				case getAnnounceList:
+					for(int i = 0; i < JSONresponse.length(); i++){
+						JSONObject object = JSONresponse.getJSONObject(i);
+						JSONAnnonce.fromJSONObject(object).saveInDB();
+					}
 					break;
 				case getDocList:
+					for(int i = 0; i < JSONresponse.length(); i++){
+						JSONObject object = JSONresponse.getJSONObject(i);
+						JSONDocument.fromJSONObject(object).saveInDB();
+					}
 					break;
 				case getSingleAnnounce:
+					JSONObject object = JSONresponse.getJSONObject(0);
+					JSONAnnonce.fromJSONObject(object).saveInDB();
 					break;
 				case getUpdates:
+					for (int i = 0; i < JSONresponse.length(); i++) {
+						JSONObject Ocours = JSONresponse.getJSONObject(i);
+					}
 					break;
 				case getUserData:
 					break;
@@ -176,6 +201,9 @@ public class ClaroClient implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

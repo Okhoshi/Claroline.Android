@@ -23,8 +23,6 @@ public class Notification
 	private Date date;
 	private int ressourceType;
 	
-	private String Text;
-	
 	private boolean isOldRessource;
 	private boolean notified;
 	private boolean Updated;
@@ -34,12 +32,11 @@ public class Notification
 	
 	
 	// Constructeur
-	public Notification(Cours Cours, Date date, int ressourceType, String Text)
+	public Notification(Cours Cours, Date date, int ressourceType)
 	{
 		this.Cours=Cours;
 		this.date=date;
 		this.ressourceType=ressourceType;
-		this.Text=Text;
 		this.isOldRessource=false;
 		this.notified=true;
 		this.Updated=true;
@@ -61,7 +58,8 @@ public class Notification
 	}
 	public String getText()
 	{
-		return this.Text;
+		//TODO Write Text for Notif!
+		return "Notification";
 	}
 	public int getId()
 	{
@@ -100,10 +98,6 @@ public class Notification
 	public void setValidTypes(int ressourceType)
 	{
 		this.ressourceType=ressourceType;
-	}
-	public void setText(String Text)
-	{
-		this.Text=Text;
 	}
 	public void setId(int Id)
 	{

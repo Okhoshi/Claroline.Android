@@ -216,6 +216,25 @@ public class CoursRepository extends Repository<Cours> {
 		return CoursConvertCursorToObject(cursor);
 	}
 	
+	public static Cours GetBySysCode(String sysCode) {
+		Cursor cursor = maBDD.query(DBOpenHelper.COURS_TABLE,
+	            new String[] {  DBOpenHelper.COURS_COLUMN_ID ,
+			 				    DBOpenHelper.COURS_COLUMN_ANNNOTIF ,
+		                        DBOpenHelper.COURS_COLUMN_DNLNOTIF ,
+		                        DBOpenHelper.COURS_COLUMN_ISANN ,
+		                        DBOpenHelper.COURS_COLUMN_ISDNL ,
+		                        DBOpenHelper.COURS_COLUMN_ISLOADED ,
+		                        DBOpenHelper.COURS_COLUMN_NOTIFIED ,
+		                        DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL ,
+		                        DBOpenHelper.COURS_COLUMN_SYSCODE ,
+		                        DBOpenHelper.COURS_COLUMN_TITLE ,
+		                        DBOpenHelper.COURS_COLUMN_TITULAR ,
+		                        DBOpenHelper.COURS_COLUMN_UPDATED  }, 
+		        DBOpenHelper.COURS_COLUMN_SYSCODE + "=?",
+		        new String[] { sysCode }, null, null, null);
+		return CoursConvertCursorToObject(cursor);
+	}
+	
 	public static List<Cours> GetAllCours() {
 		// Récupération de la liste des cours
 		Cursor cursor = maBDD.query(DBOpenHelper.COURS_TABLE,

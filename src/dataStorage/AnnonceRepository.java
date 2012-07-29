@@ -39,6 +39,23 @@ public class AnnonceRepository extends Repository<Annonce> {
 		return ConvertCursorToListObject(cursor);
 	}
 
+	public List<Annonce> GetAllAnnoncesByCoursId(int coursId) {
+		// Récupération de la liste des annonces
+		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
+	                new String[] {  DBOpenHelper.ANNONCE_COLUMN_ID ,
+								    DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID ,
+			                        DBOpenHelper.ANNONCE_COLUMN_COURSID ,
+			                        DBOpenHelper.ANNONCE_COLUMN_TITLE ,
+			                        DBOpenHelper.ANNONCE_COLUMN_CONTENT ,
+			                        DBOpenHelper.ANNONCE_COLUMN_NOTIFIED ,
+			                        DBOpenHelper.ANNONCE_COLUMN_UPDATED ,
+			                        DBOpenHelper.ANNONCE_COLUMN_VISIBILITY ,
+			                        DBOpenHelper.ANNONCE_COLUMN_DATE  },
+			        DBOpenHelper.ANNONCE_COLUMN_COURSID + "=?", 
+			        new String[] {String.valueOf(coursId)}, null, null, null);			 
+		return ConvertCursorToListObject(cursor);
+	}
+
 	public Annonce GetById(int id) {
 		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
 				new String[] { DBOpenHelper.ANNONCE_COLUMN_ID,
