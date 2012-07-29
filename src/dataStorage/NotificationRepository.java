@@ -137,8 +137,7 @@ public class NotificationRepository extends Repository<Notification> {
 		Notification notification = new Notification(	
 														CoursRepository.GetByCoursId(c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_COURSID)),
 														new Date(c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_DATE)),
-														c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_RESSOURCETYPE),
-														c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_TEXT)
+														c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_RESSOURCETYPE)
 												 	);
 		
 			   notification.setId(c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_ID));
