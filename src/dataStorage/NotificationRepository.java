@@ -197,12 +197,10 @@ public class NotificationRepository extends Repository<Notification> {
 		Notification notification = new Notification(	
 														CoursRepository.GetByCoursId(c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_COURSID)),
 														new Date(c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_DATE)),
-														c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_RESSOURCETYPE),
-														c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_TEXT)
+														c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_RESSOURCETYPE)
 												 	);
 		
 			   notification.setId(c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_ID));
-			   notification.setRessourceId((c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_RESSOURCEID)));
 			   notification.setOldRessource((c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_ISOLDRESSOURCE) != 0));
 			   notification.setNotified((c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_NOTIFIED) != 0));
 			   notification.setUpdated((c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_UPDATED) != 0));
