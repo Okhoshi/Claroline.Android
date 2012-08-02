@@ -91,9 +91,6 @@ public class searchableActivity extends Activity implements OnClickListener
             // Comportement du bouton "Recherche"
         	onSearchRequested();
             return true;
-        case R.id.menu_settings:
-            // Comportement du bouton "Paramètres"
-            return true;
         case android.R.id.home:
         	// Comportement du bouton qui permet de retourner a l'activite precedente
         	monIntent = new Intent(this,home.class);

@@ -10,7 +10,7 @@
     <!-- TextView's de l'activite about_us --> 
     <string name="about_us_authors">Authors : \n Devos Quentin \n Uytterhoeven Dimitri</string>
     <string name="about_us_version">Version 1.0</string>
-    <string name="about_us_contact_us">Contact us with mail : q.devos@student.uclouvain.be \n dimitri.uytterhoeven@student.uclouvain.be</string>
+    <string name="about_us_contact_us">Contact us with mail : \n q.devos@student.uclouvain.be \n dimitri.uytterhoeven@student.uclouvain.be</string>
     <string name="about_us_remerciements">Thanks to \n Sophie Sluymans \n Laura Delvaux \n Pr K. Mens</string>
     <string name="about_us_mail_quentin">q.devos@student.uclouvain.be</string>
     <string name="about_us_mail_dimitri">dimitri.uytterhoeven@student.uclouvain.be</string>
@@ -53,5 +53,20 @@
     <!-- Search failure message. -->
     <string name="no_results">No results found for \"%s\"</string>
     
+    
+    <!-- Choisir sa color of background -->
+    <string name="skin">Skins</string>
+    <string name="basic_skin">Basic skins</string>
+    <string name="upload_a_skin">Upload a skin</string>
+    <string name="your_skins">My skins</string>
+    <string name="white">White</string>
+    <string name="yellow">Yellow</string>
+    <string name="green">Green</string>
+    <string name="red">Red</string>
+    <string name="black">Black</string>
 
+    
+    <!-- Choisir une image dans la galerie -->
+    <string name="select_a_picture">Choisissez une image</string>
+    
 </resources>

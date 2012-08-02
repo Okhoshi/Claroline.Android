@@ -58,9 +58,6 @@ public class about_us extends Activity implements OnClickListener, OnTouchListen
             // Comportement du bouton "Recherche"
         	onSearchRequested();
             return true;
-        case R.id.menu_settings:
-            // Comportement du bouton "Paramètres"
-            return true;
         case android.R.id.home:
         	// Comportement du bouton qui permet de retourner a l'activite precedente
         	monIntent = new Intent(this,home.class);

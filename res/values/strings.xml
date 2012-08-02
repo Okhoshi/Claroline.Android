@@ -10,7 +10,7 @@
     <!-- TextView's de l'activite about_us --> 
     <string name="about_us_authors">Auteurs : \n Devos Quentin \n Uytterhoeven Dimitri</string>
     <string name="about_us_version">Version 1.0</string>
-    <string name="about_us_contact_us">Contacter nous via mails aux adresses suivantes : q.devos@student.uclouvain.be \n dimitri.uytterhoeven@student.uclouvain.be</string>
+    <string name="about_us_contact_us">Contacter nous via mails aux adresses suivantes :\n q.devos@student.uclouvain.be \n dimitri.uytterhoeven@student.uclouvain.be</string>
     <string name="about_us_remerciements">Remerciements adressés à \n Sophie Sluymans \n Laura Delvaux \n Pr K. Mens</string>
     <string name="about_us_mail_quentin">q.devos@student.uclouvain.be</string>
     <string name="about_us_mail_dimitri">dimitri.uytterhoeven@student.uclouvain.be</string>
@@ -53,5 +53,23 @@
     <!-- Search failure message. -->
     <string name="no_results">Aucun résultat pour \"%s\"</string>
     
+    <!-- Label TextView CoursActivity. -->
+    <string name="label">Nom du Cours ici"</string>
+    
+    
+    <!-- Choisir sa color of background -->
+    <string name="skin">Fonds d\'écran</string>
+    <string name="basic_skin">Couleurs de base</string>
+    <string name="upload_a_skin">Télécharger un fond d\'écran</string>
+    <string name="your_skins">Mes fonds d\'écran</string>
+    <string name="white">Blanc</string>
+    <string name="yellow">Jaune</string>
+    <string name="green">Vert</string>
+    <string name="red">Rouge</string>
+    <string name="black">Noir</string>
+    
+    <!-- Image a choisir dans la galerie -->
+    <string name="select_a_picture">Choisissez une image</string>
+
 
 </resources>

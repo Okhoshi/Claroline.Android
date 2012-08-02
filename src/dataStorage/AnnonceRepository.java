@@ -71,6 +71,7 @@ public class AnnonceRepository extends Repository<Annonce> {
                 new String[] { String.valueOf(id) }, null, null, null);
 		return ConvertCursorToObject(cursor);
 	}
+	
 
 	public void Save(Annonce entite) {
 		ContentValues contentValues = new ContentValues();
@@ -163,4 +164,80 @@ public class AnnonceRepository extends Repository<Annonce> {
 		return annonce;
 	}
 
+	
+
+	public static Annonce GetByCourseId(int id) {
+		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
+				new String[] { DBOpenHelper.ANNONCE_COLUMN_ID,
+                        	   DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,
+                        	   DBOpenHelper.ANNONCE_COLUMN_COURSID,
+                        	   DBOpenHelper.ANNONCE_COLUMN_TITLE,
+                        	   DBOpenHelper.ANNONCE_COLUMN_CONTENT,
+                        	   DBOpenHelper.ANNONCE_COLUMN_NOTIFIED,
+                        	   DBOpenHelper.ANNONCE_COLUMN_UPDATED,
+                        	   DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,
+                        	   DBOpenHelper.ANNONCE_COLUMN_DATE },
+                DBOpenHelper.ANNONCE_COLUMN_COURSID + "=?",
+                new String[] { String.valueOf(id) }, null, null, null);
+		return AnnonceConvertCursorToObject(cursor);
+	}
+	
+	
+	public static Annonce AnnonceConvertCursorToObject(Cursor c) {
+		Annonce annonce = new Annonce(
+										CoursRepository.GetByCoursId(c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_COURSID)), //TODO
+										new Date(c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_DATE)),
+										c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_TITLE), 
+										c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_CONTENT)
+									  );
+		
+		   annonce.setId(c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_ID));
+		   annonce.setRessourceId(c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_RESSOURCEID));
+		   annonce.setNotified((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_NOTIFIED) != 0));
+		   annonce.setUpdated((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_UPDATED) != 0));
+		   annonce.setVisible((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_VISIBILITY) != 0));
+				 
+		return annonce;
+	}
+	
+	public static List<Annonce> GetAllAnnonces() {
+		// Récupération de la liste des annonces
+		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
+	                new String[] {  DBOpenHelper.ANNONCE_COLUMN_ID ,
+								    DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID ,
+			                        DBOpenHelper.ANNONCE_COLUMN_COURSID ,
+			                        DBOpenHelper.ANNONCE_COLUMN_TITLE ,
+			                        DBOpenHelper.ANNONCE_COLUMN_CONTENT ,
+			                        DBOpenHelper.ANNONCE_COLUMN_NOTIFIED ,
+			                        DBOpenHelper.ANNONCE_COLUMN_UPDATED ,
+			                        DBOpenHelper.ANNONCE_COLUMN_VISIBILITY ,
+			                        DBOpenHelper.ANNONCE_COLUMN_DATE  }, null, null, null, null, null);			 
+		return AnnonceConvertCursorToListObject(cursor);
+	}
+	
+	
+	public static List<Annonce> AnnonceConvertCursorToListObject(Cursor c) {
+		List<Annonce> liste = new ArrayList<Annonce>();
+		 
+	    // Si la liste est vide
+		if (c.getCount() == 0){
+			c.close();
+		return liste;}
+			 
+		// position sur le premier item
+		c.moveToFirst();
+			 
+		// Pour chaque item
+		do {
+			 
+			Annonce annonce = AnnonceConvertCursorToObject(c);
+			 
+			liste.add(annonce);
+		   } while (c.moveToNext());
+			 
+		// Fermeture du curseur
+		c.close();
+			 
+		return liste;
+	}
 }

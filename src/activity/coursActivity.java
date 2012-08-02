@@ -1,38 +1,59 @@
 package activity;
 
+import java.lang.reflect.Field;
+
 import mobile.claroline.R;
-import model.Cours;
-import android.annotation.SuppressLint;
+import fragments.detailsAnnonceCoursFragment;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewConfiguration;
 import android.widget.SearchView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
 
-@SuppressLint("ParserError")
+
 public class coursActivity extends Activity 
 {
 	
-	// Permit to update the data of a certain course with this reference
-	private Cours currentCours = home.currentCours;
 	
-	public void onCreate(Bundle savedInstanceState) {
-	    super.onCreate(savedInstanceState);
-	    
-	    setContentView(R.layout.cours_activity);
-	    setActionBar();
-	    setTabs();
-	    
-        
-	}
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.tab_cours_activity);
+		
+		// Need to check if Activity has been switched to landscape mode
+		// If yes, finished and go back to the start Activity
+		if (getResources().getConfiguration().orientation == 
+				Configuration.ORIENTATION_LANDSCAPE) {
+			finish();
+			return;
+		}
 
+		
+		//Intent extras = getIntent();
+		//if (extras != null) {
+		//	String s = extras.getStringExtra("value");
+		//	TextView view = (TextView) findViewById(R.id.grid_item_label);
+		//	view.setText(s);
+		//}
+		
+		setTabs();
+		setActionBar();
+		setOverflowMenu();
+		
+		
+		
+	}
+	
 	
 	
 	@Override
@@ -69,9 +90,6 @@ public class coursActivity extends Activity
         	Intent monIntent1 = new Intent(this,searchableActivity.class);
         	startActivity(monIntent1);
         	//onSearchRequested();
-            return true;
-        case R.id.menu_settings:
-            // Comportement du bouton "Paramètres"
             return true;
         case android.R.id.home:
         	// Comportement du bouton qui permet de retourner a l'activite precedente
@@ -114,5 +132,24 @@ public class coursActivity extends Activity
 		actionBar.setTitle(currentCours.getTitle());	
         actionBar.setDisplayHomeAsUpEnabled(true); 
 	}
-		
+	
+	
+	public void setOverflowMenu()
+    {
+    	try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if(menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ex) {
+            // Ignore
+        }
+
+    }
+	
+	
+	
+	
 }
