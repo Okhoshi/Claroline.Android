@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <PreferenceCategory android:title="@+string/pref_cat_host"
+        				android:key="pref_cat_platform">
+        				
+        <EditTextPreference android:key="platform_host" 
+            				android:title="@+string/pref_platform_host"
+            				android:defaultValue="http://10.0.0.2/claroline"/>
+        <EditTextPreference android:key="platform_module" android:title="@+string/pref_platform_module" android:defaultValue="/module/MOBILE/"/>
+        
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -2,10 +2,8 @@
 <resources>
 
     <!-- Nom de l'application --> 
-    <string name="hello">Hello World, home!</string>
-    <string name="app_name">ClarolineMobile</string>
-
-    
+   <string name="app_name">ClarolineMobile</string>
+ 
     
     <!-- TextView's de l'activite about_us --> 
     <string name="about_us_authors">Auteurs : \n Devos Quentin \n Uytterhoeven Dimitri</string>
@@ -70,6 +68,12 @@
     
     <!-- Image a choisir dans la galerie -->
     <string name="select_a_picture">Choisissez une image</string>
+    
+    <!-- Settings -->
+    <string name="pref_cat_host">Platform Settings</string>
+    <string name="pref_platform_host">Platform Adress</string>
+    <string name="pref_platform_module">Path to module</string>
+    <string name="pref_cat_background">Background Settings</string>
 
 
 </resources>

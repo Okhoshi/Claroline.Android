@@ -292,26 +292,23 @@ public class home extends Activity
 		       
 		        
 		        
-		        SubMenu settings = menu.addSubMenu(getString(R.string.menu_settings));
+		        //SubMenu settings = menu.addSubMenu(getString(R.string.menu_settings));
 		        //SubMenu skins = settings.addSubMenu(getString(R.string.skin));
-		        SubMenu background_skin = settings.addSubMenu(getString(R.string.basic_skin));
-		        settings.add(1,R.string.upload_a_skin,1,getString(R.string.upload_a_skin));
-		        SubMenu your_skins = settings.addSubMenu(getString(R.string.your_skins));
+		        //SubMenu background_skin = settings.addSubMenu(getString(R.string.basic_skin));
+		        //settings.add(1,R.string.upload_a_skin,1,getString(R.string.upload_a_skin));
+		        //SubMenu your_skins = settings.addSubMenu(getString(R.string.your_skins));
 
 		        
-		        background_skin.add(0,R.id.white,0,getString(R.string.white));
-		        background_skin.add(0,R.id.yellow,1,getString(R.string.yellow));
-		        background_skin.add(0,R.id.green,2,getString(R.string.green));
-		        background_skin.add(0,R.id.red,3,getString(R.string.red));
-		        background_skin.add(0,R.id.black,4,getString(R.string.black));
+		        //background_skin.add(0,R.id.white,0,getString(R.string.white));
+		        //background_skin.add(0,R.id.yellow,1,getString(R.string.yellow));
+		        //background_skin.add(0,R.id.green,2,getString(R.string.green));
+		        //background_skin.add(0,R.id.red,3,getString(R.string.red));
+		        //background_skin.add(0,R.id.black,4,getString(R.string.black));
 
 		        // Permettre un upload ou un choose de skin serait pas mal
 		        
 		        return true;
 		    }
-		    
-		    
-		    
 		    
 		    @Override
 		    public boolean onOptionsItemSelected(MenuItem item) {
@@ -338,6 +335,10 @@ public class home extends Activity
 		        	//Intent monIntent1 = new Intent(this,searchableActivity.class);
 		        	//startActivity(monIntent1);
 		            return true;
+		        case R.id.menu_settings:
+		        	Intent settings_intent = new Intent(this, Preference.class);
+		        	startActivity(settings_intent);
+		        	return true;
 		        case R.id.white:
 		        	LinearLayout linLay = (LinearLayout) findViewById(R.id.frags);
 		        	linLay.setBackgroundColor(Color.WHITE);

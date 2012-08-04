@@ -90,6 +90,10 @@ public class coursActivity extends Activity
         	startActivity(monIntent1);
         	//onSearchRequested();
             return true;
+        case R.id.menu_settings:
+        	Intent settings_intent = new Intent(this, Preference.class);
+        	startActivity(settings_intent);
+        	return true;
         case android.R.id.home:
         	// Comportement du bouton qui permet de retourner a l'activite precedente
         	monIntent = new Intent(this,home.class);
