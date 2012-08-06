@@ -336,7 +336,7 @@ public class home extends Activity
 		        	//startActivity(monIntent1);
 		            return true;
 		        case R.id.menu_settings:
-		        	Intent settings_intent = new Intent(this, Preference.class);
+		        	Intent settings_intent = new Intent(this, Settings.class);
 		        	startActivity(settings_intent);
 		        	return true;
 		        case R.id.white:

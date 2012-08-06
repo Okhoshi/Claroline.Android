@@ -59,7 +59,7 @@ public class about_us extends Activity implements OnClickListener, OnTouchListen
         	onSearchRequested();
             return true;
         case R.id.menu_settings:
-        	Intent settings_intent = new Intent(this, Preference.class);
+        	Intent settings_intent = new Intent(this, Settings.class);
         	startActivity(settings_intent);
         	return true;
         case android.R.id.home:

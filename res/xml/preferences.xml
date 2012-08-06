@@ -6,8 +6,10 @@
         				
         <EditTextPreference android:key="platform_host" 
             				android:title="@+string/pref_platform_host"
-            				android:defaultValue="http://10.0.0.2/claroline"/>
-        <EditTextPreference android:key="platform_module" android:title="@+string/pref_platform_module" android:defaultValue="/module/MOBILE/"/>
+            				android:defaultValue="http://10.0.0.2/claroline" android:summary="http://10.0.0.2/claroline"/>
+        <EditTextPreference android:key="platform_module"
+            				android:title="@+string/pref_platform_module"
+            				android:defaultValue="/module/MOBILE/" android:summary="/module/MOBILE/"/>
         
     </PreferenceCategory>
 

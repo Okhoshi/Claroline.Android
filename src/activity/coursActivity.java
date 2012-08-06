@@ -91,7 +91,7 @@ public class coursActivity extends Activity
         	//onSearchRequested();
             return true;
         case R.id.menu_settings:
-        	Intent settings_intent = new Intent(this, Preference.class);
+        	Intent settings_intent = new Intent(this, Settings.class);
         	startActivity(settings_intent);
         	return true;
         case android.R.id.home:
