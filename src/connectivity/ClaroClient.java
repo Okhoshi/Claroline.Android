@@ -33,6 +33,8 @@ import org.json.JSONObject;
 
 import dataStorage.CoursRepository;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -42,55 +44,56 @@ import android.util.Log;
  *
  */
 public class ClaroClient implements Runnable {
-	
+
 	private HttpClient client;
 	private HttpContext httpContext;
-	
+
 	private CookieStore cookies;
 	private Date cookieCreation;
-	
+
 	private AllowedOperations op = AllowedOperations.authenticate;
 	private Cours reqCours = null;
 	private int resID = -1;
-	
+
 	public ClaroClient(){
-		
+
 		cookieCreation = new Date(0);
 		cookies = new BasicCookieStore();
-		
+
 		httpContext = new BasicHttpContext();
 		httpContext.setAttribute(ClientContext.COOKIE_STORE, cookies);
 		client = new DefaultHttpClient();
 	}
-	
+
 	public HttpPost getClient(boolean forAuth, CallbackArgs args) throws UnsupportedEncodingException{
 		HttpPost postMessage;
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(null);
 		if(forAuth){
-			postMessage = new HttpPost("http://10.0.2.2/devcampus/claroline/auth/login.php");
+			postMessage = new HttpPost(pref.getString("platform_host", "") + "/claroline/auth/login.php");
 		} else {
-			postMessage = new HttpPost("http://10.0.2.2/devcampus/module/MOBILE/");
+			postMessage = new HttpPost(pref.getString("platform_host", "") + pref.getString("platform_module", ""));
 		}
 		postMessage.addHeader("Content-Type", "application/x-www-form-urlencoded");
 		postMessage.setEntity(args.entity);
 		HttpClientParams.setRedirecting(postMessage.getParams(), false);
 		return postMessage;
 	}
-	
+
 	public ClaroClient makeOperation(AllowedOperations op, Cours reqCours, int resID){
 		this.op = op;
 		this.reqCours = reqCours;
 		this.resID = resID;
 		return this;
 	}
-	
+
 	public ClaroClient makeOperation(AllowedOperations op){
 		return this.makeOperation(op, null, -1);
 	}
-	
+
 	public ClaroClient makeOperation(AllowedOperations op, Cours reqCours){
 		return this.makeOperation(op, reqCours, -1);
 	}
-	
+
 	public void run(){
 		CallbackArgs args;
 		switch(op){
@@ -121,7 +124,7 @@ public class ClaroClient implements Runnable {
 			break;
 		}
 	}
-	
+
 	public void Execute(CallbackArgs args){
 		if(!isExpired()){
 			if(!getSessionCookie(new CallbackArgs("admin", "elegie24", AllowedOperations.authenticate))){
@@ -129,9 +132,9 @@ public class ClaroClient implements Runnable {
 				return;
 			}
 		}
-		
+
 		setProgressIndicator(true);
-		
+
 		if(args.operation == AllowedOperations.updateCompleteCourse){
 			Execute(new CallbackArgs(args.cidReq,AllowedOperations.getCourseToolList));
 			Execute(new CallbackArgs(args.cidReq, AllowedOperations.getDocList));
@@ -142,7 +145,7 @@ public class ClaroClient implements Runnable {
 				HttpResponse response = client.execute(getClient(false, args), httpContext);
 				Log.i(this.toString(), "Status:[" + response.getStatusLine().toString() + "]");
 				JSONArray JSONresponse = new JSONArray(readResponse(response));
-				
+
 				switch(args.operation){
 				case getCourseList:
 					for (int i = 0; i < JSONresponse.length(); i++) {
@@ -187,7 +190,7 @@ public class ClaroClient implements Runnable {
 				default:
 					break;
 				}
-				
+
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -208,22 +211,22 @@ public class ClaroClient implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		
+
 		setProgressIndicator(false);
 	}
-	
+
 	public void invalidateClient(){
 		cookieCreation = new Date(0);
 		cookies.clear();
 	}
-	
+
 	public boolean isExpired(){
 		GregorianCalendar temp = new GregorianCalendar();
 		temp.setTime(cookieCreation);
 		temp.add(Calendar.HOUR_OF_DAY, 2);
 		return cookieCreation.after(temp.getTime());
 	}
-	
+
 	public boolean getSessionCookie(CallbackArgs args){
 		setProgressIndicator(true);
 		try {
@@ -249,23 +252,23 @@ public class ClaroClient implements Runnable {
 		setProgressIndicator(false);
 		return false;
 	}
-	
+
 	private void setProgressIndicator(boolean visible){
-		
+
 	}
-	
+
 	private String readResponse(HttpResponse response) throws IllegalStateException, IOException{
 		InputStream is = response.getEntity().getContent();
 		BufferedInputStream bis = new BufferedInputStream(is);
 		ByteArrayBuffer baf = new ByteArrayBuffer(10000000);
 
-        int current = 0;
-        while((current = bis.read()) != -1){
-            baf.append((byte)current);
-        }
+		int current = 0;
+		while((current = bis.read()) != -1){
+			baf.append((byte)current);
+		}
 
-        /* Convert the Bytes read to a String. */
-        return new String(baf.toByteArray());
+		/* Convert the Bytes read to a String. */
+		return new String(baf.toByteArray());
 	}
-	
+
 }
