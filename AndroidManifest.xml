@@ -12,7 +12,7 @@
     <application
         android:icon="@drawable/logo_claroline"
         android:label="@string/app_name" 
-        >
+        android:name="app.GlobalApplication">
         
         <activity
             android:name="activity.home"
