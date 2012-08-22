@@ -33,6 +33,7 @@ import org.json.JSONObject;
 
 import dataStorage.CoursRepository;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
@@ -54,6 +55,7 @@ public class ClaroClient implements Runnable {
 	private AllowedOperations op = AllowedOperations.authenticate;
 	private Cours reqCours = null;
 	private int resID = -1;
+	private Context context = null;
 
 	public ClaroClient(){
 
@@ -67,7 +69,7 @@ public class ClaroClient implements Runnable {
 
 	public HttpPost getClient(boolean forAuth, CallbackArgs args) throws UnsupportedEncodingException{
 		HttpPost postMessage;
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(null);
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
 		if(forAuth){
 			postMessage = new HttpPost(pref.getString("platform_host", "") + "/claroline/auth/login.php");
 		} else {
@@ -79,26 +81,28 @@ public class ClaroClient implements Runnable {
 		return postMessage;
 	}
 
-	public ClaroClient makeOperation(AllowedOperations op, Cours reqCours, int resID){
+	public ClaroClient makeOperation(Context context, AllowedOperations op, Cours reqCours, int resID){
 		this.op = op;
 		this.reqCours = reqCours;
 		this.resID = resID;
+		this.context = context;
 		return this;
 	}
 
-	public ClaroClient makeOperation(AllowedOperations op){
-		return this.makeOperation(op, null, -1);
+	public ClaroClient makeOperation(Context context, AllowedOperations op){
+		return this.makeOperation(context, op, null, -1);
 	}
 
-	public ClaroClient makeOperation(AllowedOperations op, Cours reqCours){
-		return this.makeOperation(op, reqCours, -1);
+	public ClaroClient makeOperation(Context context, AllowedOperations op, Cours reqCours){
+		return this.makeOperation(context, op, reqCours, -1);
 	}
 
 	public void run(){
 		CallbackArgs args;
 		switch(op){
 		case authenticate:
-			args = new CallbackArgs("admin", "elegie24", AllowedOperations.authenticate);
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+			args = new CallbackArgs(pref.getString("user_login", ""), pref.getString("user_password", ""), AllowedOperations.authenticate);
 			getSessionCookie(args);
 			break;
 		case getSingleAnnounce:
@@ -126,93 +130,93 @@ public class ClaroClient implements Runnable {
 	}
 
 	public void Execute(CallbackArgs args){
-		if(!isExpired()){
-			if(!getSessionCookie(new CallbackArgs("admin", "elegie24", AllowedOperations.authenticate))){
-				Log.e(this.toString(), "Authentication Failed!");
-				return;
-			}
-		}
-
-		setProgressIndicator(true);
-
-		if(args.operation == AllowedOperations.updateCompleteCourse){
-			Execute(new CallbackArgs(args.cidReq,AllowedOperations.getCourseToolList));
-			Execute(new CallbackArgs(args.cidReq, AllowedOperations.getDocList));
-			Execute(new CallbackArgs(args.cidReq, AllowedOperations.getAnnounceList));
-			//TODO update the "isLoaded" property of args.cidReq
-		} else {
-			try {
-				HttpResponse response = client.execute(getClient(false, args), httpContext);
-				Log.i(this.toString(), "Status:[" + response.getStatusLine().toString() + "]");
-				JSONArray JSONresponse = new JSONArray(readResponse(response));
-
-				switch(args.operation){
-				case getCourseList:
-					for (int i = 0; i < JSONresponse.length(); i++) {
-						JSONObject object = JSONresponse.getJSONObject(i);
-						JSONCours.fromJSONObject(object).saveInDB();
-					}
-					break;
-				case getCourseToolList:
-					for(int i = 0; i < JSONresponse.length(); i++){
-						JSONObject object = JSONresponse.getJSONObject(i);
-						JSONCours cours = (JSONCours) CoursRepository.GetBySysCode(object.optString("sysCode"));
-						cours.setAnn(object.optBoolean("isAnn"));
-						cours.setAnnNotif(object.optBoolean("annNotif"));
-						cours.setDnL(object.optBoolean("isDnL"));
-						cours.setDnlNotif(object.optBoolean("dnlNotif"));
-						cours.saveInDB();
-					}
-					break;
-				case getAnnounceList:
-					for(int i = 0; i < JSONresponse.length(); i++){
-						JSONObject object = JSONresponse.getJSONObject(i);
-						JSONAnnonce.fromJSONObject(object).saveInDB();
-					}
-					break;
-				case getDocList:
-					for(int i = 0; i < JSONresponse.length(); i++){
-						JSONObject object = JSONresponse.getJSONObject(i);
-						JSONDocument.fromJSONObject(object).saveInDB();
-					}
-					break;
-				case getSingleAnnounce:
-					JSONObject object = JSONresponse.getJSONObject(0);
-					JSONAnnonce.fromJSONObject(object).saveInDB();
-					break;
-				case getUpdates:
-					for (int i = 0; i < JSONresponse.length(); i++) {
-						JSONObject Ocours = JSONresponse.getJSONObject(i);
-					}
-					break;
-				case getUserData:
-					break;
-				default:
-					break;
+			if(!isExpired()){
+				SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+				if(!getSessionCookie(new CallbackArgs(pref.getString("user_login", ""), pref.getString("user_password", ""), AllowedOperations.authenticate))){
+					Log.e(this.toString(), "Authentication Failed!");
+					return;
 				}
-
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
-		}
 
-		setProgressIndicator(false);
+			setProgressIndicator(true);
+
+			if(args.operation == AllowedOperations.updateCompleteCourse){
+				Execute(new CallbackArgs(args.cidReq,AllowedOperations.getCourseToolList));
+				Execute(new CallbackArgs(args.cidReq, AllowedOperations.getDocList));
+				Execute(new CallbackArgs(args.cidReq, AllowedOperations.getAnnounceList));
+				//TODO update the "isLoaded" property of args.cidReq
+			} else {
+				try {
+					HttpResponse response = client.execute(getClient(false, args), httpContext);
+					Log.i(this.toString(), "Status:[" + response.getStatusLine().toString() + "]");
+					JSONArray JSONresponse = new JSONArray(readResponse(response));
+
+					switch(args.operation){
+					case getCourseList:
+						for (int i = 0; i < JSONresponse.length(); i++) {
+							JSONObject object = JSONresponse.getJSONObject(i);
+							JSONCours.fromJSONObject(object).saveInDB();
+						}
+						break;
+					case getCourseToolList:
+						for(int i = 0; i < JSONresponse.length(); i++){
+							JSONObject object = JSONresponse.getJSONObject(i);
+							JSONCours cours = (JSONCours) CoursRepository.GetBySysCode(object.optString("sysCode"));
+							cours.setAnn(object.optBoolean("isAnn"));
+							cours.setAnnNotif(object.optBoolean("annNotif"));
+							cours.setDnL(object.optBoolean("isDnL"));
+							cours.setDnlNotif(object.optBoolean("dnlNotif"));
+							cours.saveInDB();
+						}
+						break;
+					case getAnnounceList:
+						for(int i = 0; i < JSONresponse.length(); i++){
+							JSONObject object = JSONresponse.getJSONObject(i);
+							JSONAnnonce.fromJSONObject(object).saveInDB();
+						}
+						break;
+					case getDocList:
+						for(int i = 0; i < JSONresponse.length(); i++){
+							JSONObject object = JSONresponse.getJSONObject(i);
+							JSONDocument.fromJSONObject(object).saveInDB();
+						}
+						break;
+					case getSingleAnnounce:
+						JSONObject object = JSONresponse.getJSONObject(0);
+						JSONAnnonce.fromJSONObject(object).saveInDB();
+						break;
+					case getUpdates:
+						for (int i = 0; i < JSONresponse.length(); i++) {
+							JSONObject Ocours = JSONresponse.getJSONObject(i);
+						}
+						break;
+					case getUserData:
+						break;
+					default:
+						break;
+					}
+
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			setProgressIndicator(false);
 	}
 
 	public void invalidateClient(){
@@ -230,6 +234,7 @@ public class ClaroClient implements Runnable {
 	public boolean getSessionCookie(CallbackArgs args){
 		setProgressIndicator(true);
 		try {
+			Log.i("WEB", getClient(true, args).getURI().getPath());
 			HttpResponse response = client.execute(getClient(true, args), httpContext);
 			boolean empty =  readResponse(response).isEmpty();
 			if(empty){

@@ -42,6 +42,8 @@ public class CallbackArgs {
 		case getUserData:
 			args.add(new BasicNameValuePair("Method",operation.name()));
 			break;
+		default:
+			break;
 		}
 		
 		try {
