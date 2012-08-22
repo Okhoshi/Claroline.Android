@@ -58,6 +58,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+import app.GlobalApplication;
 
 
 public class home extends Activity
@@ -314,9 +315,7 @@ public class home extends Activity
 			return true;
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
-			ClaroClient cli = new ClaroClient();
-			Thread thread = new Thread(cli.makeOperation(AllowedOperations.getCourseList));
-			thread.start();
+			new Thread(GlobalApplication.getClient().makeOperation(this, AllowedOperations.getUserData)).start();
 			return true;
 		case R.id.menu_search:
 			// Comportement du bouton "Recherche"
