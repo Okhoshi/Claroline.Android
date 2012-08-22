@@ -40,9 +40,11 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	}
 	
 	 public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		 	if (!key.equals("user_password")){
 	            Preference Pref = findPreference(key);
 	            // Set summary to be the user-description for the selected value
 	            Pref.setSummary(sharedPreferences.getString(key, ""));
+		 	}
 	    }
 
 }
