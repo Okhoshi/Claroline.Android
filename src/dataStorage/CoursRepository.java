@@ -19,6 +19,8 @@ import android.database.Cursor;
 
 public class CoursRepository extends Repository<Cours> {
 
+	private static final String REPO_TYPE = "Cours";
+
 	public CoursRepository(Context context) {
 		sqLiteOpenHelper = new DBOpenHelper(context, null);
 	}
@@ -57,7 +59,14 @@ public class CoursRepository extends Repository<Cours> {
 		                        DBOpenHelper.COURS_COLUMN_UPDATED  }, 
 		        DBOpenHelper.COURS_COLUMN_ID + "=?",
 		        new String[] { String.valueOf(id) }, null, null, null);
-		return ConvertCursorToObject(cursor);
+		Cours cours;
+		if(cursor.moveToFirst()){
+			cours = CoursConvertCursorToObject(cursor);
+		} else {
+			cours = null;
+		}
+		cursor.close();
+		return cours;
 	}
 
 	public void Save(Cours entite) {
@@ -76,7 +85,7 @@ public class CoursRepository extends Repository<Cours> {
 		contentValues.put(DBOpenHelper.COURS_COLUMN_UPDATED, entite.isUpdated());
 			 
 		maBDD.insert(DBOpenHelper.COURS_TABLE, null, contentValues);
-		
+		RefreshRepository(REPO_TYPE);
 	}
 
 	public void Update(Cours entite) {
@@ -97,6 +106,7 @@ public class CoursRepository extends Repository<Cours> {
 		maBDD.update(DBOpenHelper.COURS_TABLE, contentValues,	
 			     DBOpenHelper.COURS_COLUMN_ID + "=?",
 			     new String[] { String.valueOf(entite.getId()) });
+		RefreshRepository(REPO_TYPE);
 		
 	}
 
@@ -104,26 +114,16 @@ public class CoursRepository extends Repository<Cours> {
 		maBDD.delete(DBOpenHelper.COURS_TABLE,
 		         DBOpenHelper.COURS_COLUMN_ID + "=?",
 		         new String[] { String.valueOf(id) });
+		RefreshRepository(REPO_TYPE);
 	}
 
 	public List<Cours> ConvertCursorToListObject(Cursor c) {
 		List<Cours> liste = new ArrayList<Cours>();
-		 
-	    // Si la liste est vide
-		if (c.getCount() == 0){
-			c.close();
-		return liste;}
-			 
-		// position sur le premier item
-		c.moveToFirst();
-			 
 		// Pour chaque item
-		do {
-			 
-			Cours cours = ConvertCursorToObject(c);
-			 
+		while(c.moveToNext()){
+			Cours cours = ConvertCursorToObject(c);	 
 			liste.add(cours);
-		   } while (c.moveToNext());
+		}
 			 
 		// Fermeture du curseur
 		c.close();
@@ -159,10 +159,12 @@ public class CoursRepository extends Repository<Cours> {
 	}
 
 	public Cours ConvertCursorToOneObject(Cursor c) {
-		c.moveToFirst();
-		 
-		Cours cours = ConvertCursorToObject(c);
-			 
+		Cours cours;
+		if(c.moveToFirst()){
+			cours = CoursConvertCursorToObject(c);
+		} else {
+			cours = null;
+		}
 		c.close();
 		return cours;
 	}
@@ -213,7 +215,14 @@ public class CoursRepository extends Repository<Cours> {
 		                        DBOpenHelper.COURS_COLUMN_UPDATED  }, 
 		        DBOpenHelper.COURS_COLUMN_ID + "=?",
 		        new String[] { String.valueOf(id) }, null, null, null);
-		return CoursConvertCursorToObject(cursor);
+		Cours cours;
+		if(cursor.moveToFirst()){
+			cours = CoursConvertCursorToObject(cursor);
+		} else {
+			cours = null;
+		}
+		cursor.close();
+		return cours;
 	}
 	
 	public static Cours GetBySysCode(String sysCode) {
@@ -232,7 +241,11 @@ public class CoursRepository extends Repository<Cours> {
 		                        DBOpenHelper.COURS_COLUMN_UPDATED  }, 
 		        DBOpenHelper.COURS_COLUMN_SYSCODE + "=?",
 		        new String[] { sysCode }, null, null, null);
-		return CoursConvertCursorToObject(cursor);
+		if(cursor.moveToFirst()){
+			return CoursConvertCursorToObject(cursor);
+		} else {
+			return null;
+		}
 	}
 	
 	public static List<Cours> GetAllCours() {
@@ -255,23 +268,13 @@ public class CoursRepository extends Repository<Cours> {
 	
 	public static List<Cours> CoursConvertCursorToListObject(Cursor c) {
 		List<Cours> liste = new ArrayList<Cours>();
-		 
-	    // Si la liste est vide
-		if (c.getCount() == 0){
-			c.close();
-		return liste;}
-			 
-		// position sur le premier item
-		c.moveToFirst();
-			 
+		
 		// Pour chaque item
-		do {
-			 
+		while (c.moveToNext()){
 			Cours cours = CoursRepository.CoursConvertCursorToObject(c);
-			 
 			liste.add(cours);
-		   } while (c.moveToNext());
-			 
+		}
+
 		// Fermeture du curseur
 		c.close();
 			 
