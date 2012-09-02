@@ -3,6 +3,8 @@ package fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import dataStorage.CoursRepository;
+
 import mobile.claroline.R;
 import model.Cours;
 import model.CoursAdapter;
@@ -13,6 +15,8 @@ import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -41,22 +45,32 @@ public class mainCoursFragment extends ListFragment
 		int layoutID = R.layout.cours_view;
 		
 		// Normalement ca ! -->
-		//List<Cours> Liste = CoursRepository.GetAllCours();
-		// Test avec ca -->
+		List<Cours> Liste = CoursRepository.GetAllCours();
+		// Test avec ca 
 
-		
+		/*
 		final List<Cours> Liste= new ArrayList<Cours>();
 		Cours Cours1= new Cours(null, null, null, null,"ives.smeers@uclouvain.be" , null, "Economie d'entreprise", "Ives Smeers");
 		Cours Cours2= new Cours(null, null, null, null, "peter.vanroy@uclouvain.be", null, "Informatique : Oz", "Peter Van Roy");
 		Cours Cours3= new Cours(null, null, null, null, "francois.remacle@uclouvain.be", null, "Mathématique Q3", "Francois Remacle");
 		Liste.add(Cours1);
 		Liste.add(Cours2);
-		Liste.add(Cours3);
+		Liste.add(Cours3);*/
 		CoursAdapter adapter = new CoursAdapter(getActivity().getApplicationContext(),
 				layoutID, Liste);
 		setListAdapter(adapter);
 		registerForContextMenu(getListView());
 	}
+	
+	public Handler refreshList = new Handler(){
+		public void handleMessage(Message mess){
+			int layoutID = R.layout.cours_view;
+			List<Cours> Liste = CoursRepository.GetAllCours();
+			CoursAdapter adapter = new CoursAdapter(getActivity().getApplicationContext(),
+					layoutID, Liste);
+			setListAdapter(adapter);
+		}
+	};
 
 	
 	/**
