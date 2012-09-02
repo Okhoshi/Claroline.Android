@@ -1,7 +1,12 @@
 package app;
 
+import mobile.claroline.R;
 import connectivity.ClaroClient;
+import dataStorage.CoursRepository;
 import android.app.Application;
+import android.app.ProgressDialog;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class GlobalApplication extends Application {
 
@@ -17,11 +22,42 @@ public class GlobalApplication extends Application {
 		return client;
 	}
 	
+	public static SharedPreferences getPreferences(){
+		return PreferenceManager.getDefaultSharedPreferences(singleton.getApplicationContext());
+	}
+	
+	/*
+	private static ProgressDialog progress;
+	
+	public static void setNewProgressDialog(Context context){
+		progress = new ProgressDialog(context);
+		progress.setIndeterminate(true);
+	}
+	
+	public static void setProgressIndicator(boolean visible){
+		setProgressIndicator(visible, singleton.getResources().getString(R.string.loading_default));
+	}
+
+	public static void setProgressIndicator(boolean visible, String message){
+		if(visible){
+			progress.setMessage(message);
+			if(!progress.isShowing()){
+				progress.show();
+			}
+		} else {
+			if(progress.isShowing()){
+				progress.dismiss();
+			}
+			progress.setMessage("");	
+		}
+	}*/
+	
 	@Override
 	public void onCreate(){
 		super.onCreate();
 		singleton = this;
 		client = new ClaroClient();
+		new CoursRepository(getApplicationContext());
 	}
 
 }
