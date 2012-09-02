@@ -18,6 +18,7 @@ import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -60,6 +61,20 @@ public class home extends Activity
 	public static String annonce_id = "annonce_id";
 	public static String documents_id = "documents_id";
 	static TextView view ;
+	
+	protected ProgressDialog mProgressDialog;
+	private Context mContext;
+	enum ErrorStatus {
+	    NO_ERROR, ERROR_1, ERROR_2
+	};
+	private ErrorStatus status;
+	 
+	public static final int MSG_ERR = 0;
+	public static final int MSG_CNF = 1;
+	public static final int MSG_IND = 2;
+	 
+	public static final String TAG = "ProgressBarActivity";
+	
 	
 	public static Handler handler = new Handler(){
 		public void handleMessage(Message mess){
@@ -346,7 +361,11 @@ public class home extends Activity
 			return true;
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
-			new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getCourseList)).start();
+			computeProgressDialog();
+			Thread thread1 = new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getCourseList));
+			thread1.start();
+			if(!thread1.isAlive())
+			{eraseProgressDialog();};
 			return true;
 		case R.id.menu_search:
 			// Comportement du bouton "Recherche"
@@ -475,4 +494,14 @@ public class home extends Activity
 		Cours item = (Cours) l.getAdapter().getItem(position);
 		currentCours=item;
 	}
+	
+	private void computeProgressDialog() {
+	    mProgressDialog = ProgressDialog.show(this, "Please wait",
+	            getString(R.string.loading_default), true);
+	 
+	}
+	private void eraseProgressDialog() {
+		mProgressDialog.dismiss();
+	}
 }
+	
