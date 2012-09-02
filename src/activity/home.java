@@ -77,7 +77,8 @@ public class home extends Activity
 		public void onRepositoryRefresh(String type) {
 			if(type == "Cours"){
 				mainCoursFragment list = (mainCoursFragment) getFragmentManager().findFragmentById(R.id.list_frag);
-				list.refreshList.sendEmptyMessage(0);
+				if(list != null)
+					list.refreshList.sendEmptyMessage(0);
 			}
 		}
 	};
