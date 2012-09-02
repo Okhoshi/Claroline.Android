@@ -3,20 +3,15 @@ package activity;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 import connectivity.AllowedOperations;
-import connectivity.ClaroClient;
-
+import dataStorage.IRepository.RepositoryRefreshListener;
+import dataStorage.*;
+import fragments.*;
 import mobile.claroline.R;
-import mobile.claroline.R.drawable;
-import mobile.claroline.R.string;
 import model.Cours;
-import model.CoursAdapter;
 import fragments.detailsAnnonceCoursFragment;
 import fragments.detailsDocumentsCoursFragment;
-import fragments.mainCoursFragment;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -34,25 +29,14 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Gallery;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -76,6 +60,27 @@ public class home extends Activity
 	public static String annonce_id = "annonce_id";
 	public static String documents_id = "documents_id";
 	static TextView view ;
+	
+	public static Handler handler = new Handler(){
+		public void handleMessage(Message mess){
+			switch (mess.what) {
+			case 0:
+				Toast.makeText(GlobalApplication.getInstance().getApplicationContext(), mess.obj.toString(), 5).show();
+				break;
+			default:
+				break;
+			}
+		}
+	};
+	
+	private RepositoryRefreshListener listener = new RepositoryRefreshListener(){
+		public void onRepositoryRefresh(String type) {
+			if(type == "Cours"){
+				mainCoursFragment list = (mainCoursFragment) getFragmentManager().findFragmentById(R.id.list_frag);
+				list.refreshList.sendEmptyMessage(0);
+			}
+		}
+	};
 
 	/**
 	 * 
@@ -90,7 +95,6 @@ public class home extends Activity
 	String imgPath;
 
 
-
 	/** 
 	 * 
 	 * Called when the activity is first created. 
@@ -101,8 +105,9 @@ public class home extends Activity
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
+		Repository.Open();
+		
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.main);
 		setActionBar();
 		if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -110,6 +115,31 @@ public class home extends Activity
 		setOverflowMenu();
 		view = (TextView) findViewById(R.id.grid_item_label);
 	}
+	
+	@Override
+	public void onRestart(){
+		Repository.Open();
+		super.onRestart();
+	}
+	
+	@Override
+	public void onResume(){
+		Repository.addOnRepositoryRefreshListener(listener);
+		super.onResume();
+	}
+	
+	@Override
+	public void onPause(){
+		Repository.remOnRepositoryRefreshListener(listener);
+		super.onPause();
+	}
+	
+	@Override
+	public void onStop(){
+		Repository.Close();
+		super.onStop();
+	}
+	
 
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -315,7 +345,7 @@ public class home extends Activity
 			return true;
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
-			new Thread(GlobalApplication.getClient().makeOperation(this, AllowedOperations.getUserData)).start();
+			new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getCourseList)).start();
 			return true;
 		case R.id.menu_search:
 			// Comportement du bouton "Recherche"
