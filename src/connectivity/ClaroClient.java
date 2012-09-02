@@ -35,9 +35,12 @@ import dataStorage.CoursRepository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.util.Log;
+import app.GlobalApplication;
 
 
 /**
@@ -55,7 +58,7 @@ public class ClaroClient implements Runnable {
 	private AllowedOperations op = AllowedOperations.authenticate;
 	private Cours reqCours = null;
 	private int resID = -1;
-	private Context context = null;
+	private Handler handler = null;
 
 	public ClaroClient(){
 
@@ -69,7 +72,7 @@ public class ClaroClient implements Runnable {
 
 	public HttpPost getClient(boolean forAuth, CallbackArgs args) throws UnsupportedEncodingException{
 		HttpPost postMessage;
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(GlobalApplication.getInstance().getApplicationContext());
 		if(forAuth){
 			postMessage = new HttpPost(pref.getString("platform_host", "") + "/claroline/auth/login.php");
 		} else {
@@ -81,27 +84,27 @@ public class ClaroClient implements Runnable {
 		return postMessage;
 	}
 
-	public ClaroClient makeOperation(Context context, AllowedOperations op, Cours reqCours, int resID){
+	public ClaroClient makeOperation(Handler handler, AllowedOperations op, Cours reqCours, int resID){
 		this.op = op;
 		this.reqCours = reqCours;
 		this.resID = resID;
-		this.context = context;
+		this.handler = handler;
 		return this;
 	}
 
-	public ClaroClient makeOperation(Context context, AllowedOperations op){
-		return this.makeOperation(context, op, null, -1);
+	public ClaroClient makeOperation(Handler handler, AllowedOperations op){
+		return this.makeOperation(handler, op, null, -1);
 	}
 
-	public ClaroClient makeOperation(Context context, AllowedOperations op, Cours reqCours){
-		return this.makeOperation(context, op, reqCours, -1);
+	public ClaroClient makeOperation(Handler handler, AllowedOperations op, Cours reqCours){
+		return this.makeOperation(handler, op, reqCours, -1);
 	}
 
 	public void run(){
 		CallbackArgs args;
 		switch(op){
 		case authenticate:
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(GlobalApplication.getInstance().getApplicationContext());
 			args = new CallbackArgs(pref.getString("user_login", ""), pref.getString("user_password", ""), AllowedOperations.authenticate);
 			getSessionCookie(args);
 			break;
@@ -127,18 +130,22 @@ public class ClaroClient implements Runnable {
 			Execute(args);
 			break;
 		}
+		//GlobalApplication.setProgressIndicator(false);
+		Message msg = new Message();
+		msg.what = 0;
+		msg.obj = "Hello ! It's OK";
+		handler.sendMessage(msg);
+		return;
 	}
 
 	public void Execute(CallbackArgs args){
 			if(!isExpired()){
-				SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+				SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(GlobalApplication.getInstance().getApplicationContext());
 				if(!getSessionCookie(new CallbackArgs(pref.getString("user_login", ""), pref.getString("user_password", ""), AllowedOperations.authenticate))){
 					Log.e(this.toString(), "Authentication Failed!");
 					return;
 				}
 			}
-
-			setProgressIndicator(true);
 
 			if(args.operation == AllowedOperations.updateCompleteCourse){
 				Execute(new CallbackArgs(args.cidReq,AllowedOperations.getCourseToolList));
@@ -216,7 +223,6 @@ public class ClaroClient implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			setProgressIndicator(false);
 	}
 
 	public void invalidateClient(){
@@ -232,7 +238,6 @@ public class ClaroClient implements Runnable {
 	}
 
 	public boolean getSessionCookie(CallbackArgs args){
-		setProgressIndicator(true);
 		try {
 			Log.i("WEB", getClient(true, args).getURI().getPath());
 			HttpResponse response = client.execute(getClient(true, args), httpContext);
@@ -240,7 +245,6 @@ public class ClaroClient implements Runnable {
 			if(empty){
 				cookieCreation = new Date();
 			}
-			setProgressIndicator(false);
 			return empty;
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -254,12 +258,7 @@ public class ClaroClient implements Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		setProgressIndicator(false);
 		return false;
-	}
-
-	private void setProgressIndicator(boolean visible){
-
 	}
 
 	private String readResponse(HttpResponse response) throws IllegalStateException, IOException{
