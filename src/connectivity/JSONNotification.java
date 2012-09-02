@@ -6,6 +6,8 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
+import app.GlobalApplication;
+
 import dataStorage.CoursRepository;
 import dataStorage.NotificationRepository;
 
@@ -19,7 +21,7 @@ public class JSONNotification extends Notification {
 	}
 	
 	public int saveInDb(){
-		NotificationRepository repo = new NotificationRepository(null);
+		NotificationRepository repo = new NotificationRepository(GlobalApplication.getInstance().getApplicationContext());
 		
 		if(repo.GetById(this.getId()).equals(this)){
 			repo.Update(this);

@@ -193,7 +193,7 @@ public class Cours
 	@Override
 	public boolean equals(Object o){
 		if (o instanceof Cours){
-			return (((Cours) o).getSysCode() == this.getSysCode() && ((Cours) o).getId() == this.getId());
+			return (((Cours) o).getSysCode().equals(this.getSysCode()) && ((Cours) o).getId() == this.getId());
 		}
 		return false;
 	}

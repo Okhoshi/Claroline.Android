@@ -9,6 +9,8 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
+import app.GlobalApplication;
+
 import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
 
@@ -33,7 +35,7 @@ public class JSONAnnonce extends Annonce {
 	}
 	
 	public int saveInDB(){
-		AnnonceRepository repo = new AnnonceRepository(null);
+		AnnonceRepository repo = new AnnonceRepository(GlobalApplication.getInstance().getApplicationContext());
 		if(repo.GetById(this.getId()).equals(this)){
 			repo.Update(this);
 		} else {

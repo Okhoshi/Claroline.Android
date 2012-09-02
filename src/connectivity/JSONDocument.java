@@ -6,6 +6,8 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
+import app.GlobalApplication;
+
 import dataStorage.CoursRepository;
 import dataStorage.DocumentsRepository;
 
@@ -20,7 +22,7 @@ public class JSONDocument extends Documents {
 	}
 	
 	public int saveInDB(){
-		DocumentsRepository repo = new DocumentsRepository(null);
+		DocumentsRepository repo = new DocumentsRepository(GlobalApplication.getInstance().getApplicationContext());
 		
 		if(repo.GetById(this.getId()).equals(this)){
 			repo.Update(this);

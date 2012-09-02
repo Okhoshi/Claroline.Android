@@ -155,7 +155,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 				   ANNONCE_COLUMN_NOTIFIED  	+ " INTEGER NOT NULL, " +
 				   ANNONCE_COLUMN_UPDATED  		+ " INTEGER NOT NULL, " +
 				   ANNONCE_COLUMN_VISIBILITY 	+ " INTEGER NOT NULL, " +
-				   ANNONCE_COLUMN_DATE  		+ " INTEGER NOT NULL, " +
+				   ANNONCE_COLUMN_DATE  		+ " INTEGER NOT NULL" +
 			");";
 
 	private static final String CREATE_TABLE_COURS =
@@ -171,7 +171,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 				   COURS_COLUMN_SYSCODE 		+ " TEXT NOT NULL," +
 				   COURS_COLUMN_TITLE 			+ " TEXT NOT NULL," +
 				   COURS_COLUMN_TITULAR 		+ " TEXT NOT NULL," +
-				   COURS_COLUMN_UPDATED 		+ " INTEGER NOT NULL," +
+				   COURS_COLUMN_UPDATED 		+ " INTEGER NOT NULL" +
 			")";
 		
 	private static final String CREATE_TABLE_DOCUMENTS =
@@ -188,7 +188,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 				   DOCUMENTS_COLUMN_SIZE 		+" TEXT NOT NULL," +   // on met INTEGER meme si c'est de type DOUBLE ?
 				   DOCUMENTS_COLUMN_UPDATED 	+" INTEGER NOT NULL," +
 				   DOCUMENTS_COLUMN_URL 		+" TEXT NOT NULL," +
-				   DOCUMENTS_COLUMN_VISIBILITY 	+" INTEGER NOT NULL," +
+				   DOCUMENTS_COLUMN_VISIBILITY 	+" INTEGER NOT NULL" +
 			");";
 			
 	private static final String CREATE_TABLE_NOTIFICATION =
@@ -201,13 +201,13 @@ public class DBOpenHelper extends SQLiteOpenHelper
 				   NOTIFICATION_COLUMN_RESSOURCETYPE 	+ " INTEGER NOT NULL," +
 				   NOTIFICATION_COLUMN_DATE 			+ " INTEGER NOT NULL," +
 				   NOTIFICATION_COLUMN_TEXT 			+ " TEXT NOT NULL," +
-				   NOTIFICATION_COLUMN_UPDATED 			+ " INTEGER NOT NULL," +
+				   NOTIFICATION_COLUMN_UPDATED 			+ " INTEGER NOT NULL" +
 			");";
 	
 	private static final String CREATE_TABLE_IMAGE =
 			" CREATE TABLE " + IMAGE_TABLE +
 			" (" + IMAGE_COLUMN_ID 				+ " INTEGER PRIMARY KEY AUTOINCREMENT," +
-				   IMAGE_COLUMN_PATH 			+" TEXT NOT NULL," +
+				   IMAGE_COLUMN_PATH 			+" TEXT NOT NULL" +
 		     ");";
 	
 	

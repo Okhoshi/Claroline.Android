@@ -13,6 +13,8 @@ import dataStorage.AnnonceRepository;
 import dataStorage.DocumentsRepository;
 import dataStorage.NotificationRepository;
 
+import app.GlobalApplication;
+
 import model.Annonce;
 import model.Cours;
 import model.Notification;
@@ -43,8 +45,8 @@ public class JSONCours extends Cours {
 	}
 	
 	public int saveInDB(){
-		CoursRepository repo = new CoursRepository(null);
-		if(CoursRepository.GetByCoursId(this.getId()).equals(this)){
+		CoursRepository repo = new CoursRepository(GlobalApplication.getInstance().getApplicationContext());
+		if(((Cours)this).equals(CoursRepository.GetByCoursId(this.getId()))){
 			repo.Update(this);
 		} else {
 			repo.Save(this);
