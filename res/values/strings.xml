@@ -70,14 +70,14 @@
     <string name="select_a_picture">Choisissez une image</string>
     
     <!-- Settings -->
-    <string name="pref_cat_host">Platform Settings</string>
-    <string name="pref_platform_host">Platform Adress</string>
-    <string name="pref_platform_module">Path to module</string>
-    <string name="pref_cat_background">Background Settings</string>
-    <string name="pref_cat_user">User Settings</string>
-    <string name="pref_user_login">Username</string>
-    <string name="pref_user_password">Password</string>
-    <string name="loading_default">Chargement en cours</string>
+    <string name="pref_cat_host">Paramètres de la plateforme</string>
+    <string name="pref_platform_host">Adresse de la plateforme</string>
+    <string name="pref_platform_module">Chemin du module</string>
+    <string name="pref_cat_background">Paramètres de fond d'écran</string>
+    <string name="pref_cat_user">Paramètres de l'utilisateur</string>
+    <string name="pref_user_login">Nom d'utilisateur</string>
+    <string name="pref_user_password">Mot de passe</string>
+    <string name="loading_default">Chargement en cours...</string>
 
 
 </resources>

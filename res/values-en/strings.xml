@@ -69,4 +69,14 @@
     <!-- Choisir une image dans la galerie -->
     <string name="select_a_picture">Choisissez une image</string>
     
+    <!-- Settings -->
+    <string name="pref_cat_host">Platform Settings</string>
+    <string name="pref_platform_host">Platform Adress</string>
+    <string name="pref_platform_module">Path to module</string>
+    <string name="pref_cat_background">Background Settings</string>
+    <string name="pref_cat_user">User Settings</string>
+    <string name="pref_user_login">Username</string>
+    <string name="pref_user_password">Password</string>
+    <string name="loading_default">Loading...</string>
+    
 </resources>
