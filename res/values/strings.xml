@@ -73,11 +73,11 @@
     <string name="pref_cat_host">Paramètres de la plateforme</string>
     <string name="pref_platform_host">Adresse de la plateforme</string>
     <string name="pref_platform_module">Chemin du module</string>
-    <string name="pref_cat_background">Paramètres de fond d'écran</string>
-    <string name="pref_cat_user">Paramètres de l'utilisateur</string>
-    <string name="pref_user_login">Nom d'utilisateur</string>
+    <string name="pref_cat_background">Paramètres de fond d\'écran</string>
+    <string name="pref_cat_user">Paramètres de l\'utilisateur</string>
+    <string name="pref_user_login">Nom d\'utilisateur</string>
     <string name="pref_user_password">Mot de passe</string>
-    <string name="loading_default">Chargement en cours...</string>
+    <string name="loading_default">Chargement en cours&#8230;</string>
 
 
 </resources>
