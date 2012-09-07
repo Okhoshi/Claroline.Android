@@ -12,17 +12,16 @@ import android.database.Cursor;
 
 // Classe générique : le T n'est pas défini , nous pouvons le définir par la suite
 public interface IRepository<T>
-{
-	public List<T> GetAll();
-	public T GetById(int id);
+{	
+	public List<T> getAll();
+	public T getById(int id);
 
-	public void Save(T entite);
-	public void Update(T entite);
-	public void Delete(int id);
+	public void save(T entite);
+	public void update(T entite);
+	public void delete(int id);
 
-	public List<T> ConvertCursorToListObject(Cursor c);
-	public T ConvertCursorToObject(Cursor c);
-	public T ConvertCursorToOneObject(Cursor c);
+	public List<T> convertCursorToListObject(Cursor c);
+	public T convertCursorToObject(Cursor c);
 	
 	public interface RepositoryRefreshListener {
 		public abstract void onRepositoryRefresh(String type);

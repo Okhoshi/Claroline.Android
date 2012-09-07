@@ -6,6 +6,8 @@
  */
 package dataStorage;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,11 +23,39 @@ public class CoursRepository extends Repository<Cours> {
 
 	private static final String REPO_TYPE = "Cours";
 
-	public CoursRepository(Context context) {
-		sqLiteOpenHelper = new DBOpenHelper(context, null);
+	public List<Cours> getAll(){
+		return GetAll();
 	}
 
-	public List<Cours> GetAll() {
+	public Cours getById(int id){
+		return GetById(id);
+	}
+
+	public void save(Cours entite) {
+		Save(entite);
+	}
+
+	public void update(Cours entite) {
+		Update(entite);
+	}
+
+	public void delete(int id) {
+		Delete(id);
+	}
+
+	public List<Cours> convertCursorToListObject(Cursor c) {
+		return ConvertCursorToListObject(c);
+	}
+
+	public Cours convertCursorToObject(Cursor c) {
+		return ConvertCursorToObject(c);
+	}
+	
+	/*
+	 * Static methods of CoursRepository 
+	 */
+
+	public static List<Cours> GetAll() {
 		// Récupération de la liste des cours
 		Cursor cursor = maBDD.query(DBOpenHelper.COURS_TABLE,
 		            new String[] {  DBOpenHelper.COURS_COLUMN_ID ,
@@ -42,8 +72,8 @@ public class CoursRepository extends Repository<Cours> {
 			                        DBOpenHelper.COURS_COLUMN_UPDATED  }, null, null, null, null, null);			 
 		return ConvertCursorToListObject(cursor);
 	}
-
-	public Cours GetById(int id) {
+	
+	public static Cours GetById(int id) {
 		Cursor cursor = maBDD.query(DBOpenHelper.COURS_TABLE,
 	            new String[] {  DBOpenHelper.COURS_COLUMN_ID ,
 			 				    DBOpenHelper.COURS_COLUMN_ANNNOTIF ,
@@ -61,7 +91,7 @@ public class CoursRepository extends Repository<Cours> {
 		        new String[] { String.valueOf(id) }, null, null, null);
 		Cours cours;
 		if(cursor.moveToFirst()){
-			cours = CoursConvertCursorToObject(cursor);
+			cours = ConvertCursorToObject(cursor);
 		} else {
 			cours = null;
 		}
@@ -69,7 +99,7 @@ public class CoursRepository extends Repository<Cours> {
 		return cours;
 	}
 
-	public void Save(Cours entite) {
+	public static void Save(Cours entite) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ANNNOTIF,entite.isAnnNotif());
@@ -87,8 +117,8 @@ public class CoursRepository extends Repository<Cours> {
 		maBDD.insert(DBOpenHelper.COURS_TABLE, null, contentValues);
 		RefreshRepository(REPO_TYPE);
 	}
-
-	public void Update(Cours entite) {
+	
+	public static void Update(Cours entite) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ANNNOTIF,entite.isAnnNotif());
@@ -110,14 +140,14 @@ public class CoursRepository extends Repository<Cours> {
 		
 	}
 
-	public void Delete(int id) {
+	public static void Delete(int id) {
 		maBDD.delete(DBOpenHelper.COURS_TABLE,
 		         DBOpenHelper.COURS_COLUMN_ID + "=?",
 		         new String[] { String.valueOf(id) });
 		RefreshRepository(REPO_TYPE);
 	}
 
-	public List<Cours> ConvertCursorToListObject(Cursor c) {
+	public static List<Cours> ConvertCursorToListObject(Cursor c) {
 		List<Cours> liste = new ArrayList<Cours>();
 		// Pour chaque item
 		while(c.moveToNext()){
@@ -131,21 +161,23 @@ public class CoursRepository extends Repository<Cours> {
 		return liste;
 	}
 
-	public  Cours ConvertCursorToObject(Cursor c) {
-		Cours cours = new Cours(
-									new Date(c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED)),
-									null, 
-									null, 
-									null,
-									c.getString(DBOpenHelper.COURS_NUM_COLUMN_OFFICIALEMAIL),
-									c.getString(DBOpenHelper.COURS_NUM_COLUMN_SYSCODE),
-									c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITLE),
-									c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITULAR)
-									// TODO
-									//c.getAnnonces(DBOpenHelper.COURS_NUM_COLUMN_ANNONCE)
-									//c.getDocuments(DBOpenHelper.COURS_NUM_COLUMN_DOCUMENTS)
-									//c.getNotifications(DBOpenHelper.COURS_NUM_COLUMN_NOTIFICATION)
-							   );
+	public static Cours ConvertCursorToObject(Cursor c) {
+		Cours cours;
+		try {
+			cours = new Cours(
+										(new SimpleDateFormat("yyyy-MM-dd")).parse(c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED)),
+										null, 
+										null, 
+										null,
+										c.getString(DBOpenHelper.COURS_NUM_COLUMN_OFFICIALEMAIL),
+										c.getString(DBOpenHelper.COURS_NUM_COLUMN_SYSCODE),
+										c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITLE),
+										c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITULAR)
+										// TODO
+										//c.getAnnonces(DBOpenHelper.COURS_NUM_COLUMN_ANNONCE)
+										//c.getDocuments(DBOpenHelper.COURS_NUM_COLUMN_DOCUMENTS)
+										//c.getNotifications(DBOpenHelper.COURS_NUM_COLUMN_NOTIFICATION)
+								   );
 		
 		   cours.setId(c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ID));
 		   cours.setAnnNotif((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ANNNOTIF) != 0));
@@ -156,73 +188,10 @@ public class CoursRepository extends Repository<Cours> {
 		   cours.setUpdated((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_UPDATED)   != 0));
 				 
 		   return cours;
-	}
-
-	public Cours ConvertCursorToOneObject(Cursor c) {
-		Cours cours;
-		if(c.moveToFirst()){
-			cours = CoursConvertCursorToObject(c);
-		} else {
-			cours = null;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
 		}
-		c.close();
-		return cours;
-	}
-	
-	// On definit deux methodes static qui font exactement la meme chose que deux autres mais dans
-	// le but de pouvoir les utiliser dans d'autres classes Repository
-	
-	public static Cours CoursConvertCursorToObject(Cursor c) {
-		Cours cours = new Cours(
-									new Date(c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED)),
-									null, 
-									null, 
-									null,
-									c.getString(DBOpenHelper.COURS_NUM_COLUMN_OFFICIALEMAIL),
-									c.getString(DBOpenHelper.COURS_NUM_COLUMN_SYSCODE),
-									c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITLE),
-									c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITULAR)
-									// TODO
-									//c.getAnnonces(DBOpenHelper.COURS_NUM_COLUMN_ANNONCE)
-									//c.getDocuments(DBOpenHelper.COURS_NUM_COLUMN_DOCUMENTS)
-									//c.getNotifications(DBOpenHelper.COURS_NUM_COLUMN_NOTIFICATION)
-							   );
-		
-		   cours.setId(c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ID));
-		   cours.setAnnNotif((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ANNNOTIF) != 0));
-		   cours.setDnlNotif((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_DNLNOTIF) != 0));
-		   cours.setAnn((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ISANN) 		   != 0));
-		   cours.setDnL((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ISDNL) 		   != 0));
-		   cours.setNotified((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_NOTIFIED) != 0));
-		   cours.setUpdated((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_UPDATED)   != 0));
-				 
-		   return cours;
-	}
-	
-	public static Cours GetByCoursId(int id) {
-		Cursor cursor = maBDD.query(DBOpenHelper.COURS_TABLE,
-	            new String[] {  DBOpenHelper.COURS_COLUMN_ID ,
-			 				    DBOpenHelper.COURS_COLUMN_ANNNOTIF ,
-		                        DBOpenHelper.COURS_COLUMN_DNLNOTIF ,
-		                        DBOpenHelper.COURS_COLUMN_ISANN ,
-		                        DBOpenHelper.COURS_COLUMN_ISDNL ,
-		                        DBOpenHelper.COURS_COLUMN_ISLOADED ,
-		                        DBOpenHelper.COURS_COLUMN_NOTIFIED ,
-		                        DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL ,
-		                        DBOpenHelper.COURS_COLUMN_SYSCODE ,
-		                        DBOpenHelper.COURS_COLUMN_TITLE ,
-		                        DBOpenHelper.COURS_COLUMN_TITULAR ,
-		                        DBOpenHelper.COURS_COLUMN_UPDATED  }, 
-		        DBOpenHelper.COURS_COLUMN_ID + "=?",
-		        new String[] { String.valueOf(id) }, null, null, null);
-		Cours cours;
-		if(cursor.moveToFirst()){
-			cours = CoursConvertCursorToObject(cursor);
-		} else {
-			cours = null;
-		}
-		cursor.close();
-		return cours;
 	}
 	
 	public static Cours GetBySysCode(String sysCode) {
@@ -241,11 +210,14 @@ public class CoursRepository extends Repository<Cours> {
 		                        DBOpenHelper.COURS_COLUMN_UPDATED  }, 
 		        DBOpenHelper.COURS_COLUMN_SYSCODE + "=?",
 		        new String[] { sysCode }, null, null, null);
+		Cours cours;
 		if(cursor.moveToFirst()){
-			return CoursConvertCursorToObject(cursor);
+			cours = ConvertCursorToObject(cursor);
 		} else {
-			return null;
+			cours = null;
 		}
+		cursor.close();
+		return cours;
 	}
 	
 	public static List<Cours> GetAllCours() {
@@ -263,21 +235,6 @@ public class CoursRepository extends Repository<Cours> {
 			                        DBOpenHelper.COURS_COLUMN_TITLE ,
 			                        DBOpenHelper.COURS_COLUMN_TITULAR ,
 			                        DBOpenHelper.COURS_COLUMN_UPDATED  }, null, null, null, null, null);			 
-		return CoursRepository.CoursConvertCursorToListObject(cursor);
-	}
-	
-	public static List<Cours> CoursConvertCursorToListObject(Cursor c) {
-		List<Cours> liste = new ArrayList<Cours>();
-		
-		// Pour chaque item
-		while (c.moveToNext()){
-			Cours cours = CoursRepository.CoursConvertCursorToObject(c);
-			liste.add(cours);
-		}
-
-		// Fermeture du curseur
-		c.close();
-			 
-		return liste;
+		return ConvertCursorToListObject(cursor);
 	}
 }
