@@ -159,4 +159,12 @@ public class Documents
 		{
 			this.visibility=visibility;
 		}
+		
+		@Override
+		public boolean equals(Object o){
+			if(o instanceof Documents){
+				return ((Documents) o).getPath().equals(path) && ((Documents) o).getCours().equals(Cours);
+			}
+			return false;
+		}
 }

@@ -51,13 +51,9 @@ public class AnnonceAdapter extends BaseAdapter {
 		return listeAnnonce.get(position).getId();
 	}
 	
-	
 	public View getView(final int position, View view, ViewGroup viewGroup) 
 	{
 		return null;
 		//TODO
 	}
-		
-	
-	
 }

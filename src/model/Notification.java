@@ -119,4 +119,12 @@ public class Notification
 	{
 		this.Updated=Updated;
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof Notification){
+			return ((Notification) o).getRessourceType() == ressourceType && ((Notification) o).ressourceId == ressourceId && ((Notification) o).getCours().equals(Cours);
+		}
+		return false;
+	}
 }

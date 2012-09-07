@@ -120,6 +120,12 @@ public class Annonce
 		this.visibility=visibility;
 	}
 	
-	
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof Annonce){
+			return ((Annonce) o).getCours().equals(Cours) && ((Annonce) o).getRessourceId() == ressourceId;
+		}
+		return false;
+	}
 
 }
