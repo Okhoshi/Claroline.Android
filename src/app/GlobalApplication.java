@@ -1,12 +1,10 @@
 package app;
 
-import mobile.claroline.R;
-import connectivity.ClaroClient;
-import dataStorage.CoursRepository;
 import android.app.Application;
-import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import connectivity.ClaroClient;
+import dataStorage.Repository;
 
 public class GlobalApplication extends Application {
 
@@ -57,7 +55,7 @@ public class GlobalApplication extends Application {
 		super.onCreate();
 		singleton = this;
 		client = new ClaroClient();
-		new CoursRepository(getApplicationContext());
+		Repository.SetOpenHelper(getApplicationContext());
 	}
 
 }

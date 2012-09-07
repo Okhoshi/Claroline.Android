@@ -8,7 +8,7 @@ package dataStorage;
 
 import java.util.ArrayList;
 
-import dataStorage.IRepository.RepositoryRefreshListener;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -29,6 +29,14 @@ public abstract class Repository<T> implements IRepository<T>
 	public Repository() 
 	{
 		
+	}
+	
+	/**
+	 * @return 
+	 * 
+	 */
+	public static void SetOpenHelper(Context context){
+		sqLiteOpenHelper = new DBOpenHelper(context, null);
 	}
 
 	/**
