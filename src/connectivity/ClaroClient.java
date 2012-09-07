@@ -11,7 +11,6 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 
 import model.Cours;
 
@@ -31,16 +30,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import dataStorage.CoursRepository;
-
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.text.format.DateUtils;
 import android.util.Log;
 import app.GlobalApplication;
+import dataStorage.CoursRepository;
 
 
 /**
@@ -194,7 +190,7 @@ public class ClaroClient implements Runnable {
 						break;
 					case getUpdates:
 						for (int i = 0; i < JSONresponse.length(); i++) {
-							JSONObject Ocours = JSONresponse.getJSONObject(i);
+							//JSONObject Ocours = JSONresponse.getJSONObject(i);
 						}
 						break;
 					case getUserData:
