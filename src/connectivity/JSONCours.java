@@ -41,15 +41,13 @@ public class JSONCours extends Cours {
 			String officialEmail, String sysCode, String title, String titular) {
 		super(isLoaded, Annonces, Documents, Notifications, officialEmail,
 				sysCode, title, titular);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public int saveInDB(){
-		CoursRepository repo = new CoursRepository(GlobalApplication.getInstance().getApplicationContext());
-		if(((Cours)this).equals(CoursRepository.GetByCoursId(this.getId()))){
-			repo.Update(this);
+		if(((Cours)this).equals(CoursRepository.GetById(this.getId()))){
+			CoursRepository.Update(this);
 		} else {
-			repo.Save(this);
+			CoursRepository.Save(this);
 		}
 		return this.getId();
 	}

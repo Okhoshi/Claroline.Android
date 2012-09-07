@@ -17,16 +17,13 @@ public class JSONNotification extends Notification {
 
 	public JSONNotification(model.Cours Cours, Date date, int ressourceType) {
 		super(Cours, date, ressourceType);
-		// TODO Auto-generated constructor stub
 	}
 	
-	public int saveInDb(){
-		NotificationRepository repo = new NotificationRepository(GlobalApplication.getInstance().getApplicationContext());
-		
-		if(repo.GetById(this.getId()).equals(this)){
-			repo.Update(this);
+	public int saveInDb(){		
+		if(this.equals(NotificationRepository.GetById(this.getId()))){
+			NotificationRepository.Update(this);
 		} else {
-			repo.Save(this);
+			NotificationRepository.Save(this);
 		}
 		
 		return this.getId();

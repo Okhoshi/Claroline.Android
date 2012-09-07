@@ -35,11 +35,10 @@ public class JSONAnnonce extends Annonce {
 	}
 	
 	public int saveInDB(){
-		AnnonceRepository repo = new AnnonceRepository(GlobalApplication.getInstance().getApplicationContext());
-		if(repo.GetById(this.getId()).equals(this)){
-			repo.Update(this);
+		if(this.equals(AnnonceRepository.GetById(this.getId()))){
+			AnnonceRepository.Update(this);
 		} else {
-			repo.Save(this);
+			AnnonceRepository.Save(this);
 		}
 		return this.getId();
 	}

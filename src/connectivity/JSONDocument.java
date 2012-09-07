@@ -22,12 +22,10 @@ public class JSONDocument extends Documents {
 	}
 	
 	public int saveInDB(){
-		DocumentsRepository repo = new DocumentsRepository(GlobalApplication.getInstance().getApplicationContext());
-		
-		if(repo.GetById(this.getId()).equals(this)){
-			repo.Update(this);
+		if(this.equals(DocumentsRepository.GetById(this.getId()))){
+			DocumentsRepository.Update(this);
 		} else {
-			repo.Save(this);
+			DocumentsRepository.Save(this);
 		}
 		
 		return this.getId();
