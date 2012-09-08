@@ -9,7 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
-public class ImageRepository extends Repository<Image> {
+public abstract class ImageRepository extends Repository<Image> {
 
 	public ImageRepository(Context context) {
 		sqLiteOpenHelper = new DBOpenHelper(context, null);

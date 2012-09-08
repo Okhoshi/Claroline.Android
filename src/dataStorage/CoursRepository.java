@@ -106,7 +106,7 @@ public class CoursRepository extends Repository<Cours> {
 		contentValues.put(DBOpenHelper.COURS_COLUMN_DNLNOTIF, entite.isDnlNotif()); 
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ISANN,entite.isAnn());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ISDNL, entite.isDnL());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,entite.getIsLoaded().toString());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,(new SimpleDateFormat("E MMM dd y HH:mm:ss")).format(entite.getIsLoaded()));
 		contentValues.put(DBOpenHelper.COURS_COLUMN_NOTIFIED, entite.isNotified());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL,entite.getOfficialEmail());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_SYSCODE, entite.getSysCode());
@@ -125,7 +125,7 @@ public class CoursRepository extends Repository<Cours> {
 		contentValues.put(DBOpenHelper.COURS_COLUMN_DNLNOTIF, entite.isDnlNotif()); 
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ISANN,entite.isAnn());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ISDNL, entite.isDnL());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,entite.getIsLoaded().toString());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,(new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getIsLoaded()));
 		contentValues.put(DBOpenHelper.COURS_COLUMN_NOTIFIED, entite.isNotified());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL,entite.getOfficialEmail());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_SYSCODE, entite.getSysCode());
@@ -165,7 +165,7 @@ public class CoursRepository extends Repository<Cours> {
 		Cours cours;
 		try {
 			cours = new Cours(
-										(new SimpleDateFormat("yyyy-MM-dd")).parse(c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED)),
+										(new SimpleDateFormat("E MMM dd y HH:mm:ss")).parse(c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED)),
 										null, 
 										null, 
 										null,

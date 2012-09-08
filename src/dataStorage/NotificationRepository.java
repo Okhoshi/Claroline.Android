@@ -21,6 +21,8 @@ import android.database.Cursor;
 
 public class NotificationRepository extends Repository<Notification> {
 
+	private static final String REPO_TYPE = "Notification";
+
 	public NotificationRepository(Context context) {
 		sqLiteOpenHelper = new DBOpenHelper(context, null);
 	}
@@ -104,11 +106,12 @@ public class NotificationRepository extends Repository<Notification> {
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ISOLDRESSOURCE,entite.isOldRessource());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_NOTIFIED, entite.isNotified());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); 
-		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, entite.getDate().toString());
+		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate()));
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_TEXT,entite.getText());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_UPDATED, entite.isUpdated());
 
 		maBDD.insert(DBOpenHelper.NOTIFICATION_TABLE, null, contentValues);
+		RefreshRepository(REPO_TYPE);
 	}
 
 	public static void Update(Notification entite) {
@@ -119,19 +122,21 @@ public class NotificationRepository extends Repository<Notification> {
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ISOLDRESSOURCE,entite.isOldRessource());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_NOTIFIED, entite.isNotified());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); 
-		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, entite.getDate().toString());
+		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate()));
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_TEXT,entite.getText());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_UPDATED, entite.isUpdated());
 
 		maBDD.update(DBOpenHelper.NOTIFICATION_TABLE, contentValues,	
 				DBOpenHelper.NOTIFICATION_COLUMN_ID + "=?",
 				new String[] { String.valueOf(entite.getId()) });
+		RefreshRepository(REPO_TYPE);
 	}
 
 	public static void Delete(int id) {
 		maBDD.delete(DBOpenHelper.NOTIFICATION_TABLE,
 				DBOpenHelper.NOTIFICATION_COLUMN_ID + "=?",
-				new String[] { String.valueOf(id) });	
+				new String[] { String.valueOf(id) });
+		RefreshRepository(REPO_TYPE);
 	}
 
 	public static List<Notification> ConvertCursorToListObject(Cursor c) {
@@ -162,7 +167,7 @@ public class NotificationRepository extends Repository<Notification> {
 		try {
 			notification = new Notification(	
 					CoursRepository.GetById(c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_COURSID)),
-					(new SimpleDateFormat("yyyy-MM-dd")).parse(c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_DATE)),
+					(new SimpleDateFormat("E MMM y dd HH:mm:ss")).parse(c.getString(DBOpenHelper.NOTIFICATION_NUM_COLUMN_DATE)),
 					c.getInt(DBOpenHelper.NOTIFICATION_NUM_COLUMN_RESSOURCETYPE)
 					);
 

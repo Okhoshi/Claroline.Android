@@ -21,6 +21,8 @@ import android.database.Cursor;
 
 public class DocumentsRepository extends Repository<Documents> {
 
+	private static final String REPO_TYPE = "Documents";
+
 	public DocumentsRepository(Context context) {
 		sqLiteOpenHelper = new DBOpenHelper(context, null);
 	}
@@ -108,7 +110,7 @@ public class DocumentsRepository extends Repository<Documents> {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_COURSID,entite.getCours().getId());
-		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, entite.getDate().toString()); 
+		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate())); 
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION,entite.getDescription());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION, entite.getExtension());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER,entite.isFolder());
@@ -121,13 +123,14 @@ public class DocumentsRepository extends Repository<Documents> {
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY, entite.isVisible());
 			 
 		maBDD.insert(DBOpenHelper.DOCUMENTS_TABLE, null, contentValues);
+		RefreshRepository(REPO_TYPE);
 	}
 
 	public static void Update(Documents entite) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_COURSID,entite.getCours().getId());
-		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, entite.getDate().toString()); 
+		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate())); 
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION,entite.getDescription());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION, entite.getExtension());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER,entite.isFolder());
@@ -142,13 +145,14 @@ public class DocumentsRepository extends Repository<Documents> {
 		maBDD.update(DBOpenHelper.DOCUMENTS_TABLE, contentValues,	
 			     DBOpenHelper.DOCUMENTS_COLUMN_ID + "=?",
 			     new String[] { String.valueOf(entite.getId()) });
-		
+		RefreshRepository(REPO_TYPE);
 	}
 
 	public static void Delete(int id) {
 		maBDD.delete(DBOpenHelper.DOCUMENTS_TABLE,
 			         DBOpenHelper.DOCUMENTS_COLUMN_ID + "=?",
-			         new String[] { String.valueOf(id) });		
+			         new String[] { String.valueOf(id) });
+		RefreshRepository(REPO_TYPE);
 	}
 
 	public static List<Documents> ConvertCursorToListObject(Cursor c) {
@@ -175,7 +179,7 @@ public class DocumentsRepository extends Repository<Documents> {
 		try {
 			documents = new Documents(
 													CoursRepository.GetById(c.getInt(DBOpenHelper.DOCUMENTS_NUM_COLUMN_COURSID)),
-													(new SimpleDateFormat("yyyy-MM-dd")).parse(c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_DATE)),
+													(new SimpleDateFormat("E MMM y dd HH:mm:ss")).parse(c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_DATE)),
 													c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_DESCRIPTION),
 													c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_EXTENSION),
 													c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_NAME),

@@ -22,6 +22,8 @@ import android.database.Cursor;
 
 public class AnnonceRepository extends Repository<Annonce> {
 
+	private static final String REPO_TYPE = "Annonce";
+
 	public AnnonceRepository(Context context) {
 		sqLiteOpenHelper = new DBOpenHelper(context, null);
 	}
@@ -121,40 +123,41 @@ public class AnnonceRepository extends Repository<Annonce> {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,entite.getRessourceId());
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours().getId()); // Changeons nous le type du return du getCours() en String à la place de Cours
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours().getId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_TITLE,entite.getTitle());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_CONTENT, entite.getContent());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_NOTIFIED,entite.isNotified());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_UPDATED, entite.isUpdated());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,entite.isVisible());
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, entite.getDate().toString());
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate()));
 
 		maBDD.insert(DBOpenHelper.ANNONCE_TABLE, null, contentValues);
-
+		RefreshRepository(REPO_TYPE);
 	}
 
 	public static void Update(Annonce entite) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,entite.getRessourceId());
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours().getId()); // Changeons nous le type du return du getCours() en String à la place de Cours
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours().getId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_TITLE,entite.getTitle());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_CONTENT, entite.getContent());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_NOTIFIED,entite.isNotified());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_UPDATED, entite.isUpdated());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,entite.isVisible());
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, entite.getDate().toString());
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate()));
 
 		maBDD.update(DBOpenHelper.ANNONCE_TABLE, contentValues,	
 				DBOpenHelper.ANNONCE_COLUMN_ID + "=?",
 				new String[] { String.valueOf(entite.getId()) });
-
+		RefreshRepository(REPO_TYPE);
 	}
 
 	public static void Delete(int id) {
 		maBDD.delete(DBOpenHelper.ANNONCE_TABLE,
 				DBOpenHelper.ANNONCE_COLUMN_ID + "=?",
 				new String[] { String.valueOf(id) });
+		RefreshRepository(REPO_TYPE);
 	}
 
 	public static List<Annonce> ConvertCursorToListObject(Cursor c) {
@@ -182,7 +185,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 		try {
 			annonce = new Annonce(
 					CoursRepository.GetById(c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_COURSID)),
-					(new SimpleDateFormat("yyyy-MM-dd")).parse(c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_DATE)),
+					(new SimpleDateFormat("E MMM y dd HH:mm:ss")).parse(c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_DATE)),
 					c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_TITLE), 
 					c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_CONTENT)
 					);
