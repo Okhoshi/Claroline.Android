@@ -54,9 +54,9 @@ public class JSONCours extends Cours {
 	
 	public static JSONCours fromJSONObject(JSONObject object){
 		JSONCours cours = new JSONCours(new Date(),
-							 (new AnnonceRepository(null)).GetAllAnnoncesByCoursId(object.optInt("cours_id")), 
-							 (new DocumentsRepository(null)).GetDocListByCoursId(object.optInt("cours_id")), 
-							 (new NotificationRepository(null)).GetAllNotificationsByCoursId(object.optInt("cours_id")), 
+							 AnnonceRepository.GetAllAnnoncesByCoursId(object.optInt("cours_id")), 
+							 DocumentsRepository.GetDocListByCoursId(object.optInt("cours_id")), 
+							 NotificationRepository.GetAllNotificationsByCoursId(object.optInt("cours_id")), 
 							 object.optString("officialEmail"), 
 							 object.optString("sysCode"), 
 							 object.optString("title"), 

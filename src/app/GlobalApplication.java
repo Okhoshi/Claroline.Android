@@ -1,6 +1,9 @@
 package app;
 
+import mobile.claroline.R;
 import android.app.Application;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import connectivity.ClaroClient;
@@ -24,31 +27,35 @@ public class GlobalApplication extends Application {
 		return PreferenceManager.getDefaultSharedPreferences(singleton.getApplicationContext());
 	}
 	
-	/*
 	private static ProgressDialog progress;
 	
-	public static void setNewProgressDialog(Context context){
-		progress = new ProgressDialog(context);
-		progress.setIndeterminate(true);
+	public static void setProgressIndicator(boolean visible){
+		setProgressIndicator(null, visible);
 	}
 	
-	public static void setProgressIndicator(boolean visible){
-		setProgressIndicator(visible, singleton.getResources().getString(R.string.loading_default));
+	public static void setProgressIndicator(boolean visible, String message){
+		setProgressIndicator(null, visible, message);
 	}
 
-	public static void setProgressIndicator(boolean visible, String message){
+	public static void setProgressIndicator(Context context, boolean visible) {
+		setProgressIndicator(context, visible, singleton.getResources().getString(R.string.loading_default));
+	}
+
+	public static void setProgressIndicator(Context context, boolean visible, String message){
 		if(visible){
+			if(progress == null){
+				progress = new ProgressDialog(context);
+				progress.setIndeterminate(true);
+			}
 			progress.setMessage(message);
 			if(!progress.isShowing()){
 				progress.show();
 			}
 		} else {
-			if(progress.isShowing()){
-				progress.dismiss();
-			}
-			progress.setMessage("");	
+			progress.dismiss();
+			progress = null;
 		}
-	}*/
+	}
 	
 	@Override
 	public void onCreate(){
@@ -57,5 +64,4 @@ public class GlobalApplication extends Application {
 		client = new ClaroClient();
 		Repository.SetOpenHelper(getApplicationContext());
 	}
-
 }
