@@ -11,7 +11,9 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 
+import model.Annonce;
 import model.Cours;
 
 import org.apache.http.HttpResponse;
@@ -36,6 +38,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import app.GlobalApplication;
+import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
 
 
@@ -152,16 +155,18 @@ public class ClaroClient implements Runnable {
 				try {
 					HttpResponse response = client.execute(getClient(false, args), httpContext);
 					Log.i(this.toString(), "Status:[" + response.getStatusLine().toString() + "]");
-					JSONArray JSONresponse = new JSONArray(readResponse(response));
+					JSONArray JSONresponse;
 
 					switch(args.operation){
 					case getCourseList:
+						JSONresponse = new JSONArray(readResponse(response));
 						for (int i = 0; i < JSONresponse.length(); i++) {
 							JSONObject object = JSONresponse.getJSONObject(i);
 							JSONCours.fromJSONObject(object).saveInDB();
 						}
 						break;
 					case getCourseToolList:
+						JSONresponse = new JSONArray(readResponse(response));
 						for(int i = 0; i < JSONresponse.length(); i++){
 							JSONObject object = JSONresponse.getJSONObject(i);
 							JSONCours cours = (JSONCours) CoursRepository.GetBySysCode(object.optString("sysCode"));
@@ -173,24 +178,67 @@ public class ClaroClient implements Runnable {
 						}
 						break;
 					case getAnnounceList:
+						JSONresponse = new JSONArray(readResponse(response));
 						for(int i = 0; i < JSONresponse.length(); i++){
 							JSONObject object = JSONresponse.getJSONObject(i);
 							JSONAnnonce.fromJSONObject(object).saveInDB();
 						}
 						break;
 					case getDocList:
+						JSONresponse = new JSONArray(readResponse(response));
 						for(int i = 0; i < JSONresponse.length(); i++){
 							JSONObject object = JSONresponse.getJSONObject(i);
 							JSONDocument.fromJSONObject(object).saveInDB();
 						}
 						break;
 					case getSingleAnnounce:
+						JSONresponse = new JSONArray(readResponse(response));
 						JSONObject object = JSONresponse.getJSONObject(0);
 						JSONAnnonce.fromJSONObject(object).saveInDB();
 						break;
 					case getUpdates:
-						for (int i = 0; i < JSONresponse.length(); i++) {
-							//JSONObject Ocours = JSONresponse.getJSONObject(i);
+						if(readResponse(response) != "[]"){
+							JSONObject JSONResp = new JSONObject(readResponse(response));
+							Iterator iterOnCours = JSONResp.keys();
+							while(iterOnCours.hasNext()){
+								Cours upCours;
+								String syscode = (String) iterOnCours.next();
+								if((upCours = CoursRepository.GetBySysCode(syscode)) == null){
+									Execute(new CallbackArgs(AllowedOperations.getCourseList));
+									if((upCours = CoursRepository.GetBySysCode(syscode)) != null){
+										Execute(new CallbackArgs(upCours, AllowedOperations.updateCompleteCourse));
+									}
+									continue;
+								} else {
+									JSONObject jsonCours = JSONResp.getJSONObject(syscode);
+									Iterator iterOnMod = jsonCours.keys();
+									while(iterOnMod.hasNext()){
+										String modKey = (String) iterOnMod.next();
+										if(modKey == "CLANN"){
+											if(!upCours.isAnn()){
+												Execute(new CallbackArgs(upCours, AllowedOperations.getCourseToolList));
+												if(upCours.isAnn()){
+													Execute(new CallbackArgs(upCours, AllowedOperations.getAnnounceList));
+												}
+												continue;
+											} else {
+												JSONObject jsonAnn = jsonCours.getJSONObject(modKey);
+												Iterator iterOnAnn = jsonAnn.keys();
+												while(iterOnAnn.hasNext()){
+													int resID = Integer.parseInt((String) iterOnAnn.next());
+													Annonce upAnn;
+													if((upAnn = AnnonceRepository.GetByRessourceId(resID)) == null){
+														//TODO
+													}
+												}
+											}
+										}
+										else if(true){
+											//TODO Doc Case
+										}
+									}
+								}
+							}
 						}
 						break;
 					case getUserData:
@@ -270,5 +318,4 @@ public class ClaroClient implements Runnable {
 		/* Convert the Bytes read to a String. */
 		return new String(baf.toByteArray());
 	}
-
 }
