@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -15,6 +16,7 @@ import java.util.Iterator;
 
 import model.Annonce;
 import model.Cours;
+import model.Documents;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -40,6 +42,7 @@ import android.util.Log;
 import app.GlobalApplication;
 import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
+import dataStorage.DocumentsRepository;
 
 
 /**
@@ -129,7 +132,7 @@ public class ClaroClient implements Runnable {
 			Execute(args);
 			break;
 		}
-		//GlobalApplication.setProgressIndicator(false);
+
 		Message msg = new Message();
 		msg.what = 0;
 		msg.obj = "Hello ! It's OK";
@@ -228,13 +231,38 @@ public class ClaroClient implements Runnable {
 													int resID = Integer.parseInt((String) iterOnAnn.next());
 													Annonce upAnn;
 													if((upAnn = AnnonceRepository.GetByRessourceId(resID)) == null){
-														//TODO
+														Execute(new CallbackArgs(upCours, AllowedOperations.getAnnounceList));
+													} else {
+														upAnn.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonAnn.optString(String.valueOf(resID))));
+														upAnn.setNotified(true);
+														AnnonceRepository.Update(upAnn);
+														Execute(new CallbackArgs(upCours, resID, AllowedOperations.getSingleAnnounce));
 													}
 												}
 											}
 										}
-										else if(true){
-											//TODO Doc Case
+										else if(modKey == "CLDOC"){
+											if(!upCours.isDnL()){
+												Execute(new CallbackArgs(upCours, AllowedOperations.getCourseToolList));
+												if(upCours.isDnL()){
+													Execute(new CallbackArgs(upCours, AllowedOperations.getDocList));
+												}
+												continue;
+											} else {
+												JSONObject jsonDoc = jsonCours.getJSONObject(modKey);
+												Iterator iterOnDoc = jsonDoc.keys();
+												while(iterOnDoc.hasNext()){
+													String path = (String) iterOnDoc.next();
+													Documents upDoc;
+													if((upDoc = DocumentsRepository.GetByPath(path)) == null){
+														Execute(new CallbackArgs(upCours, AllowedOperations.getDocList));
+													} else {
+														upDoc.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonDoc.optString(path)));
+														upDoc.setNotified(true);
+														DocumentsRepository.Update(upDoc);
+													}
+												}
+											}
 										}
 									}
 								}
