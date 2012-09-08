@@ -80,7 +80,7 @@ public class home extends Activity
 		public void handleMessage(Message mess){
 			switch (mess.what) {
 			case 0:
-				Toast.makeText(GlobalApplication.getInstance().getApplicationContext(), mess.obj.toString(), 5).show();
+				GlobalApplication.setProgressIndicator(false);
 				break;
 			default:
 				break;
@@ -361,11 +361,8 @@ public class home extends Activity
 			return true;
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
-			computeProgressDialog();
-			Thread thread1 = new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getCourseList));
-			thread1.start();
-			if(!thread1.isAlive())
-			{eraseProgressDialog();};
+			GlobalApplication.setProgressIndicator(this, true);
+			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getCourseList))).start();
 			return true;
 		case R.id.menu_search:
 			// Comportement du bouton "Recherche"
@@ -493,15 +490,6 @@ public class home extends Activity
 	{
 		Cours item = (Cours) l.getAdapter().getItem(position);
 		currentCours=item;
-	}
-	
-	private void computeProgressDialog() {
-	    mProgressDialog = ProgressDialog.show(this, "Please wait",
-	            getString(R.string.loading_default), true);
-	 
-	}
-	private void eraseProgressDialog() {
-		mProgressDialog.dismiss();
 	}
 }
 	

@@ -1,32 +1,23 @@
 package fragments;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import dataStorage.CoursRepository;
 
 import mobile.claroline.R;
 import model.Cours;
 import model.CoursAdapter;
-import activity.coursActivity;
 import activity.home;
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ListView;
+import dataStorage.CoursRepository;
 
 public class mainCoursFragment extends ListFragment 
 {
