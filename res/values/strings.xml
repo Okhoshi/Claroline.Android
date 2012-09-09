@@ -35,7 +35,7 @@
     
     
     <!-- String concernant la searchView -->
-    <string name="search_hint">Chercher un cours</string>
+    <string name="search_hint">Rechercher un cours</string>
     
     
      <!-- Shown above search results when we receive a search request. -->

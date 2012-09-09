@@ -23,7 +23,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-@SuppressLint("ParserError")
+//@SuppressLint("ParserError")
 public class searchableActivity extends Activity implements OnClickListener {
 
 	private TextView mTextView;
@@ -38,11 +38,18 @@ public class searchableActivity extends Activity implements OnClickListener {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
-		mTextView = (TextView) findViewById(R.id.text);
-		mListView = (ListView) findViewById(R.id.list);
+		mTextView = (TextView) findViewById(R.id.searchCounter);
+		mListView = (ListView) findViewById(R.id.searchList);
 
-		// Get the intent, verify the action and get the query
-		Intent intent = getIntent();
+		handleIntent(getIntent());
+	}
+	
+	@Override
+	public void onNewIntent(Intent intent){
+		handleIntent(intent);
+	}
+
+	private void handleIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
 			doMySearch(query);
@@ -80,13 +87,14 @@ public class searchableActivity extends Activity implements OnClickListener {
 		case R.id.menu_search:
 			// Comportement du bouton "Recherche"
 			onSearchRequested();
+			return true;
 		case R.id.menu_settings:
 			Intent settings_intent = new Intent(this, Settings.class);
 			startActivity(settings_intent);
 			return true;
 		case android.R.id.home:
 			// Comportement du bouton qui permet de retourner a l'activite
-			// precedente
+			// Home
 			monIntent = new Intent(this, home.class);
 			startActivity(monIntent);
 			return true;

@@ -2,7 +2,6 @@
 <resources>
 
     <!-- Nom de l'application --> 
-    <string name="hello">Hello World, home!</string>
     <string name="app_name">ClarolineMobile</string>
 
     

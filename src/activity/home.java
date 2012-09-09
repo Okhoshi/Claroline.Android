@@ -321,29 +321,13 @@ public class home extends Activity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.actionbar, menu);
+		
 		// Get the SearchView and set the searchable configuration
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 		searchView.setIconifiedByDefault(false);     
 		searchView.setSubmitButtonEnabled(true);
-
-
-
-		//SubMenu settings = menu.addSubMenu(getString(R.string.menu_settings));
-		//SubMenu skins = settings.addSubMenu(getString(R.string.skin));
-		//SubMenu background_skin = settings.addSubMenu(getString(R.string.basic_skin));
-		//settings.add(1,R.string.upload_a_skin,1,getString(R.string.upload_a_skin));
-		//SubMenu your_skins = settings.addSubMenu(getString(R.string.your_skins));
-
-
-		//background_skin.add(0,R.id.white,0,getString(R.string.white));
-		//background_skin.add(0,R.id.yellow,1,getString(R.string.yellow));
-		//background_skin.add(0,R.id.green,2,getString(R.string.green));
-		//background_skin.add(0,R.id.red,3,getString(R.string.red));
-		//background_skin.add(0,R.id.black,4,getString(R.string.black));
-
-		// Permettre un upload ou un choose de skin serait pas mal
 
 		return true;
 	}
