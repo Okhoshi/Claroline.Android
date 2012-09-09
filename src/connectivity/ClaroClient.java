@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -270,6 +271,15 @@ public class ClaroClient implements Runnable {
 						}
 						break;
 					case getUserData:
+						JSONObject jsonUser = new JSONObject(readResponse(response));
+						Editor edit = GlobalApplication.getPreferences().edit();
+						edit.putString("firstName", jsonUser.optString("firstName"))
+							.putString("lastName", jsonUser.optString("lastName"))
+							.putBoolean("isPlatformAdmin", jsonUser.optBoolean("isPlatformAdmin"))
+							.putString("NOMA", jsonUser.optString("officialCode"))
+							.putString("platformName", jsonUser.optString("platformName"))
+							.putString("institutionName", jsonUser.getString("institutionName"))
+							.apply();
 						break;
 					default:
 						break;
