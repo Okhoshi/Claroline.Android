@@ -9,8 +9,6 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
-import app.GlobalApplication;
-
 import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
 

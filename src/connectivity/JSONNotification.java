@@ -6,8 +6,6 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
-import app.GlobalApplication;
-
 import dataStorage.CoursRepository;
 import dataStorage.NotificationRepository;
 
