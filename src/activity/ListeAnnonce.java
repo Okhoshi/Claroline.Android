@@ -22,7 +22,7 @@ import android.widget.ListView;
 
 public class ListeAnnonce extends Activity 
 {
-	Cours currentCours = home.currentCours;
+	Cours currentCours;
 	ListView list = (ListView) findViewById(R.id.ListViewAnnonce);	
 	
 	@Override
@@ -107,6 +107,7 @@ public class ListeAnnonce extends Activity
 			Annonce item = (Annonce) list.getAdapter().getItem(position);
 			home.currentAnnonce=item;
 			Intent intent = new Intent(this, activity.detailsAnnonce.class);
+			intent.putExtra("annID", item.getId());
 			startActivity(intent);
 		}
 }

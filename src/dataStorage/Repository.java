@@ -64,8 +64,10 @@ public abstract class Repository<T> implements IRepository<T>
 	}
 	
 	protected static void RefreshRepository(String type){
-		for (RepositoryRefreshListener listener : repositoryRefreshListener) {
-			listener.onRepositoryRefresh(type);
+		if(repositoryRefreshListener.size() > 0){
+			for (RepositoryRefreshListener listener : repositoryRefreshListener) {
+				listener.onRepositoryRefresh(type);
+			}
 		}
 	}
 }

@@ -24,7 +24,7 @@
 	 		android:layout_width="fill_parent"
 	 		android:layout_height="wrap_content"
 	 		android:gravity="center"
-	 		android:text="@+string/about_us_authors"
+	 		android:text="@string/about_us_authors"
 			android:layout_marginTop="70dp"
      
   		/>
@@ -34,7 +34,7 @@
 	 		android:layout_width="fill_parent"
 	 		android:layout_height="wrap_content"
 	 		android:gravity="center"
-	 		android:text="@+string/about_us_version"	
+	 		android:text="@string/about_us_version"	
 	 		android:layout_marginTop="50dp"
      
   		/>
@@ -44,7 +44,7 @@
 	 		android:layout_width="fill_parent"
 	 		android:layout_height="wrap_content"
 	 		android:gravity="center"
-	 		android:text="@+string/about_us_contact_us"
+	 		android:text="@string/about_us_contact_us"
 	 		android:layout_marginTop="50dp"
      
   		/>
@@ -54,7 +54,7 @@
 	 		android:layout_width="fill_parent"
 	 		android:layout_height="wrap_content"
 	 		android:gravity="center"
-	 		android:text="@+string/about_us_remerciements"
+	 		android:text="@string/about_us_remerciements"
 	 		android:layout_marginTop="50dp"
      
   		/>
