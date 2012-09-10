@@ -7,6 +7,8 @@ import model.Annonce;
 import model.AnnonceAdapter;
 import model.Cours;
 import model.CoursAdapter;
+import model.Documents;
+import model.DocumentsAdapter;
 import activity.home;
 import android.app.ListFragment;
 import android.content.Intent;
@@ -90,7 +92,6 @@ public class mainCoursFragment extends ListFragment
 		if (fragmentAnnonce != null && fragmentAnnonce.isInLayout() && home.currentTag.equals(home.annonce_id)) 
 		{
 			//fragmentAnnonce.setText(title);
-			//Intent intent1 = ;
 			int layoutID2 = R.layout.details_annonce;			
 			// Normalement ca ! -->
 			List<Annonce> Liste = item.getAnnonces();
@@ -102,7 +103,15 @@ public class mainCoursFragment extends ListFragment
 		} 
 		if (fragmentDocs != null && fragmentDocs.isInLayout() && home.currentTag.equals(home.documents_id))
 		{
-			fragmentAnnonce.setText(titular);
+			//fragmentAnnonce.setText(titular);
+			int layoutID4 = R.layout.details_annonce;		//TODO changer ici	
+			// Normalement ca ! -->
+			List<Documents> Liste = item.getDocuments();
+			
+			DocumentsAdapter adapter = new DocumentsAdapter(getActivity().getApplicationContext(),
+					layoutID4, Liste);
+			setListAdapter(adapter);
+			registerForContextMenu(getListView());
 		} 
 		else 
 		{

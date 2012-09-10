@@ -10,22 +10,28 @@ package model;
 
 import java.util.List;
 
+import mobile.claroline.R;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class DocumentsAdapter extends BaseAdapter {
 
 	private List<Documents> listeDocuments;
 	private LayoutInflater inflater;
 	private Context context;
-
-	public DocumentsAdapter(Context context, List<Documents> listeDocuments) {
+	int resource;
+	
+	public DocumentsAdapter(Context context, int _resource,  List<Documents> listeDocuments) {
 		this.listeDocuments=listeDocuments;
 		this.context=context;
 		this.inflater=LayoutInflater.from(context);
+		this.resource=_resource;
 	}
 	
 	public void setDocuments(List<Documents> listeDocuments)
@@ -38,7 +44,7 @@ public class DocumentsAdapter extends BaseAdapter {
 		return listeDocuments.size();
 	}
 	
-	public Object getItem(int position)
+	public Documents getItem(int position)
 	{
 		return listeDocuments.get(position);
 	}
@@ -49,9 +55,36 @@ public class DocumentsAdapter extends BaseAdapter {
 	}
 	
 	
+
+	public Context getContext()
+	{
+		return this.context;
+	}
+	
 	public View getView(final int position, View view, ViewGroup viewGroup) 
 	{
-		return null;
-		//TODO
+		LinearLayout newView=null;
+		Documents document1   		 = getItem(position);
+		String DocumentsText   		 = document1.getName()+"\n"+document1.getSize();
+		
+		if(view==null)
+		{
+			newView = new LinearLayout(getContext());
+			String inflater1 = Context.LAYOUT_INFLATER_SERVICE;
+			this.inflater = (LayoutInflater) getContext().getSystemService(inflater1);
+			this.inflater.inflate(resource, newView, true);
+			
+			TextView textView =  (TextView) newView.findViewById(R.id.details_annonce_tv1); //TODO changer ici
+			textView.setText(DocumentsText);
+			
+			//textView.setGravity(gravity);
+		}
+		else
+		{
+			newView=(LinearLayout) view;
+		}
+		
+		
+		return newView;
 	}
 }
