@@ -8,6 +8,7 @@ import model.Annonce;
 import model.Cours;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ActivityGroup;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +22,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
 
-public class coursActivity extends Activity 
+public class coursActivity extends ActivityGroup 
 {
 	Cours currentCours=home.currentCours;
 	List<Annonce> liste_annonce = currentCours.getAnnonces();
@@ -115,7 +116,7 @@ public class coursActivity extends Activity
 	{
 	
 		TabHost tabHost=(TabHost)findViewById(R.id.tabHost);
-		tabHost.setup();
+		tabHost.setup(getLocalActivityManager());
 
 		Intent intent = new Intent().setClass(this, ListeAnnonce.class);
 		TabSpec spec1=tabHost.newTabSpec(getString(R.string.onglet_annonces));
@@ -128,10 +129,7 @@ public class coursActivity extends Activity
 		spec2.setIndicator(getString(R.string.onglet_documents));
 		spec2.setContent(intent2);
 
-		
-		
-		
-		
+
 		tabHost.addTab(spec1);
 		tabHost.addTab(spec2);
 		

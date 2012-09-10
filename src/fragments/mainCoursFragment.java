@@ -105,7 +105,6 @@ public class mainCoursFragment extends ListFragment
 		{
 			//fragmentAnnonce.setText(titular);
 			int layoutID4 = R.layout.details_annonce;		//TODO changer ici	
-			// Normalement ca ! -->
 			List<Documents> Liste = item.getDocuments();
 			
 			DocumentsAdapter adapter = new DocumentsAdapter(getActivity().getApplicationContext(),
