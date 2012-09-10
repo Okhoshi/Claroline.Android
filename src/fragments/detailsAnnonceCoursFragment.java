@@ -49,7 +49,7 @@ public class detailsAnnonceCoursFragment extends ListFragment
 		home.currentAnnonce=item;
 		
 		detailsAnnonceCoursFragment fragmentAnnonce = (detailsAnnonceCoursFragment) getFragmentManager().findFragmentById(R.id.details_frag);
-
+		fragmentAnnonce.setText(item.getTitle()+"\n \n"+item.getContent());
 		
 	
 
