@@ -105,7 +105,7 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 	public void setActionBar()
 	{
 		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(false); 
+		actionBar.setDisplayHomeAsUpEnabled(true); 
 	}
 
 	public void setOverflowMenu()
