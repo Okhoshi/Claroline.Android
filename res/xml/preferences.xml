@@ -12,7 +12,7 @@
             				android:defaultValue="/module/MOBILE/" android:summary="/module/MOBILE/"/>
         
         
-    </PreferenceCategory><PreferenceCategory android:key="pref_cat_user" android:title="@+string/pref_cat_user">
+    </PreferenceCategory><PreferenceCategory android:key="pref_cat_user" android:title="@+string/pref_cat_user" >
         <EditTextPreference android:title="@+string/pref_user_login" android:key="user_login" android:defaultValue="admin"/>
         <EditTextPreference android:title="@+string/pref_user_password" android:key="user_password" android:inputType="textPassword" android:defaultValue="elegie24"/>
     </PreferenceCategory>
