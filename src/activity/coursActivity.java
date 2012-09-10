@@ -3,6 +3,9 @@ package activity;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import dataStorage.AnnonceRepository;
+import dataStorage.CoursRepository;
+
 import mobile.claroline.R;
 import model.Annonce;
 import model.Cours;
@@ -24,7 +27,7 @@ import android.widget.TabHost.TabSpec;
 
 public class coursActivity extends ActivityGroup 
 {
-	Cours currentCours=home.currentCours;
+	Cours currentCours;
 	List<Annonce> liste_annonce = currentCours.getAnnonces();
 	
 	@Override
@@ -40,7 +43,13 @@ public class coursActivity extends ActivityGroup
 			return;
 		}
 
-		
+		Bundle extras = getIntent().getExtras();
+	    if (extras != null)
+
+	    {
+	        int coursID = extras.getInt("coursID");
+	        currentCours=CoursRepository.GetById(coursID);
+	    }
 		//Intent extras = getIntent();
 		//if (extras != null) {
 		//	String s = extras.getStringExtra("value");
@@ -50,11 +59,7 @@ public class coursActivity extends ActivityGroup
 		
 		setTabs();
 		setActionBar();
-		setOverflowMenu();
-		
-		
-		
-		
+		setOverflowMenu();		
 		
 	}
 	

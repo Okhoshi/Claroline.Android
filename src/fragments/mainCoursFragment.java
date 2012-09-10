@@ -115,9 +115,8 @@ public class mainCoursFragment extends ListFragment
 		else 
 		{
 			Intent intent = new Intent(getActivity().getApplicationContext(), activity.coursActivity.class);
-			intent.putExtra("value", title);
+			intent.putExtra("coursID", item.getId());
 			startActivity(intent);
-
 		}
 
 	}
