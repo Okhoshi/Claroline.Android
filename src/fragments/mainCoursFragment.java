@@ -3,6 +3,8 @@ package fragments;
 import java.util.List;
 
 import mobile.claroline.R;
+import model.Annonce;
+import model.AnnonceAdapter;
 import model.Cours;
 import model.CoursAdapter;
 import activity.home;
@@ -87,7 +89,16 @@ public class mainCoursFragment extends ListFragment
 		
 		if (fragmentAnnonce != null && fragmentAnnonce.isInLayout() && home.currentTag.equals(home.annonce_id)) 
 		{
-			fragmentAnnonce.setText(title);
+			//fragmentAnnonce.setText(title);
+			//Intent intent1 = ;
+			int layoutID2 = R.layout.details_annonce;			
+			// Normalement ca ! -->
+			List<Annonce> Liste = item.getAnnonces();
+			
+			AnnonceAdapter adapter = new AnnonceAdapter(getActivity().getApplicationContext(),
+					layoutID2, Liste);
+			setListAdapter(adapter);
+			registerForContextMenu(getListView());
 		} 
 		if (fragmentDocs != null && fragmentDocs.isInLayout() && home.currentTag.equals(home.documents_id))
 		{

@@ -9,6 +9,7 @@ import dataStorage.IRepository.RepositoryRefreshListener;
 import dataStorage.*;
 import fragments.*;
 import mobile.claroline.R;
+import model.Annonce;
 import model.Cours;
 import fragments.detailsAnnonceCoursFragment;
 import fragments.detailsDocumentsCoursFragment;
@@ -57,6 +58,7 @@ public class home extends Activity
 	 */
 
 	public static Cours currentCours;
+	public static Annonce currentAnnonce;
 	public static String currentTag;
 	public static String annonce_id = "annonce_id";
 	public static String documents_id = "documents_id";
@@ -262,8 +264,8 @@ public class home extends Activity
 				if(mTag.equals(documents_id))
 					currentTag=documents_id;
 
-				if(currentCours==null)
-					Log.v("BO", "Cours nulllll ici");
+				//if(currentCours==null)
+				//	Log.v("BO", "Cours nulllll ici");
 
 				if(currentCours!=null)
 				{

@@ -1,9 +1,11 @@
 package activity;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import mobile.claroline.R;
-import fragments.detailsAnnonceCoursFragment;
+import model.Annonce;
+import model.Cours;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
@@ -17,12 +19,12 @@ import android.view.ViewConfiguration;
 import android.widget.SearchView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
 
 
 public class coursActivity extends Activity 
 {
-	
+	Cours currentCours=home.currentCours;
+	List<Annonce> liste_annonce = currentCours.getAnnonces();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,8 @@ public class coursActivity extends Activity
 		setTabs();
 		setActionBar();
 		setOverflowMenu();
+		
+		
 		
 		
 		
@@ -113,15 +117,21 @@ public class coursActivity extends Activity
 		TabHost tabHost=(TabHost)findViewById(R.id.tabHost);
 		tabHost.setup();
 
+		Intent intent = new Intent().setClass(this, ListeAnnonce.class);
 		TabSpec spec1=tabHost.newTabSpec(getString(R.string.onglet_annonces));
-		spec1.setContent(R.id.tab1);
+		spec1.setContent(intent);
 		spec1.setIndicator(getString(R.string.onglet_annonces));
 
 
+		Intent intent2 = new Intent().setClass(this, ListeAnnonce.class);
 		TabSpec spec2=tabHost.newTabSpec(getString(R.string.onglet_documents));
 		spec2.setIndicator(getString(R.string.onglet_documents));
-		spec2.setContent(R.id.tab2);
+		spec2.setContent(intent2);
 
+		
+		
+		
+		
 		tabHost.addTab(spec1);
 		tabHost.addTab(spec2);
 		
