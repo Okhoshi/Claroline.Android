@@ -54,6 +54,9 @@
                    android:value="activity.searchableActivity" />
         
         <activity android:name="activity.Settings" android:label="@string/app_name"></activity>
+        <activity android:name="activity.ListeAnnonce" android:label="@string/app_name"></activity>
+        <activity android:label="@string/app_name" android:name="activity.ListeDocument"></activity>
+        <activity android:label="@string/app_name" android:name="activity.detailsAnnonce"></activity>
         
     </application>
 

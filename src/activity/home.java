@@ -23,8 +23,6 @@ import android.widget.TextView;
 import app.AppActivity;
 import app.GlobalApplication;
 import connectivity.AllowedOperations;
-import dataStorage.IRepository.RepositoryRefreshListener;
-import dataStorage.Repository;
 import fragments.detailsAnnonceCoursFragment;
 import fragments.detailsDocumentsCoursFragment;
 import fragments.mainCoursFragment;

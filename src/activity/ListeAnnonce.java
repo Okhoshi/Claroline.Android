@@ -1,29 +1,21 @@
 package activity;
 
-import java.lang.reflect.Field;
 import java.util.List;
-
-import fragments.detailsAnnonceCoursFragment;
-import fragments.detailsDocumentsCoursFragment;
-
 
 import mobile.claroline.R;
 import model.Annonce;
 import model.AnnonceAdapter;
 import model.Cours;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.ListView;
 
 public class ListeAnnonce extends Activity 
 {
-	Cours currentCours;
-	ListView list = (ListView) findViewById(R.id.ListViewAnnonce);	
+	Cours currentCours = home.currentCours;
+	ListView list;	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -31,7 +23,7 @@ public class ListeAnnonce extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.liste_annonce);
 		
-			
+		list = (ListView) findViewById(R.id.ListViewAnnonce);
 		int layoutID2 = R.layout.details_annonce;			
 		List<Annonce> Liste = currentCours.getAnnonces();
 		AnnonceAdapter adapter = new AnnonceAdapter(this, layoutID2, Liste);

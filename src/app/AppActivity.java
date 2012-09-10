@@ -93,6 +93,9 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			monIntent = new Intent(this,home.class);
 			startActivity(monIntent);
 			return true;
+        case R.id.menu_refresh:
+            // Comportement du bouton "Rafraichir"
+            return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
