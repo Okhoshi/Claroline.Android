@@ -71,15 +71,11 @@ public class home extends AppActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
-		Repository.Open();
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		setActionBar();
 		if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			setActionBarTabs();
 		}
-		setOverflowMenu();
 		view = (TextView) findViewById(R.id.grid_item_label);
 	}
 
