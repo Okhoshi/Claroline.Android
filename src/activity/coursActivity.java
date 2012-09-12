@@ -26,7 +26,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
 
-public class coursActivity extends ActivityGroup 
+public class coursActivity extends TabActivity
 {
 	Cours currentCours;
 	int coursID;
@@ -125,7 +125,7 @@ public class coursActivity extends ActivityGroup
 	public void setTabs()
 	{
 	
-		TabHost tabHost=(TabHost)findViewById(R.id.tabHost);
+		TabHost tabHost=(TabHost)findViewById(android.R.id.tabhost);
 		//TabHost tabHost = getTabHost();
 		tabHost.setup(getLocalActivityManager());
 		
@@ -135,16 +135,16 @@ public class coursActivity extends ActivityGroup
 		
 		
 		Intent intent = new Intent().setClass(this, ListeAnnonce.class);
-		Intent intent2 = new Intent().setClass(this, ListeAnnonce.class);
+		Intent intent2 = new Intent().setClass(this, ListeDocument.class);
 		
 		intent.putExtra("coursID", coursID);
 		intent2.putExtra("coursID", coursID);
 		
-		spec1.setContent(intent);
-		spec2.setContent(intent2);
-		
 		spec1.setIndicator(getString(R.string.onglet_annonces));
 		spec2.setIndicator(getString(R.string.onglet_documents));
+		
+		spec1.setContent(intent);
+		spec2.setContent(intent2);
 		
 		tabHost.addTab(spec1);
 		tabHost.addTab(spec2);
@@ -153,6 +153,8 @@ public class coursActivity extends ActivityGroup
 		
 		
 	}
+	
+
 	
 
 	// Met les propriétés de l'action bar
