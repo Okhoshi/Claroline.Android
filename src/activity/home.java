@@ -75,6 +75,8 @@ public class home extends AppActivity
 			setActionBarTabs();
 		}
 		view = (TextView) findViewById(R.id.grid_item_label);
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(false); 
 	}
 
 

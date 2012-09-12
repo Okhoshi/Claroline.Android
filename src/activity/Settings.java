@@ -63,5 +63,17 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	        actionBar.setDisplayHomeAsUpEnabled(true); 
 		}
 		
+		 @Override
+		    public boolean onOptionsItemSelected(MenuItem item) {
+		        switch (item.getItemId()) {
+		        case android.R.id.home:
+		        	// Comportement du bouton qui permet de retourner a l'activite precedente
+		        	Intent monIntent = new Intent(this,home.class);
+		        	startActivity(monIntent);
+		        	return true;
+		        default:
+		            return super.onOptionsItemSelected(item);
+		        }
+		 }
 
 }

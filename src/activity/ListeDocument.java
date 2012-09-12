@@ -3,6 +3,8 @@ package activity;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import dataStorage.CoursRepository;
+
 import fragments.detailsAnnonceCoursFragment;
 import fragments.detailsDocumentsCoursFragment;
 
@@ -25,19 +27,31 @@ import android.widget.ListView;
 public class ListeDocument extends Activity 
 {
 	Cours currentCours = home.currentCours;
-	ListView list = (ListView) findViewById(R.id.ListViewDocuments);	
+	ListView list;	
+	List<Documents> liste_documents;
+	int coursID;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{	
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.liste_documents);
-		
+		list = (ListView) findViewById(R.id.ListViewDocuments);
 			
 		int layoutID3 = R.layout.details_annonce;		//TODO change ici	
-		List<Documents> Liste = currentCours.getDocuments();
-		DocumentsAdapter adapter = new DocumentsAdapter(this, layoutID3, Liste);
-		list.setAdapter(adapter);
+		
+		
+		Bundle extras = getIntent().getExtras();
+	    if (extras != null)
+
+	    {
+	        coursID = extras.getInt("coursID");
+	        currentCours=CoursRepository.GetById(coursID);	
+	        liste_documents = currentCours.getDocuments();
+	        DocumentsAdapter adapter = new DocumentsAdapter(this, layoutID3, liste_documents);
+			list.setAdapter(adapter);
+	        
+	    }
 
 	}
 	
@@ -48,7 +62,8 @@ public class ListeDocument extends Activity
 		public void onListItemClick(ListView l, View v, int position, long id) {
 			Documents item = (Documents) list.getAdapter().getItem(position);
 			home.currentDocument=item;
-			Intent intent = new Intent(this, activity.detailsAnnonce.class); //TODO changer ici
+			Intent intent = new Intent(this, activity.detailsAnnonce.class); //TODO changer ici 
+			intent.putExtra("docID", item.getId());
 			startActivity(intent);
 		}
 }

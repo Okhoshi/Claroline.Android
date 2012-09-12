@@ -2,6 +2,8 @@ package activity;
 
 import java.util.List;
 
+import dataStorage.CoursRepository;
+
 import mobile.claroline.R;
 import model.Annonce;
 import model.AnnonceAdapter;
@@ -14,8 +16,10 @@ import android.widget.ListView;
 
 public class ListeAnnonce extends Activity 
 {
-	Cours currentCours = home.currentCours;
+	Cours currentCours;
 	ListView list;	
+	List<Annonce> liste_annonces;
+	int coursID;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -25,9 +29,21 @@ public class ListeAnnonce extends Activity
 		
 		list = (ListView) findViewById(R.id.ListViewAnnonce);
 		int layoutID2 = R.layout.details_annonce;			
-		List<Annonce> Liste = currentCours.getAnnonces();
-		AnnonceAdapter adapter = new AnnonceAdapter(this, layoutID2, Liste);
-		list.setAdapter(adapter);
+		
+		
+		Bundle extras = getIntent().getExtras();
+	    if (extras != null)
+
+	    {
+	        coursID = extras.getInt("coursID");
+	        currentCours=CoursRepository.GetById(coursID);	
+	        liste_annonces = currentCours.getAnnonces();
+	        AnnonceAdapter adapter = new AnnonceAdapter(this, layoutID2, liste_annonces);
+			list.setAdapter(adapter);
+	        
+	    }
+	    
+		
 		
 	}
 	

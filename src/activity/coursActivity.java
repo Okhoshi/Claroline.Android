@@ -13,6 +13,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityGroup;
 import android.app.SearchManager;
+import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -28,7 +29,8 @@ import android.widget.TabHost.TabSpec;
 public class coursActivity extends ActivityGroup 
 {
 	Cours currentCours;
-	List<Annonce> liste_annonce = currentCours.getAnnonces();
+	int coursID;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +49,12 @@ public class coursActivity extends ActivityGroup
 	    if (extras != null)
 
 	    {
-	        int coursID = extras.getInt("coursID");
-	        currentCours=CoursRepository.GetById(coursID);
+	        coursID = extras.getInt("coursID");
+	        currentCours=CoursRepository.GetById(coursID);			
 	    }
+	    
+	    
+	    
 		//Intent extras = getIntent();
 		//if (extras != null) {
 		//	String s = extras.getStringExtra("value");
@@ -121,22 +126,31 @@ public class coursActivity extends ActivityGroup
 	{
 	
 		TabHost tabHost=(TabHost)findViewById(R.id.tabHost);
+		//TabHost tabHost = getTabHost();
 		tabHost.setup(getLocalActivityManager());
-
-		Intent intent = new Intent().setClass(this, ListeAnnonce.class);
+		
 		TabSpec spec1=tabHost.newTabSpec(getString(R.string.onglet_annonces));
-		spec1.setContent(intent);
-		spec1.setIndicator(getString(R.string.onglet_annonces));
-
-
-		Intent intent2 = new Intent().setClass(this, ListeAnnonce.class);
 		TabSpec spec2=tabHost.newTabSpec(getString(R.string.onglet_documents));
-		spec2.setIndicator(getString(R.string.onglet_documents));
+		
+		
+		
+		Intent intent = new Intent().setClass(this, ListeAnnonce.class);
+		Intent intent2 = new Intent().setClass(this, ListeAnnonce.class);
+		
+		intent.putExtra("coursID", coursID);
+		intent2.putExtra("coursID", coursID);
+		
+		spec1.setContent(intent);
 		spec2.setContent(intent2);
-
-
+		
+		spec1.setIndicator(getString(R.string.onglet_annonces));
+		spec2.setIndicator(getString(R.string.onglet_documents));
+		
 		tabHost.addTab(spec1);
 		tabHost.addTab(spec2);
+
+
+		
 		
 	}
 	
