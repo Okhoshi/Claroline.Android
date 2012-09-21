@@ -2,7 +2,6 @@
 <resources>
 
     <!-- Nom de l'application --> 
-    <string name="hello">Hello World, home!</string>
     <string name="app_name">ClarolineMobile</string>
 
     
@@ -10,8 +9,8 @@
     <!-- TextView's de l'activite about_us --> 
     <string name="about_us_authors">Authors : \n Devos Quentin \n Uytterhoeven Dimitri</string>
     <string name="about_us_version">Version 1.0</string>
-    <string name="about_us_contact_us">Contact us with mail : \n q.devos@student.uclouvain.be \n dimitri.uytterhoeven@student.uclouvain.be</string>
-    <string name="about_us_remerciements">Thanks to \n Sophie Sluymans \n Laura Delvaux \n Pr K. Mens</string>
+    <string name="about_us_contact_us">Contact us : \n q.devos@student.uclouvain.be \n dimitri.uytterhoeven@student.uclouvain.be</string>
+    <string name="about_us_remerciements">Special Thanks to \n S. Sluysmans \n L. Delvaux \n Pr K. Mens (UCL) \n Claroline Dev Team</string>
     <string name="about_us_mail_quentin">q.devos@student.uclouvain.be</string>
     <string name="about_us_mail_dimitri">dimitri.uytterhoeven@student.uclouvain.be</string>
     

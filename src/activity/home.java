@@ -1,52 +1,34 @@
 package activity;
 
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-
-import connectivity.AllowedOperations;
-import dataStorage.IRepository.RepositoryRefreshListener;
-import dataStorage.*;
-import fragments.*;
 import mobile.claroline.R;
+import model.Annonce;
 import model.Cours;
-import fragments.detailsAnnonceCoursFragment;
-import fragments.detailsDocumentsCoursFragment;
+import model.Documents;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
+import app.AppActivity;
 import app.GlobalApplication;
+import connectivity.AllowedOperations;
+import fragments.detailsAnnonceCoursFragment;
+import fragments.detailsDocumentsCoursFragment;
+import fragments.mainCoursFragment;
 
 
-public class home extends Activity
+public class home extends AppActivity
 {
 	/**
 	 * 
@@ -57,24 +39,12 @@ public class home extends Activity
 	 */
 
 	public static Cours currentCours;
+	public static Annonce currentAnnonce;
+	public static Documents currentDocument;
 	public static String currentTag;
 	public static String annonce_id = "annonce_id";
 	public static String documents_id = "documents_id";
 	static TextView view ;
-	
-	protected ProgressDialog mProgressDialog;
-	private Context mContext;
-	enum ErrorStatus {
-	    NO_ERROR, ERROR_1, ERROR_2
-	};
-	private ErrorStatus status;
-	 
-	public static final int MSG_ERR = 0;
-	public static final int MSG_CNF = 1;
-	public static final int MSG_IND = 2;
-	 
-	public static final String TAG = "ProgressBarActivity";
-	
 	
 	public static Handler handler = new Handler(){
 		public void handleMessage(Message mess){
@@ -87,28 +57,6 @@ public class home extends Activity
 			}
 		}
 	};
-	
-	private RepositoryRefreshListener listener = new RepositoryRefreshListener(){
-		public void onRepositoryRefresh(String type) {
-			if(type == "Cours"){
-				mainCoursFragment list = (mainCoursFragment) getFragmentManager().findFragmentById(R.id.list_frag);
-				if(list != null)
-					list.refreshList.sendEmptyMessage(0);
-			}
-		}
-	};
-
-	/**
-	 * 
-	 *  
-	 *  Used to choose an image
-	 *  
-	 *   
-	 */
-
-	//variable for selection intent
-	private final int PICKER = 1;
-	String imgPath;
 
 
 	/** 
@@ -121,76 +69,16 @@ public class home extends Activity
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
-		Repository.Open();
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		setActionBar();
-		if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+		if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			setActionBarTabs();
-		setOverflowMenu();
-		view = (TextView) findViewById(R.id.grid_item_label);
-	}
-	
-	@Override
-	public void onRestart(){
-		Repository.Open();
-		super.onRestart();
-	}
-	
-	@Override
-	public void onResume(){
-		Repository.addOnRepositoryRefreshListener(listener);
-		super.onResume();
-	}
-	
-	@Override
-	public void onPause(){
-		Repository.remOnRepositoryRefreshListener(listener);
-		super.onPause();
-	}
-	
-	@Override
-	public void onStop(){
-		Repository.Close();
-		super.onStop();
-	}
-	
-
-
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-		if (resultCode == RESULT_OK) 
-		{
-			//check if we are returning from picture selection
-			if (requestCode == PICKER) 
-			{
-				//import the image
-				//the returned picture URI
-				Uri pickedUri = data.getData();
-				//declare the bitmap
-				Bitmap pic = null;    	 
-				//declare the path string
-				String imgPath = "";
-
-				//retrieve the string using media data
-				String[] medData = { MediaStore.Images.Media.DATA };
-				//query the data
-				Cursor picCursor = managedQuery(pickedUri, medData, null, null, null);
-				if(picCursor!=null)
-				{
-					//get the path string
-					int index = picCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-					picCursor.moveToFirst();
-					imgPath = picCursor.getString(index);
-				}
-				else
-					imgPath = pickedUri.getPath();
-			}
 		}
-		//superclass method
-		super.onActivityResult(requestCode, resultCode, data);
+		view = (TextView) findViewById(R.id.grid_item_label);
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(false); 
 	}
+
 
 	/**
 	 * 
@@ -262,8 +150,8 @@ public class home extends Activity
 				if(mTag.equals(documents_id))
 					currentTag=documents_id;
 
-				if(currentCours==null)
-					Log.v("BO", "Cours nulllll ici");
+				//if(currentCours==null)
+				//	Log.v("BO", "Cours nulllll ici");
 
 				if(currentCours!=null)
 				{
@@ -316,128 +204,18 @@ public class home extends Activity
 	 * 
 	 */
 
-
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.actionbar, menu);
-		// Get the SearchView and set the searchable configuration
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-		searchView.setIconifiedByDefault(false);     
-		searchView.setSubmitButtonEnabled(true);
-
-
-
-		//SubMenu settings = menu.addSubMenu(getString(R.string.menu_settings));
-		//SubMenu skins = settings.addSubMenu(getString(R.string.skin));
-		//SubMenu background_skin = settings.addSubMenu(getString(R.string.basic_skin));
-		//settings.add(1,R.string.upload_a_skin,1,getString(R.string.upload_a_skin));
-		//SubMenu your_skins = settings.addSubMenu(getString(R.string.your_skins));
-
-
-		//background_skin.add(0,R.id.white,0,getString(R.string.white));
-		//background_skin.add(0,R.id.yellow,1,getString(R.string.yellow));
-		//background_skin.add(0,R.id.green,2,getString(R.string.green));
-		//background_skin.add(0,R.id.red,3,getString(R.string.red));
-		//background_skin.add(0,R.id.black,4,getString(R.string.black));
-
-		// Permettre un upload ou un choose de skin serait pas mal
-
-		return true;
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_about:
-			// Comportement du bouton "A Propos"
-			Intent monIntent = new Intent(this,about_us.class);
-			startActivity(monIntent);
-			return true;
-		case R.id.menu_help:
-			// Comportement du bouton "Aide"
-			return true;
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
 			GlobalApplication.setProgressIndicator(this, true);
 			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getCourseList))).start();
 			return true;
-		case R.id.menu_search:
-			// Comportement du bouton "Recherche"
-			//Repository.Open();
-			onSearchRequested();
-			//Repository.Close();
-			//Intent monIntent1 = new Intent(this,searchableActivity.class);
-			//startActivity(monIntent1);
-			return true;
-		case R.id.menu_settings:
-			Intent settings_intent = new Intent(this, Settings.class);
-			startActivity(settings_intent);
-			return true;
-		case R.id.white:
-			LinearLayout linLay = (LinearLayout) findViewById(R.id.frags);
-			linLay.setBackgroundColor(Color.WHITE);
-			// checker portrait ou land et mettre en fonction + pour toutes les activités
-			return true;
-		case R.id.yellow:
-			LinearLayout linLay1 = (LinearLayout) findViewById(R.id.frags);
-			linLay1.setBackgroundColor(Color.YELLOW);
-			return true;
-		case R.id.green:
-			LinearLayout linLay2 = (LinearLayout) findViewById(R.id.frags);
-			linLay2.setBackgroundColor(Color.GREEN);
-			return true;
-		case R.id.red:
-			LinearLayout linLay3 = (LinearLayout) findViewById(R.id.frags);
-			linLay3.setBackgroundColor(Color.RED);
-			return true;
-		case R.id.black:
-			LinearLayout linLay4 = (LinearLayout) findViewById(R.id.frags);
-			linLay4.setBackgroundColor(Color.BLACK);
-			return true;
-		case R.string.upload_a_skin:
-
-			LinearLayout linLay5 = (LinearLayout) findViewById(R.id.frags);
-			//take the user to their chosen image selection app (gallery or file manager)
-			Intent pickIntent = new Intent();
-			pickIntent.setType("image/*");
-			pickIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-			//we will handle the returned data in onActivityResult
-			startActivityForResult(Intent.createChooser(pickIntent, getString(R.string.select_a_picture)), PICKER);
-			try {
-
-				Bitmap bm = BitmapFactory.decodeStream(getResources().getAssets().open(imgPath + ".gif"));
-				BitmapDrawable bmd= new BitmapDrawable(bm);
-				linLay5.setBackgroundDrawable(bmd);
-
-				// ajouter le stockage de cette image dans une base de donnée pour que celle-ci soit mise par défaut
-				// lors du nouveau lancement de l'application
-				// aussi, permettre de supprimer les images de la base de donnée
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-
-
-
-	// Met les propriétés de l'action bar
-	public void setActionBar()
-	{
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(false); 
-	}
-
 
 	public void setActionBarTabs()
 	{
@@ -470,26 +248,18 @@ public class home extends Activity
 		actionBar.addTab(tab);
 	}
 
-
-	public void setOverflowMenu()
-	{
-		try {
-			ViewConfiguration config = ViewConfiguration.get(this);
-			Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
-			if(menuKeyField != null) {
-				menuKeyField.setAccessible(true);
-				menuKeyField.setBoolean(config, false);
-			}
-		} catch (Exception ex) {
-			// Ignore
-		}
-
-	}
-
 	public void onListItemClick(ListView l, View v, int position, long id) 
 	{
 		Cours item = (Cours) l.getAdapter().getItem(position);
 		currentCours=item;
+	}
+
+	public void onRepositoryRefresh(String type) {
+		if(type == "Cours"){
+			mainCoursFragment list = (mainCoursFragment) getFragmentManager().findFragmentById(R.id.list_frag);
+			if(list != null)
+				list.refreshList.sendEmptyMessage(0);
+		}
 	}
 }
 	

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -34,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -131,7 +133,7 @@ public class ClaroClient implements Runnable {
 			Execute(args);
 			break;
 		}
-		//GlobalApplication.setProgressIndicator(false);
+
 		Message msg = new Message();
 		msg.what = 0;
 		msg.obj = "Hello ! It's OK";
@@ -232,6 +234,9 @@ public class ClaroClient implements Runnable {
 													if((upAnn = AnnonceRepository.GetByRessourceId(resID)) == null){
 														Execute(new CallbackArgs(upCours, AllowedOperations.getAnnounceList));
 													} else {
+														upAnn.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonAnn.optString(String.valueOf(resID))));
+														upAnn.setNotified(true);
+														AnnonceRepository.Update(upAnn);
 														Execute(new CallbackArgs(upCours, resID, AllowedOperations.getSingleAnnounce));
 													}
 												}
@@ -253,7 +258,9 @@ public class ClaroClient implements Runnable {
 													if((upDoc = DocumentsRepository.GetByPath(path)) == null){
 														Execute(new CallbackArgs(upCours, AllowedOperations.getDocList));
 													} else {
-														Execute(new CallbackArgs(upCours, AllowedOperations.getDocList));
+														upDoc.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonDoc.optString(path)));
+														upDoc.setNotified(true);
+														DocumentsRepository.Update(upDoc);
 													}
 												}
 											}
@@ -264,6 +271,15 @@ public class ClaroClient implements Runnable {
 						}
 						break;
 					case getUserData:
+						JSONObject jsonUser = new JSONObject(readResponse(response));
+						Editor edit = GlobalApplication.getPreferences().edit();
+						edit.putString("firstName", jsonUser.optString("firstName"))
+							.putString("lastName", jsonUser.optString("lastName"))
+							.putBoolean("isPlatformAdmin", jsonUser.optBoolean("isPlatformAdmin"))
+							.putString("NOMA", jsonUser.optString("officialCode"))
+							.putString("platformName", jsonUser.optString("platformName"))
+							.putString("institutionName", jsonUser.getString("institutionName"))
+							.apply();
 						break;
 					default:
 						break;

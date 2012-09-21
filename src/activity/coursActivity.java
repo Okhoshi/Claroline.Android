@@ -1,12 +1,19 @@
 package activity;
 
 import java.lang.reflect.Field;
+import java.util.List;
+
+import dataStorage.AnnonceRepository;
+import dataStorage.CoursRepository;
 
 import mobile.claroline.R;
-import fragments.detailsAnnonceCoursFragment;
+import model.Annonce;
+import model.Cours;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ActivityGroup;
 import android.app.SearchManager;
+import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -17,11 +24,12 @@ import android.view.ViewConfiguration;
 import android.widget.SearchView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
 
 
-public class coursActivity extends Activity 
+public class coursActivity extends TabActivity
 {
+	Cours currentCours;
+	int coursID;
 	
 	
 	@Override
@@ -37,7 +45,16 @@ public class coursActivity extends Activity
 			return;
 		}
 
-		
+		Bundle extras = getIntent().getExtras();
+	    if (extras != null)
+
+	    {
+	        coursID = extras.getInt("coursID");
+	        currentCours=CoursRepository.GetById(coursID);			
+	    }
+	    
+	    
+	    
 		//Intent extras = getIntent();
 		//if (extras != null) {
 		//	String s = extras.getStringExtra("value");
@@ -47,9 +64,7 @@ public class coursActivity extends Activity
 		
 		setTabs();
 		setActionBar();
-		setOverflowMenu();
-		
-		
+		setOverflowMenu();		
 		
 	}
 	
@@ -110,22 +125,36 @@ public class coursActivity extends Activity
 	public void setTabs()
 	{
 	
-		TabHost tabHost=(TabHost)findViewById(R.id.tabHost);
-		tabHost.setup();
-
+		TabHost tabHost=(TabHost)findViewById(android.R.id.tabhost);
+		//TabHost tabHost = getTabHost();
+		tabHost.setup(getLocalActivityManager());
+		
 		TabSpec spec1=tabHost.newTabSpec(getString(R.string.onglet_annonces));
-		spec1.setContent(R.id.tab1);
-		spec1.setIndicator(getString(R.string.onglet_annonces));
-
-
 		TabSpec spec2=tabHost.newTabSpec(getString(R.string.onglet_documents));
+		
+		
+		
+		Intent intent = new Intent().setClass(this, ListeAnnonce.class);
+		Intent intent2 = new Intent().setClass(this, ListeDocument.class);
+		
+		intent.putExtra("coursID", coursID);
+		intent2.putExtra("coursID", coursID);
+		
+		spec1.setIndicator(getString(R.string.onglet_annonces));
 		spec2.setIndicator(getString(R.string.onglet_documents));
-		spec2.setContent(R.id.tab2);
-
+		
+		spec1.setContent(intent);
+		spec2.setContent(intent2);
+		
 		tabHost.addTab(spec1);
 		tabHost.addTab(spec2);
+
+
+		
 		
 	}
+	
+
 	
 
 	// Met les propriétés de l'action bar

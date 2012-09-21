@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
 //import java.util.Date;
 import java.util.List;
@@ -42,9 +43,9 @@ public class Cours
 	public Cours(Date isLoaded, List<Annonce> Annonces, List<model.Documents> Documents, List<Notification> Notifications, String officialEmail, String sysCode, String title, String titular)
 	{
 		this.isLoaded=isLoaded;
-		this.Annonces=Annonces;
-		this.Documents=Documents;
-		this.Notifications=Notifications;
+		this.Annonces=new ArrayList<Annonce>();
+		this.Documents=new ArrayList<Documents>();
+		this.Notifications=new ArrayList<Notification>();
 		this.annNotif=true;
 		this.dnlNotif=true;
 		this.isAnn=false;
@@ -56,7 +57,6 @@ public class Cours
 		this.title=title;
 		this.titular=titular;
 	}
-	
 	
 	// Méthodes get
 	

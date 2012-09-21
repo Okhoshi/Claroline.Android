@@ -6,19 +6,17 @@ package connectivity;
 import java.util.Date;
 import java.util.List;
 
-import org.json.JSONObject;
-
-import dataStorage.CoursRepository;
-import dataStorage.AnnonceRepository;
-import dataStorage.DocumentsRepository;
-import dataStorage.NotificationRepository;
-
-import app.GlobalApplication;
-
 import model.Annonce;
 import model.Cours;
-import model.Notification;
 import model.Documents;
+import model.Notification;
+
+import org.json.JSONObject;
+
+import dataStorage.AnnonceRepository;
+import dataStorage.CoursRepository;
+import dataStorage.DocumentsRepository;
+import dataStorage.NotificationRepository;
 
 /**
  * @author Quentin
