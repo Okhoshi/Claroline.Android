@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 import model.Annonce;
 import model.Cours;
+import model.Documents;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -40,6 +41,7 @@ import android.util.Log;
 import app.GlobalApplication;
 import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
+import dataStorage.DocumentsRepository;
 
 
 /**
@@ -228,13 +230,33 @@ public class ClaroClient implements Runnable {
 													int resID = Integer.parseInt((String) iterOnAnn.next());
 													Annonce upAnn;
 													if((upAnn = AnnonceRepository.GetByRessourceId(resID)) == null){
-														//TODO
+														Execute(new CallbackArgs(upCours, AllowedOperations.getAnnounceList));
+													} else {
+														Execute(new CallbackArgs(upCours, resID, AllowedOperations.getSingleAnnounce));
 													}
 												}
 											}
 										}
-										else if(true){
-											//TODO Doc Case
+										else if(modKey == "CLDOC"){
+											if(!upCours.isDnL()){
+												Execute(new CallbackArgs(upCours, AllowedOperations.getCourseToolList));
+												if(upCours.isDnL()){
+													Execute(new CallbackArgs(upCours, AllowedOperations.getDocList));
+												}
+												continue;
+											} else {
+												JSONObject jsonDoc = jsonCours.getJSONObject(modKey);
+												Iterator iterOnDoc = jsonDoc.keys();
+												while(iterOnDoc.hasNext()){
+													String path = (String) iterOnDoc.next();
+													Documents upDoc;
+													if((upDoc = DocumentsRepository.GetByPath(path)) == null){
+														Execute(new CallbackArgs(upCours, AllowedOperations.getDocList));
+													} else {
+														Execute(new CallbackArgs(upCours, AllowedOperations.getDocList));
+													}
+												}
+											}
 										}
 									}
 								}
