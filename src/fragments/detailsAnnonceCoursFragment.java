@@ -25,7 +25,7 @@ import android.widget.TextView;
 public class detailsAnnonceCoursFragment extends ListFragment 
 {
 	
-	Cours currentCours = home.currentCours;
+	Cours currentCours;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,23 +42,16 @@ public class detailsAnnonceCoursFragment extends ListFragment
 		}
 	};*/
 	
-
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Annonce item = (Annonce) getListAdapter().getItem(position);
-		home.currentAnnonce=item;
-		
 		detailsAnnonceCoursFragment fragmentAnnonce = (detailsAnnonceCoursFragment) getFragmentManager().findFragmentById(R.id.details_frag);
 		fragmentAnnonce.setText(item.getTitle()+"\n \n"+item.getContent());
-		
-	
-
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
 	}
 
 

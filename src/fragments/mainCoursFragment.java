@@ -89,7 +89,7 @@ public class mainCoursFragment extends ListFragment
 		
 		//Log.v("MO", home.currentTag);
 		
-		if (fragmentAnnonce != null && fragmentAnnonce.isInLayout() && home.currentTag.equals(home.annonce_id)) 
+		if (fragmentAnnonce != null && fragmentAnnonce.isInLayout() && home.currentTag.equals(home.ANNONCE_ID)) 
 		{
 			//fragmentAnnonce.setText(title);
 			int layoutID2 = R.layout.details_annonce;			
@@ -101,7 +101,7 @@ public class mainCoursFragment extends ListFragment
 			setListAdapter(adapter);
 			registerForContextMenu(getListView());
 		} 
-		if (fragmentDocs != null && fragmentDocs.isInLayout() && home.currentTag.equals(home.documents_id))
+		if (fragmentDocs != null && fragmentDocs.isInLayout() && home.currentTag.equals(home.DOCUMENTS_ID))
 		{
 			//fragmentAnnonce.setText(titular);
 			int layoutID4 = R.layout.details_annonce;		//TODO changer ici	

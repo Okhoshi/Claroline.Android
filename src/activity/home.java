@@ -31,21 +31,20 @@ import fragments.mainCoursFragment;
 public class home extends AppActivity
 {
 	/**
-	 * 
-	 *  
 	 *  Used to know which course is the current course
-	 *  
-	 *   
 	 */
+	private static Cours currentCours;
+	public static final String ANNONCE_ID = "annonce_id";
+	public static final String DOCUMENTS_ID = "documents_id";
 
-	public static Cours currentCours;
-	public static Annonce currentAnnonce;
-	public static Documents currentDocument;
+	//private static Annonce currentAnnonce;
+	//private static Documents currentDocument;
+	/**
+	 * Used to know which Tab is selected
+	 */
 	public static String currentTag;
-	public static String annonce_id = "annonce_id";
-	public static String documents_id = "documents_id";
 	static TextView view ;
-	
+
 	public static Handler handler = new Handler(){
 		public void handleMessage(Message mess){
 			switch (mess.what) {
@@ -60,10 +59,7 @@ public class home extends AppActivity
 
 
 	/** 
-	 * 
 	 * Called when the activity is first created. 
-	 * 
-	 * 
 	 */
 
 	@Override
@@ -80,7 +76,7 @@ public class home extends AppActivity
 	}
 
 
-	/**
+	/*
 	 * 
 	 *   Listeners
 	 * 
@@ -95,7 +91,15 @@ public class home extends AppActivity
 		private final Class<T> mClass;
 
 
-		/** * Constructor used each time a new tab is created. * * @param activity * The host Activity, used to instantiate the fragment * @param tag * The identifier tag for the fragment * @param clz * The fragment's Class, used to instantiate the fragment */
+		/**
+		 * Constructor used each time a new tab is created.
+		 * @param activity
+		 * The host Activity, used to instantiate the fragment
+		 * @param tag
+		 * The identifier tag for the fragment
+		 * @param clz
+		 * The fragment's Class, used to instantiate the fragment
+		 */
 
 		public MyTabListener(Activity activity, String tag, Class<T> clz) {
 			mActivity = activity;
@@ -111,70 +115,30 @@ public class home extends AppActivity
 				// If not, instantiate and add it to the activity
 				mFragment = Fragment.instantiate(mActivity, mClass.getName());
 
-
-				if(mTag.equals(annonce_id))
-					currentTag=annonce_id;
-				if(mTag.equals(documents_id))
-					currentTag=documents_id;
-
-
-				if(currentCours!=null)
-				{
-					String title = currentCours.getTitle();
-					String titular = currentCours.getTitular();
-
-					Log.v("MO", home.currentTag);
-
-					if (home.currentTag.equals(home.annonce_id)) 
-					{
-						view.setText(title);
-					} 
-					if (home.currentTag.equals(home.documents_id))
-					{
-						view.setText(titular);
-					} 
-				}
-
-				ft.add(android.R.id.content, mFragment, mTag);					
-
-
-
+				ft.add(android.R.id.content, mFragment, mTag);	
 			} else {
 				// If it exists, simply attach it in order to show it
 				ft.setCustomAnimations(android.R.animator.fade_in,
 						android.R.animator.fade_out);
-
-
-				if(mTag.equals(annonce_id))
-					currentTag=annonce_id;
-				if(mTag.equals(documents_id))
-					currentTag=documents_id;
-
-				//if(currentCours==null)
-				//	Log.v("BO", "Cours nulllll ici");
-
-				if(currentCours!=null)
-				{
-					String title = currentCours.getTitle();
-					String titular = currentCours.getTitular();
-
-					Log.v("MO", home.currentTag);
-
-					if (home.currentTag.equals(home.annonce_id)) 
-					{
-						view.setText(title);
-					} 
-					if (home.currentTag.equals(home.documents_id))
-					{
-						view.setText(titular);
-					} 
-				}
-
 				ft.attach(mFragment);
-
-
-
 			}
+			
+			if(currentCours!=null)
+			{
+
+				if(mTag.equals(ANNONCE_ID))
+					currentTag=DOCUMENTS_ID;
+				else if(mTag.equals(DOCUMENTS_ID))	
+					currentTag=ANNONCE_ID;
+				
+				Log.v("MO", currentTag);
+
+				if(mTag.equals(ANNONCE_ID)){
+					view.setText(currentCours.getTitle());
+				} else if(mTag.equals(DOCUMENTS_ID)){
+					view.setText(currentCours.getTitular());
+				}
+			}				
 		}
 
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
@@ -182,22 +146,21 @@ public class home extends AppActivity
 				ft.setCustomAnimations(android.R.animator.fade_in,
 						android.R.animator.fade_out);
 
-				if(mTag.equals(annonce_id))
-					currentTag=documents_id;
-				if(mTag.equals(documents_id))	
-					currentTag=annonce_id;
+				if(mTag.equals(ANNONCE_ID))
+					currentTag=DOCUMENTS_ID;
+				else if(mTag.equals(DOCUMENTS_ID))	
+					currentTag=ANNONCE_ID;
 				ft.detach(mFragment);
-
-
 			}
 		}
 
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+			//Ignore ;)
 		}
 	}
 
 
-	/**
+	/*
 	 * 
 	 *   Menus,tabs,actionBar
 	 * 
@@ -235,7 +198,7 @@ public class home extends AppActivity
 		Tab tab = actionBar
 				.newTab()
 				.setText(getString(R.string.onglet_annonces))
-				.setTabListener(new MyTabListener<detailsAnnonceCoursFragment>(this, annonce_id,
+				.setTabListener(new MyTabListener<detailsAnnonceCoursFragment>(this, ANNONCE_ID,
 						detailsAnnonceCoursFragment.class));
 		actionBar.addTab(tab);
 
@@ -243,7 +206,7 @@ public class home extends AppActivity
 		tab = actionBar
 				.newTab()
 				.setText(getString(R.string.onglet_documents))
-				.setTabListener(new MyTabListener<detailsDocumentsCoursFragment>(this, documents_id,
+				.setTabListener(new MyTabListener<detailsDocumentsCoursFragment>(this, DOCUMENTS_ID,
 						detailsDocumentsCoursFragment.class));
 		actionBar.addTab(tab);
 	}
@@ -262,4 +225,4 @@ public class home extends AppActivity
 		}
 	}
 }
-	
+
