@@ -5,27 +5,12 @@
     android:orientation="horizontal"
     android:id="@+id/frags" 
     >
-
+
     <fragment
         android:id="@+id/list_frag"
-        android:layout_width="150dip"
-        android:layout_height="match_parent"
-        class="fragments.mainCoursFragment" 
-    ></fragment>
-
-    <fragment
-        android:id="@+id/details_frag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="fragments.detailsAnnonceCoursFragment" >
-    </fragment>
-        
-    <fragment
-        android:id="@+id/details_frag_docs"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class="fragments.detailsDocumentsCoursFragment" >
-        <!-- Preview: layout=@layout/details -->
-    </fragment>
+        class="fragments.mainCoursFragment" >
+</fragment>
 
 </LinearLayout> 
