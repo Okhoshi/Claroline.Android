@@ -37,8 +37,6 @@ public class home extends AppActivity
 	public static final String ANNONCE_ID = "annonce_id";
 	public static final String DOCUMENTS_ID = "documents_id";
 
-	//private static Annonce currentAnnonce;
-	//private static Documents currentDocument;
 	/**
 	 * Used to know which Tab is selected
 	 */
@@ -66,13 +64,13 @@ public class home extends AppActivity
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-		if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+		setContentView(R.layout.home);
+		/*if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			setActionBarTabs();
-		}
-		view = (TextView) findViewById(R.id.grid_item_label);
+		}*/
+		//view = (TextView) findViewById(R.id.grid_item_label);
 		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(false); 
+		actionBar.setDisplayHomeAsUpEnabled(false);
 	}
 
 
@@ -180,7 +178,7 @@ public class home extends AppActivity
 		}
 	}
 
-	public void setActionBarTabs()
+	/*public void setActionBarTabs()
 	{
 		// setup action bar for tabs
 		ActionBar actionBar = getActionBar();
@@ -209,7 +207,7 @@ public class home extends AppActivity
 				.setTabListener(new MyTabListener<detailsDocumentsCoursFragment>(this, DOCUMENTS_ID,
 						detailsDocumentsCoursFragment.class));
 		actionBar.addTab(tab);
-	}
+	}*/
 
 	public void onListItemClick(ListView l, View v, int position, long id) 
 	{

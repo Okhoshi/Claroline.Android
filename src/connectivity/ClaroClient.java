@@ -75,11 +75,11 @@ public class ClaroClient implements Runnable {
 
 	public HttpPost getClient(boolean forAuth, CallbackArgs args) throws UnsupportedEncodingException{
 		HttpPost postMessage;
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(GlobalApplication.getInstance().getApplicationContext());
 		if(forAuth){
-			postMessage = new HttpPost(pref.getString("platform_host", "") + "/claroline/auth/login.php");
+			postMessage = new HttpPost(GlobalApplication.getPreferences().getString("platform_host", "") + "/claroline/auth/login.php");
 		} else {
-			postMessage = new HttpPost(pref.getString("platform_host", "") + pref.getString("platform_module", ""));
+			postMessage = new HttpPost(GlobalApplication.getPreferences().getString("platform_host", "")
+										+ GlobalApplication.getPreferences().getString("platform_module", ""));
 		}
 		postMessage.addHeader("Content-Type", "application/x-www-form-urlencoded");
 		postMessage.setEntity(args.entity);
@@ -107,8 +107,9 @@ public class ClaroClient implements Runnable {
 		CallbackArgs args;
 		switch(op){
 		case authenticate:
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(GlobalApplication.getInstance().getApplicationContext());
-			args = new CallbackArgs(pref.getString("user_login", ""), pref.getString("user_password", ""), AllowedOperations.authenticate);
+			args = new CallbackArgs(GlobalApplication.getPreferences().getString("user_login", ""),
+									GlobalApplication.getPreferences().getString("user_password", ""),
+									AllowedOperations.authenticate);
 			getSessionCookie(args);
 			break;
 		case getSingleAnnounce:
@@ -143,8 +144,9 @@ public class ClaroClient implements Runnable {
 
 	public void Execute(CallbackArgs args){
 			if(!isExpired()){
-				SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(GlobalApplication.getInstance().getApplicationContext());
-				if(!getSessionCookie(new CallbackArgs(pref.getString("user_login", ""), pref.getString("user_password", ""), AllowedOperations.authenticate))){
+				if(!getSessionCookie(new CallbackArgs(GlobalApplication.getPreferences().getString("user_login", ""),
+													  GlobalApplication.getPreferences().getString("user_password", ""),
+													  AllowedOperations.authenticate))){
 					Log.e(this.toString(), "Authentication Failed!");
 					return;
 				}
@@ -278,7 +280,9 @@ public class ClaroClient implements Runnable {
 							.putBoolean("isPlatformAdmin", jsonUser.optBoolean("isPlatformAdmin"))
 							.putString("NOMA", jsonUser.optString("officialCode"))
 							.putString("platformName", jsonUser.optString("platformName"))
-							.putString("institutionName", jsonUser.getString("institutionName"))
+							.putString("institutionName", jsonUser.optString("institutionName"))
+							.putString("platformTextAnonym", jsonUser.optString("platformTextAnonym"))
+							.putString("platformTextAuth", jsonUser.optString("platformTextAuth"))
 							.apply();
 						break;
 					default:

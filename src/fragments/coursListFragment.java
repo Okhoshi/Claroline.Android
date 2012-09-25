@@ -17,66 +17,42 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import dataStorage.CoursRepository;
 
-public class mainCoursFragment extends ListFragment 
+public class coursListFragment extends ListFragment 
 {
 	
 	private static final int MAIL_ID = R.id.itemMails;
+	private static final int LIST_ITEM_LAYOUT = R.layout.two_lines_details_list_item;
 	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-	}
+	public Handler refreshList = new Handler(){
+		public void handleMessage(Message mess){
+			liste = CoursRepository.GetAllCours();
+			CoursAdapter adapter = new CoursAdapter(getActivity(),LIST_ITEM_LAYOUT, liste);
+			setListAdapter(adapter);
+		}
+	};
+	
+	private List<Cours> liste;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		int layoutID = R.layout.cours_view;
 		
-		List<Cours> Liste = CoursRepository.GetAllCours();
-		CoursAdapter adapter = new CoursAdapter(getActivity(),layoutID, Liste);
+		liste = CoursRepository.GetAllCours();
+		CoursAdapter adapter = new CoursAdapter(getActivity(),LIST_ITEM_LAYOUT, liste);
 		setListAdapter(adapter);
 		registerForContextMenu(getListView());
 	}
 	
-	public Handler refreshList = new Handler(){
-		public void handleMessage(Message mess){
-			int layoutID = R.layout.cours_view;
-			List<Cours> Liste = CoursRepository.GetAllCours();
-			CoursAdapter adapter = new CoursAdapter(getActivity(),layoutID, Liste);
-			setListAdapter(adapter);
-		}
-	};
-
-	
-	/**
-	 * 
-	 *   OnListItemClick
-	 * 
-	 * 
-	 */
-	
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		Cours item = (Cours) getListAdapter().getItem(position);
-		
-		Intent intent = new Intent(getActivity().getApplicationContext(), activity.coursActivity.class);
-		intent.putExtra("coursID", item.getId());
-		startActivity(intent);
-	}
-	
-	
-	/**
-	 * 
-	 *   All about the contextual menu
-	 * 
-	 * 
+	/*
+	 *   All about the contextual menu 
 	 */
 	
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -87,14 +63,10 @@ public class mainCoursFragment extends ListFragment
 
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		switch (item.getItemId()) 
-		{
+		switch (item.getItemId()){
 		case MAIL_ID:
-			//String officialEmail = currentCours.getOfficialEmail();
-			// Pour test
-			String officialEmail = "eldala07@hotmail.com";
 			Intent i = new Intent(Intent.ACTION_SEND);
-			i.putExtra(Intent.EXTRA_EMAIL, new String[] {officialEmail});
+			i.putExtra(Intent.EXTRA_EMAIL, new String[] {liste.get(info.position).getOfficialEmail()});
 			i.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_titulars));
 			i.setType("message/rfc822");
 			startActivity(Intent.createChooser(i, getString(R.string.choose_activity_mail)));
