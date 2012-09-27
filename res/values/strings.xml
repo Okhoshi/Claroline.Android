@@ -78,6 +78,7 @@
     <string name="pref_user_login">Nom d\'utilisateur</string>
     <string name="pref_user_password">Mot de passe</string>
     <string name="loading_default">Chargement en cours&#8230;</string>
+    <string name="list_no_items">Aucun élément dans cette liste</string>
 
 
 </resources>

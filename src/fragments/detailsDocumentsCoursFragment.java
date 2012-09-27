@@ -25,16 +25,16 @@ public class detailsDocumentsCoursFragment extends Fragment
 
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.cours_view_2, container, false);
-		return view;
-	}
-
-	public void setText(String item) {
-		TextView view = (TextView) getView().findViewById(R.id.grid_item_label_2);
-		view.setText(item);
-	}
+//	@Override
+//	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//			Bundle savedInstanceState) {
+//		View view = inflater.inflate(R.layout.cours_view_2, container, false);
+//		return view;
+//	}
+//
+//	public void setText(String item) {
+//		TextView view = (TextView) getView().findViewById(R.id.grid_item_label_2);
+//		view.setText(item);
+//	}
 
 }

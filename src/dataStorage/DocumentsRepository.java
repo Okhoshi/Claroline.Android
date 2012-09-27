@@ -229,34 +229,6 @@ public class DocumentsRepository extends Repository<Documents> {
 		}
 	}
 
-	public static Documents GetByPath(String path) {
-		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
-	            new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
-							    DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,
-		                        DBOpenHelper.DOCUMENTS_COLUMN_DATE ,
-		                        DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION ,
-		                        DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION ,
-		                        DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER ,
-		                        DBOpenHelper.DOCUMENTS_COLUMN_NAME ,
-		                        DBOpenHelper.DOCUMENTS_COLUMN_NOTIFIED ,
-		                        DBOpenHelper.DOCUMENTS_COLUMN_PATH ,
-		                        DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
-		                        DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
-		                        DBOpenHelper.DOCUMENTS_COLUMN_URL ,
-		                        DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
-		        DBOpenHelper.DOCUMENTS_COLUMN_PATH + "=?",
-		        new String[] { path }, null, null, null);
-		
-		Documents documents;
-		if(cursor.moveToFirst()){
-			documents = ConvertCursorToObject(cursor);
-		} else {
-			documents = null;
-		}
-		cursor.close();
-		return documents;
-	}
-
 	public static List<Documents> GetDocListByCoursId(int coursId) {
 		// Récupération de la liste des documents
 		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,

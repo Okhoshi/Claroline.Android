@@ -46,6 +46,25 @@ public class CallbackArgs {
 			break;
 		}
 		
+		//TEMP !!!!
+		switch (operation) {
+		case getSingleAnnounce:
+		case getAnnounceList:
+			args.add(new BasicNameValuePair("Package","Annonce"));
+			break;
+		case getDocList:
+			args.add(new BasicNameValuePair("Package","Documents"));
+			break;
+		case getCourseList:
+		case getCourseToolList:
+		case getUpdates:
+		case getUserData:
+			args.add(new BasicNameValuePair("Package","General"));
+			break;
+		default:
+			break;
+		}
+		
 		try {
 			entity = new UrlEncodedFormEntity(args);
 		} catch (UnsupportedEncodingException e) {

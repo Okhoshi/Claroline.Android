@@ -14,13 +14,14 @@
         android:layout_weight="1.5"
         class="fragments.contextFragment"
         tools:layout="@layout/context_frag" />
-
+
     <fragment
         android:id="@+id/list_frag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        class="fragments.mainCoursFragment">
+        class="fragments.coursListFragment" >
+
     </fragment>
 
 </LinearLayout>

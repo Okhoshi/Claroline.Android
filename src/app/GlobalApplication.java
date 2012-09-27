@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import connectivity.AllowedOperations;
 import connectivity.ClaroClient;
 import dataStorage.Repository;
 
@@ -62,6 +63,7 @@ public class GlobalApplication extends Application {
 		super.onCreate();
 		singleton = this;
 		client = new ClaroClient();
+		(new Thread(client.makeOperation(null, AllowedOperations.getUserData))).start();
 		Repository.SetOpenHelper(getApplicationContext());
 	}
 }

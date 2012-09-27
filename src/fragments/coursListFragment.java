@@ -6,10 +6,10 @@ import mobile.claroline.R;
 import model.Annonce;
 import model.AnnonceAdapter;
 import model.Cours;
-import model.CoursAdapter;
 import model.Documents;
 import model.DocumentsAdapter;
 import activity.home;
+import adapter.CoursAdapter;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,26 +29,37 @@ public class coursListFragment extends ListFragment
 {
 	
 	private static final int MAIL_ID = R.id.itemMails;
-	private static final int LIST_ITEM_LAYOUT = R.layout.two_lines_details_list_item;
 	
 	public Handler refreshList = new Handler(){
 		public void handleMessage(Message mess){
-			liste = CoursRepository.GetAllCours();
-			CoursAdapter adapter = new CoursAdapter(getActivity(),LIST_ITEM_LAYOUT, liste);
+			List<Cours> liste = CoursRepository.GetAllCours();
+			CoursAdapter adapter = new CoursAdapter(getActivity(), liste);
 			setListAdapter(adapter);
 		}
 	};
 	
-	private List<Cours> liste;
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+		super.onCreateView(inflater, container, savedInstanceState);
+		return inflater.inflate(R.layout.standard_list, container);
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		liste = CoursRepository.GetAllCours();
-		CoursAdapter adapter = new CoursAdapter(getActivity(),LIST_ITEM_LAYOUT, liste);
+		List<Cours> liste = CoursRepository.GetAllCours();
+		CoursAdapter adapter = new CoursAdapter(getActivity(), liste);
 		setListAdapter(adapter);
 		registerForContextMenu(getListView());
+	}
+	
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id){
+		Cours item = (Cours) getListAdapter().getItem(position);
+		Intent intent = new Intent(getActivity().getApplicationContext(), activity.coursActivity.class);
+		intent.putExtra("coursID", item.getId());
+		startActivity(intent);
 	}
 	
 	/*
@@ -66,7 +77,7 @@ public class coursListFragment extends ListFragment
 		switch (item.getItemId()){
 		case MAIL_ID:
 			Intent i = new Intent(Intent.ACTION_SEND);
-			i.putExtra(Intent.EXTRA_EMAIL, new String[] {liste.get(info.position).getOfficialEmail()});
+			i.putExtra(Intent.EXTRA_EMAIL, new String[] {((Cours) getListAdapter().getItem(info.position)).getOfficialEmail()});
 			i.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_titulars));
 			i.setType("message/rfc822");
 			startActivity(Intent.createChooser(i, getString(R.string.choose_activity_mail)));

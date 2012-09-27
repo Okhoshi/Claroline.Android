@@ -7,8 +7,8 @@ import mobile.claroline.R;
 import model.Annonce;
 import model.AnnonceAdapter;
 import model.Cours;
-import model.CoursAdapter;
 import activity.home;
+import adapter.CoursAdapter;
 import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.Intent;
@@ -42,12 +42,12 @@ public class detailsAnnonceCoursFragment extends ListFragment
 		}
 	};*/
 	
-	@Override
+	/*@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Annonce item = (Annonce) getListAdapter().getItem(position);
 		detailsAnnonceCoursFragment fragmentAnnonce = (detailsAnnonceCoursFragment) getFragmentManager().findFragmentById(R.id.details_frag);
 		fragmentAnnonce.setText(item.getTitle()+"\n \n"+item.getContent());
-	}
+	}*/
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -55,10 +55,10 @@ public class detailsAnnonceCoursFragment extends ListFragment
 	}
 
 
-	public void setText(String item) {
+	/*public void setText(String item) {
 		TextView view = (TextView) getView().findViewById(R.id.grid_item_label);
 		view.setText(item);
-	}
+	}*/
 	
 	
 }

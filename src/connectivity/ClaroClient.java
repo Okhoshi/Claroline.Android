@@ -30,6 +30,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.ByteArrayBuffer;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -107,8 +108,8 @@ public class ClaroClient implements Runnable {
 		CallbackArgs args;
 		switch(op){
 		case authenticate:
-			args = new CallbackArgs(GlobalApplication.getPreferences().getString("user_login", ""),
-									GlobalApplication.getPreferences().getString("user_password", ""),
+			args = new CallbackArgs(GlobalApplication.getPreferences().getString("user_login", "qdevos"),
+									GlobalApplication.getPreferences().getString("user_password", "elegie24"),
 									AllowedOperations.authenticate);
 			getSessionCookie(args);
 			break;
@@ -134,11 +135,12 @@ public class ClaroClient implements Runnable {
 			Execute(args);
 			break;
 		}
-
-		Message msg = new Message();
-		msg.what = 0;
-		msg.obj = "Hello ! It's OK";
-		handler.sendMessage(msg);
+		if(handler != null){
+			Message msg = new Message();
+			msg.what = 0;
+			msg.obj = "Hello ! It's OK";
+			handler.sendMessage(msg);
+		}
 		return;
 	}
 
@@ -153,26 +155,28 @@ public class ClaroClient implements Runnable {
 			}
 
 			if(args.operation == AllowedOperations.updateCompleteCourse){
-				Execute(new CallbackArgs(args.cidReq,AllowedOperations.getCourseToolList));
+				Execute(new CallbackArgs(args.cidReq, AllowedOperations.getCourseToolList));
 				Execute(new CallbackArgs(args.cidReq, AllowedOperations.getDocList));
 				Execute(new CallbackArgs(args.cidReq, AllowedOperations.getAnnounceList));
 				//TODO update the "isLoaded" property of args.cidReq
 			} else {
 				try {
 					HttpResponse response = client.execute(getClient(false, args), httpContext);
-					Log.i(this.toString(), "Status:[" + response.getStatusLine().toString() + "]");
+					String _res = EntityUtils.toString(response.getEntity());
+					//String _res = readResponse(response);
+					Log.i("ClaroClient", "Response:" + _res);
 					JSONArray JSONresponse;
 
 					switch(args.operation){
 					case getCourseList:
-						JSONresponse = new JSONArray(readResponse(response));
+						JSONresponse = new JSONArray(_res);
 						for (int i = 0; i < JSONresponse.length(); i++) {
 							JSONObject object = JSONresponse.getJSONObject(i);
 							JSONCours.fromJSONObject(object).saveInDB();
 						}
 						break;
 					case getCourseToolList:
-						JSONresponse = new JSONArray(readResponse(response));
+						JSONresponse = new JSONArray(_res);
 						for(int i = 0; i < JSONresponse.length(); i++){
 							JSONObject object = JSONresponse.getJSONObject(i);
 							JSONCours cours = (JSONCours) CoursRepository.GetBySysCode(object.optString("sysCode"));
@@ -184,27 +188,27 @@ public class ClaroClient implements Runnable {
 						}
 						break;
 					case getAnnounceList:
-						JSONresponse = new JSONArray(readResponse(response));
+						JSONresponse = new JSONArray(_res);
 						for(int i = 0; i < JSONresponse.length(); i++){
 							JSONObject object = JSONresponse.getJSONObject(i);
 							JSONAnnonce.fromJSONObject(object).saveInDB();
 						}
 						break;
 					case getDocList:
-						JSONresponse = new JSONArray(readResponse(response));
+						JSONresponse = new JSONArray(_res);
 						for(int i = 0; i < JSONresponse.length(); i++){
 							JSONObject object = JSONresponse.getJSONObject(i);
 							JSONDocument.fromJSONObject(object).saveInDB();
 						}
 						break;
 					case getSingleAnnounce:
-						JSONresponse = new JSONArray(readResponse(response));
+						JSONresponse = new JSONArray(_res);
 						JSONObject object = JSONresponse.getJSONObject(0);
 						JSONAnnonce.fromJSONObject(object).saveInDB();
 						break;
 					case getUpdates:
-						if(readResponse(response) != "[]"){
-							JSONObject JSONResp = new JSONObject(readResponse(response));
+						if(_res != "[]"){
+							JSONObject JSONResp = new JSONObject(_res);
 							Iterator iterOnCours = JSONResp.keys();
 							while(iterOnCours.hasNext()){
 								Cours upCours;
@@ -273,7 +277,7 @@ public class ClaroClient implements Runnable {
 						}
 						break;
 					case getUserData:
-						JSONObject jsonUser = new JSONObject(readResponse(response));
+						JSONObject jsonUser = new JSONObject(_res);
 						Editor edit = GlobalApplication.getPreferences().edit();
 						edit.putString("firstName", jsonUser.optString("firstName"))
 							.putString("lastName", jsonUser.optString("lastName"))
@@ -288,6 +292,8 @@ public class ClaroClient implements Runnable {
 					default:
 						break;
 					}
+					
+					response.getEntity().consumeContent();
 
 				} catch (ClientProtocolException e) {
 					// TODO Auto-generated catch block
@@ -325,12 +331,14 @@ public class ClaroClient implements Runnable {
 
 	public boolean getSessionCookie(CallbackArgs args){
 		try {
-			Log.i("WEB", getClient(true, args).getURI().getPath());
+			Log.i("WEB", "Host:" + getClient(true, args).getURI().getHost()
+					   + "Path:" + getClient(true, args).getURI().getPath());
 			HttpResponse response = client.execute(getClient(true, args), httpContext);
-			boolean empty =  readResponse(response).isEmpty();
+			boolean empty =  EntityUtils.toString(response.getEntity()).isEmpty();
 			if(empty){
 				cookieCreation = new Date();
 			}
+			response.getEntity().consumeContent();
 			return empty;
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
