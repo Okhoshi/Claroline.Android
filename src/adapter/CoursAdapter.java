@@ -57,15 +57,15 @@ public class CoursAdapter extends BaseAdapter {
 		return this.context;
 	}
 	
-	public View getView(final int position, View view, ViewGroup viewGroup) 
+	public View getView(final int position, View view, ViewGroup parent) 
 	{
 		Cours cours = getItem(position);
 		LinearLayout v = (LinearLayout) view;
 		
-		if(view==null)
+		if(v==null)
 		{
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = (LinearLayout) inflater.inflate(R.layout.two_lines_details_list_item, (ViewGroup) view, false);
+			v = (LinearLayout) inflater.inflate(R.layout.two_lines_details_list_item, parent, false);
 		}
 		
 		if(cours != null){
@@ -84,7 +84,7 @@ public class CoursAdapter extends BaseAdapter {
 			}
 		}
 		
-		return view;
+		return v;
 	}
 	 
 
