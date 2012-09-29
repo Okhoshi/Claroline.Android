@@ -161,6 +161,9 @@ public class ClaroClient implements Runnable {
 				//TODO update the "isLoaded" property of args.cidReq
 			} else {
 				try {
+					Log.i("WEB", "Host:" + getClient(false, args).getURI().getHost()
+							   + "Path:" + getClient(false, args).getURI().getPath()
+							   + " " + EntityUtils.toString(getClient(false, args).getEntity()));
 					HttpResponse response = client.execute(getClient(false, args), httpContext);
 					String _res = EntityUtils.toString(response.getEntity());
 					//String _res = readResponse(response);

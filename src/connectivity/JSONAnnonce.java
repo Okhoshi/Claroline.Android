@@ -42,7 +42,7 @@ public class JSONAnnonce extends Annonce {
 	}
 	
 	public static JSONAnnonce fromJSONObject(JSONObject object) throws ParseException{
-		String sysCode = object.optJSONArray("cours").optJSONObject(0).optString("sysCode");
+		String sysCode = object.optJSONObject("cours").optString("sysCode");
 		
 		JSONAnnonce annonce = new JSONAnnonce(
 				CoursRepository.GetBySysCode(sysCode),

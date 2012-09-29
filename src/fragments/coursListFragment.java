@@ -3,12 +3,7 @@ package fragments;
 import java.util.List;
 
 import mobile.claroline.R;
-import model.Annonce;
-import model.AnnonceAdapter;
 import model.Cours;
-import model.Documents;
-import model.DocumentsAdapter;
-import activity.home;
 import adapter.CoursAdapter;
 import android.app.ListFragment;
 import android.content.Intent;
@@ -57,7 +52,7 @@ public class coursListFragment extends ListFragment
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id){
 		Cours item = (Cours) getListAdapter().getItem(position);
-		Intent intent = new Intent(getActivity().getApplicationContext(), activity.coursActivity.class);
+		Intent intent = new Intent(getActivity(), activity.coursActivity.class);
 		intent.putExtra("coursID", item.getId());
 		startActivity(intent);
 	}

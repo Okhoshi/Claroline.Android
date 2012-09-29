@@ -6,11 +6,15 @@
  * 				   The Adapter provides access to the data items. 
  * 			       The Adapter is also responsible for making a View for each item in the data set. 
  */
-package model;
+package adapter;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import mobile.claroline.R;
+import model.Annonce;
 
 
 import android.content.Context;
@@ -24,24 +28,20 @@ import android.widget.TextView;
 
 public class AnnonceAdapter extends BaseAdapter {
 	
+	private int RESOURCE = R.layout.two_lines_details_list_item;
 	private List<Annonce> listeAnnonce;
-	private LayoutInflater inflater;
 	private Context context;
-	private int resource;
 
-	public AnnonceAdapter(Context context, int _resource, List<Annonce> listeAnnonce) {
+	public AnnonceAdapter(Context context, List<Annonce> listeAnnonce) {
 		this.listeAnnonce=listeAnnonce;
 		this.context=context;
-		this.inflater=LayoutInflater.from(context);
-		this.resource=_resource;
 	}
 	
 	public void setAnnonce(List<Annonce> listeAnnonce)
 	{
 		this.listeAnnonce=listeAnnonce;
 	}
-	
-	
+
 	public int getCount()
 	{
 		return listeAnnonce.size();
@@ -64,28 +64,31 @@ public class AnnonceAdapter extends BaseAdapter {
 	
 	public View getView(final int position, View view, ViewGroup viewGroup) 
 	{
-		LinearLayout newView=null;
-		Annonce annonce1   		 = getItem(position);
-		String AnnonceText   		 = annonce1.getTitle()+"\n"+annonce1.getDate();
+		LinearLayout v = (LinearLayout) view;
+		Annonce ann = getItem(position);
 		
-		if(view==null)
+		if(v==null)
 		{
-			newView = new LinearLayout(getContext());
-			String inflater1 = Context.LAYOUT_INFLATER_SERVICE;
-			this.inflater = (LayoutInflater) getContext().getSystemService(inflater1);
-			this.inflater.inflate(resource, newView, true);
-			
-			TextView textView =  (TextView) newView.findViewById(R.id.details_annonce_tv1);
-			textView.setText(AnnonceText);
-			
-			//textView.setGravity(gravity);
-		}
-		else
-		{
-			newView=(LinearLayout) view;
+			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			v = (LinearLayout) inflater.inflate(RESOURCE, viewGroup, false);
 		}
 		
+		if(ann != null){
+			TextView name = (TextView) v.findViewById(R.id.name_item);
+			TextView detail_1 = (TextView) v.findViewById(R.id.detail_1);
+			TextView detail_2 = (TextView) v.findViewById(R.id.detail_2);
+			
+			if(name != null){
+				name.setText(ann.getTitle());
+			}
+			if(detail_1 != null){
+				detail_1.setText((new SimpleDateFormat("E MMM y dd")).format(ann.getDate()));
+			}
+			if(detail_2 != null){
+				detail_2.setText("");
+			}
+		}
 		
-		return newView;
+		return v;
 	}
 }

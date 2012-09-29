@@ -21,7 +21,7 @@ import android.database.Cursor;
 
 public class CoursRepository extends Repository<Cours> {
 
-	private static final String REPO_TYPE = "Cours";
+	public static final String REPO_TYPE = "Cours";
 
 	public List<Cours> getAll(){
 		return GetAll();
@@ -101,7 +101,6 @@ public class CoursRepository extends Repository<Cours> {
 
 	public static void Save(Cours entite) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ANNNOTIF,entite.isAnnNotif());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_DNLNOTIF, entite.isDnlNotif()); 
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ISANN,entite.isAnn());
@@ -120,7 +119,6 @@ public class CoursRepository extends Repository<Cours> {
 	
 	public static void Update(Cours entite) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ANNNOTIF,entite.isAnnNotif());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_DNLNOTIF, entite.isDnlNotif()); 
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ISANN,entite.isAnn());

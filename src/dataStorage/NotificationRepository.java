@@ -21,7 +21,7 @@ import android.database.Cursor;
 
 public class NotificationRepository extends Repository<Notification> {
 
-	private static final String REPO_TYPE = "Notification";
+	public static final String REPO_TYPE = "Notification";
 
 	public NotificationRepository(Context context) {
 		sqLiteOpenHelper = new DBOpenHelper(context, null);

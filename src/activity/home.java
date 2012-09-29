@@ -23,6 +23,7 @@ import android.widget.TextView;
 import app.AppActivity;
 import app.GlobalApplication;
 import connectivity.AllowedOperations;
+import dataStorage.CoursRepository;
 import fragments.coursListFragment;
 import fragments.detailsAnnonceCoursFragment;
 import fragments.detailsDocumentsCoursFragment;
@@ -33,7 +34,6 @@ public class home extends AppActivity
 	/**
 	 *  Used to know which course is the current course
 	 */
-	private static Cours currentCours;
 	public static final String ANNONCE_ID = "annonce_id";
 	public static final String DOCUMENTS_ID = "documents_id";
 
@@ -41,19 +41,7 @@ public class home extends AppActivity
 	 * Used to know which Tab is selected
 	 */
 	public static String currentTag;
-	static TextView view ;
-
-	public static Handler handler = new Handler(){
-		public void handleMessage(Message mess){
-			switch (mess.what) {
-			case 0:
-				GlobalApplication.setProgressIndicator(false);
-				break;
-			default:
-				break;
-			}
-		}
-	};
+	static TextView view;
 
 
 	/** 
@@ -65,98 +53,10 @@ public class home extends AppActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
-		/*if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			setActionBarTabs();
-		}*/
-		//view = (TextView) findViewById(R.id.grid_item_label);
+		
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(false);
 	}
-
-
-	/*
-	 * 
-	 *   Listeners
-	 * 
-	 * 
-	 */
-
-
-//	public static class MyTabListener<T extends Fragment> implements TabListener {
-//		private Fragment mFragment;
-//		private final Activity mActivity;
-//		private final String mTag;
-//		private final Class<T> mClass;
-//
-//
-//		/**
-//		 * Constructor used each time a new tab is created.
-//		 * @param activity
-//		 * The host Activity, used to instantiate the fragment
-//		 * @param tag
-//		 * The identifier tag for the fragment
-//		 * @param clz
-//		 * The fragment's Class, used to instantiate the fragment
-//		 */
-//
-//		public MyTabListener(Activity activity, String tag, Class<T> clz) {
-//			mActivity = activity;
-//			mTag = tag;
-//			mClass = clz;
-//		}
-//
-//		/* The following are each of the ActionBar.TabListener callbacks */
-//
-//		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-//			// Check if the fragment is already initialized
-//			if (mFragment == null) {
-//				// If not, instantiate and add it to the activity
-//				mFragment = Fragment.instantiate(mActivity, mClass.getName());
-//
-//				ft.add(android.R.id.content, mFragment, mTag);	
-//			} else {
-//				// If it exists, simply attach it in order to show it
-//				ft.setCustomAnimations(android.R.animator.fade_in,
-//						android.R.animator.fade_out);
-//				ft.attach(mFragment);
-//			}
-//			
-//			if(currentCours!=null)
-//			{
-//
-//				if(mTag.equals(ANNONCE_ID))
-//					currentTag=DOCUMENTS_ID;
-//				else if(mTag.equals(DOCUMENTS_ID))	
-//					currentTag=ANNONCE_ID;
-//				
-//				Log.v("MO", currentTag);
-//
-//				if(mTag.equals(ANNONCE_ID)){
-//					view.setText(currentCours.getTitle());
-//				} else if(mTag.equals(DOCUMENTS_ID)){
-//					view.setText(currentCours.getTitular());
-//				}
-//			}				
-//		}
-//
-//		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-//			if (mFragment != null) {
-//				ft.setCustomAnimations(android.R.animator.fade_in,
-//						android.R.animator.fade_out);
-//
-//				if(mTag.equals(ANNONCE_ID))
-//					currentTag=DOCUMENTS_ID;
-//				else if(mTag.equals(DOCUMENTS_ID))	
-//					currentTag=ANNONCE_ID;
-//				ft.detach(mFragment);
-//			}
-//		}
-//
-//		public void onTabReselected(Tab tab, FragmentTransaction ft) {
-//			//Ignore ;)
-//		}
-//	}
-
 
 	/*
 	 * 
@@ -178,45 +78,8 @@ public class home extends AppActivity
 		}
 	}
 
-	/*public void setActionBarTabs()
-	{
-		// setup action bar for tabs
-		ActionBar actionBar = getActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		if (getResources().getConfiguration().orientation == 
-				Configuration.ORIENTATION_LANDSCAPE)
-		{
-			actionBar.setDisplayShowTitleEnabled(false);
-		}
-		else
-		{
-			actionBar.setDisplayShowTitleEnabled(true);
-		}
-
-		Tab tab = actionBar
-				.newTab()
-				.setText(getString(R.string.onglet_annonces))
-				.setTabListener(new MyTabListener<detailsAnnonceCoursFragment>(this, ANNONCE_ID,
-						detailsAnnonceCoursFragment.class));
-		actionBar.addTab(tab);
-
-
-		tab = actionBar
-				.newTab()
-				.setText(getString(R.string.onglet_documents))
-				.setTabListener(new MyTabListener<detailsDocumentsCoursFragment>(this, DOCUMENTS_ID,
-						detailsDocumentsCoursFragment.class));
-		actionBar.addTab(tab);
-	}*/
-
-	public void onListItemClick(ListView l, View v, int position, long id) 
-	{
-		Cours item = (Cours) l.getAdapter().getItem(position);
-		currentCours=item;
-	}
-
 	public void onRepositoryRefresh(String type) {
-		if(type == "Cours"){
+		if(type == CoursRepository.REPO_TYPE){
 			coursListFragment list = (coursListFragment) getFragmentManager().findFragmentById(R.id.list_frag);
 			if(list != null)
 				list.refreshList.sendEmptyMessage(0);

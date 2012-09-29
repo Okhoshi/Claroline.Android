@@ -22,7 +22,7 @@ import android.database.Cursor;
 
 public class AnnonceRepository extends Repository<Annonce> {
 
-	private static final String REPO_TYPE = "Annonce";
+	public static final String REPO_TYPE = "Annonce";
 
 	public AnnonceRepository(Context context) {
 		sqLiteOpenHelper = new DBOpenHelper(context, null);
@@ -121,7 +121,6 @@ public class AnnonceRepository extends Repository<Annonce> {
 	
 	public static void Save(Annonce entite) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,entite.getRessourceId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours().getId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_TITLE,entite.getTitle());
@@ -137,7 +136,6 @@ public class AnnonceRepository extends Repository<Annonce> {
 
 	public static void Update(Annonce entite) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,entite.getRessourceId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours().getId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_TITLE,entite.getTitle());

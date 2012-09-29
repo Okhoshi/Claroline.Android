@@ -8,10 +8,13 @@
  */
 package adapter;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import mobile.claroline.R;
-import model.Cours;
+import model.Annonce;
+import model.Documents;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,70 +23,71 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class CoursAdapter extends BaseAdapter {
+public class DocumentsAdapter extends BaseAdapter {
 
-	private List<Cours> listeCours;
+	private int RESOURCE = R.layout.two_lines_details_list_item;
+	private List<Documents> listeDocuments;
 	private Context context;
 	
-	public CoursAdapter(Context context, List<Cours> listeCours) {
+	public DocumentsAdapter(Context context,  List<Documents> listeDocuments) {
+		this.listeDocuments=listeDocuments;
 		this.context=context;
-		this.listeCours=listeCours;
 	}
 	
-	public void setCours(List<Cours> listeCours)
+	public void setDocuments(List<Documents> listeDocuments)
 	{
-		this.listeCours=listeCours;
+		this.listeDocuments=listeDocuments;
 	}
 	
 	public int getCount()
 	{
-		return listeCours.size();
+		return listeDocuments.size();
 	}
 	
-	public Cours getItem(int position)
+	public Documents getItem(int position)
 	{
-		return listeCours.get(position);
+		return listeDocuments.get(position);
 	}
 
 	public long getItemId(int position)
 	{
-		return listeCours.get(position).getId();
+		return listeDocuments.get(position).getId();
 	}
 	
+	
+
 	public Context getContext()
 	{
 		return this.context;
 	}
 	
-	public View getView(final int position, View view, ViewGroup parent) 
+	public View getView(final int position, View view, ViewGroup viewGroup) //TODO Refaire le layout de la row
 	{
-		Cours cours = getItem(position);
 		LinearLayout v = (LinearLayout) view;
+		Documents doc = getItem(position);
 		
 		if(v==null)
 		{
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = (LinearLayout) inflater.inflate(R.layout.two_lines_details_list_item, parent, false);
+			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			v = (LinearLayout) inflater.inflate(RESOURCE, viewGroup, false);
 		}
 		
-		if(cours != null){
+		if(doc != null){
 			TextView name = (TextView) v.findViewById(R.id.name_item);
 			TextView detail_1 = (TextView) v.findViewById(R.id.detail_1);
 			TextView detail_2 = (TextView) v.findViewById(R.id.detail_2);
 			
 			if(name != null){
-				name.setText(cours.getTitle());
+				name.setText(doc.getName());
 			}
 			if(detail_1 != null){
-				detail_1.setText(cours.getTitular());
+				detail_1.setText((new SimpleDateFormat("E MMM y dd")).format(doc.getDate()));
 			}
 			if(detail_2 != null){
-				detail_2.setText(cours.getSysCode());
+				detail_2.setText(doc.getStringSize());
 			}
 		}
 		
 		return v;
 	}
-	 
-
 }

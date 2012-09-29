@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/texts"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5dp"
-    android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/anonymous_platform_text"
+    android:layout_margin="5dp" >
+
+    <LinearLayout
+        android:id="@+id/texts"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    
-	<View
-	    android:id="@+id/Separator"
-	    android:layout_width="match_parent"
-	    android:layout_height="1dp"
-	    android:background="#2B497B" />
-    
-    <TextView
-        android:id="@+id/auth_platform_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
-    </TextView>
+        <TextView
+            android:id="@+id/anonymous_platform_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-</LinearLayout>
+        <View
+            android:id="@+id/Separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2B497B" />
+
+        <TextView
+            android:id="@+id/auth_platform_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </TextView>
+    </LinearLayout>
+
+</ScrollView>

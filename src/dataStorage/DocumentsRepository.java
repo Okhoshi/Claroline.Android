@@ -21,7 +21,7 @@ import android.database.Cursor;
 
 public class DocumentsRepository extends Repository<Documents> {
 
-	private static final String REPO_TYPE = "Documents";
+	public static final String REPO_TYPE = "Documents";
 
 	public DocumentsRepository(Context context) {
 		sqLiteOpenHelper = new DBOpenHelper(context, null);
@@ -136,7 +136,6 @@ public class DocumentsRepository extends Repository<Documents> {
 
 	public static void Save(Documents entite) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_COURSID,entite.getCours().getId());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate())); 
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION,entite.getDescription());
@@ -156,7 +155,6 @@ public class DocumentsRepository extends Repository<Documents> {
 
 	public static void Update(Documents entite) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_COURSID,entite.getCours().getId());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate())); 
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION,entite.getDescription());

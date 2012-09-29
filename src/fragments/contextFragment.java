@@ -43,7 +43,6 @@ public class contextFragment extends Fragment implements OnSharedPreferenceChang
 	    GlobalApplication.getPreferences().unregisterOnSharedPreferenceChangeListener(this);
 	}
 	
-	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreference, String key) {
 		if(key.equals(AUTH_PLATFORM_TEXT)){
 			authView.setText(GlobalApplication.getPreferences().getString(key,""));

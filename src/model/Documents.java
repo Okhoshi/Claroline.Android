@@ -167,4 +167,25 @@ public class Documents
 			}
 			return false;
 		}
+
+		public String getStringSize() {
+			double div = getSize();
+			if (div < 1) return "";
+			div /= Double.parseDouble("1E+9");
+			if (div > 1)
+				return Math.round(div) + " Go";
+			else
+			{
+				div *= 1000;
+				if (div > 1)
+					return Math.round(div) + " Mo";
+				else
+				{
+					div *= 1000;
+					if (div > 1)
+						return Math.round(div) + " Ko";
+				}
+			}
+			return Math.round(getSize()) + " o";
+		}
 }

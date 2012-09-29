@@ -30,7 +30,7 @@ public class JSONDocument extends Documents {
 	}
 	
 	public static JSONDocument fromJSONObject(JSONObject object) throws ParseException{
-		String sysCode = object.optJSONArray("cours").optJSONObject(0).optString("sysCode");
+		String sysCode = object.optJSONObject("cours").optString("sysCode");
 		
 		JSONDocument doc = new JSONDocument(CoursRepository.GetBySysCode(sysCode),
 											(new SimpleDateFormat("yyyy-MM-dd")).parse(object.optString("date")), 

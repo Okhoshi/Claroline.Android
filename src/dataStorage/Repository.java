@@ -55,6 +55,10 @@ public abstract class Repository<T> implements IRepository<T>
 		maBDD.close();
 	}
 	
+	public static boolean isOpen(){
+		return maBDD.isOpen();
+	}
+	
 	public static void addOnRepositoryRefreshListener(RepositoryRefreshListener listener){
 		repositoryRefreshListener.add(listener);
 	}

@@ -1,186 +1,158 @@
 package activity;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
-import dataStorage.AnnonceRepository;
-import dataStorage.CoursRepository;
-
 import mobile.claroline.R;
-import model.Annonce;
 import model.Cours;
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
-import android.app.ActivityGroup;
-import android.app.SearchManager;
-import android.app.TabActivity;
-import android.content.Context;
-import android.content.Intent;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewConfiguration;
-import android.widget.SearchView;
-import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
+import app.AppActivity;
+import app.GlobalApplication;
+import connectivity.AllowedOperations;
+import dataStorage.AnnonceRepository;
+import dataStorage.CoursRepository;
+import dataStorage.DocumentsRepository;
+import fragments.annonceListFragment;
+import fragments.contextFragment;
+import fragments.documentsListFragment;
 
 
-public class coursActivity extends TabActivity
+public class coursActivity extends AppActivity
 {
-	Cours currentCours;
-	int coursID;
-	
+	protected Cours currentCours;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.tab_cours_activity);
 		
-		// Need to check if Activity has been switched to landscape mode
-		// If yes, finished and go back to the start Activity
-		if (getResources().getConfiguration().orientation == 
-				Configuration.ORIENTATION_LANDSCAPE) {
-			finish();
-			return;
-		}
-
+		setContentView(R.layout.cours_activity);
+		
 		Bundle extras = getIntent().getExtras();
 	    if (extras != null)
-
 	    {
-	        coursID = extras.getInt("coursID");
-	        currentCours=CoursRepository.GetById(coursID);			
+	        currentCours=CoursRepository.GetById(extras.getInt("coursID"));		
 	    }
 	    
-	    
-	    
-		//Intent extras = getIntent();
-		//if (extras != null) {
-		//	String s = extras.getStringExtra("value");
-		//	TextView view = (TextView) findViewById(R.id.grid_item_label);
-		//	view.setText(s);
-		//}
-		
-		setTabs();
-		setActionBar();
-		setOverflowMenu();		
-		
+	    setTabs();
+
+        if (savedInstanceState != null) {
+            getActionBar().setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
+        }
 	}
-	
-	
-	
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.actionbar, menu);
-     // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);     
-        searchView.setSubmitButtonEnabled(true);
-        return true;
-    }
-    
-    
-    
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.menu_about:
-            // Comportement du bouton "A Propos"
-        	Intent monIntent = new Intent(this,about_us.class);
-        	startActivity(monIntent);
-            return true;
-        case R.id.menu_help:
-            // Comportement du bouton "Aide"
-            return true;
         case R.id.menu_refresh:
-            // Comportement du bouton "Rafraichir"
+            switch(getActionBar().getSelectedNavigationIndex()){
+/*            case 0: //Annonce
+            	GlobalApplication.setProgressIndicator(this, true);
+    			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getAnnounceList, currentCours))).start();
+    			break;
+            case 1: //Documents
+            	GlobalApplication.setProgressIndicator(this, true);
+    			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getDocList, currentCours))).start();
+    			break;*/
+    		default:
+            	GlobalApplication.setProgressIndicator(this, true);
+    			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.updateCompleteCourse, currentCours))).start();
+    			break;
+            }
             return true;
-        case R.id.menu_search:
-            // Comportement du bouton "Recherche"
-        	Intent monIntent1 = new Intent(this,searchableActivity.class);
-        	startActivity(monIntent1);
-        	//onSearchRequested();
-            return true;
-        case R.id.menu_settings:
-        	Intent settings_intent = new Intent(this, Settings.class);
-        	startActivity(settings_intent);
-        	return true;
-        case android.R.id.home:
-        	// Comportement du bouton qui permet de retourner a l'activite precedente
-        	monIntent = new Intent(this,home.class);
-        	startActivity(monIntent);
-        	return true;
         default:
             return super.onOptionsItemSelected(item);
         }
     }
 	
-	
-    
-	
-	public void setTabs()
-	{
-	
-		TabHost tabHost=(TabHost)findViewById(android.R.id.tabhost);
-		//TabHost tabHost = getTabHost();
-		tabHost.setup(getLocalActivityManager());
-		
-		TabSpec spec1=tabHost.newTabSpec(getString(R.string.onglet_annonces));
-		TabSpec spec2=tabHost.newTabSpec(getString(R.string.onglet_documents));
-		
-		
-		
-		Intent intent = new Intent().setClass(this, ListeAnnonce.class);
-		Intent intent2 = new Intent().setClass(this, ListeDocument.class);
-		
-		intent.putExtra("coursID", coursID);
-		intent2.putExtra("coursID", coursID);
-		
-		spec1.setIndicator(getString(R.string.onglet_annonces));
-		spec2.setIndicator(getString(R.string.onglet_documents));
-		
-		spec1.setContent(intent);
-		spec2.setContent(intent2);
-		
-		tabHost.addTab(spec1);
-		tabHost.addTab(spec2);
+    public void setTabs(){    	
+    	final ActionBar bar = getActionBar();
+        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		if (getResources().getConfiguration().orientation != 
+				Configuration.ORIENTATION_LANDSCAPE)
+		{
+			bar.setDisplayShowTitleEnabled(false);
+		}
+		else
+		{
+			bar.setDisplayShowTitleEnabled(true);
+		}
+        
+        Bundle args = new Bundle();
+        args.putInt("coursID", currentCours.getId());
+        
+        bar.addTab(bar.newTab().setText("TEST")
+                .setTabListener(new TabListener<annonceListFragment>(this, "announce", annonceListFragment.class, args)));
+        bar.addTab(bar.newTab().setText(getString(R.string.onglet_documents)).setTag("documents")
+                .setTabListener(new TabListener<documentsListFragment>(this, "documents", documentsListFragment.class, args)));
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
+    }
 
-		
-		
+	public void onRepositoryRefresh(String type) {
+		if(type.equals(AnnonceRepository.REPO_TYPE)){
+			annonceListFragment list = (annonceListFragment) getFragmentManager().findFragmentByTag("announce");
+			if(list != null)
+				list.refreshList.sendEmptyMessage(0);
+		} else if(type.equals(DocumentsRepository.REPO_TYPE)){
+			documentsListFragment list = (documentsListFragment) getFragmentManager().findFragmentByTag("documents");
+			if(list != null)
+				list.refreshList.sendEmptyMessage(0);
+		}
 	}
 	
+    public static class TabListener<T extends Fragment> implements ActionBar.TabListener {
+        private final Activity mActivity;
+        private final String mTag;
+        private final Class<T> mClass;
+        private final Bundle mArgs;
+        private Fragment mFragment;
 
-	
-
-	// Met les propriétés de l'action bar
-	public void setActionBar()
-	{
-		ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true); 
-	}
-	
-	
-	public void setOverflowMenu()
-    {
-    	try {
-            ViewConfiguration config = ViewConfiguration.get(this);
-            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
-            if(menuKeyField != null) {
-                menuKeyField.setAccessible(true);
-                menuKeyField.setBoolean(config, false);
-            }
-        } catch (Exception ex) {
-            // Ignore
+        public TabListener(Activity activity, String tag, Class<T> clz) {
+            this(activity, tag, clz, null);
         }
 
+        public TabListener(Activity activity, String tag, Class<T> clz, Bundle args) {
+            mActivity = activity;
+            mTag = tag;
+            mClass = clz;
+            mArgs = args;
+
+            // Check to see if we already have a fragment for this tab, probably
+            // from a previously saved state.  If so, deactivate it, because our
+            // initial state is that a tab isn't shown.
+            mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
+            if (mFragment != null && !mFragment.isDetached()) {
+                FragmentTransaction ft = mActivity.getFragmentManager().beginTransaction();
+                ft.detach(mFragment);
+                ft.commit();
+            }
+        }
+
+        public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        	if (mFragment == null) {
+        		mFragment = Fragment.instantiate(mActivity, mClass.getName(), mArgs);
+        		ft.add(R.id.tab_content, mFragment, mTag);
+        	} else {
+        		ft.attach(mFragment);
+        	}
+        }
+
+        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+            if (mFragment != null) {
+                ft.detach(mFragment);
+            }
+        }
+
+        public void onTabReselected(Tab tab, FragmentTransaction ft) {
+        	// Ignore :)
+        }
     }
-	
-	
-	
-	
 }

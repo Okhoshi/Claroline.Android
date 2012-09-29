@@ -36,7 +36,7 @@ public class CallbackArgs {
 		case getAnnounceList:
 		case getCourseToolList:
 		case getDocList:
-			args.add(new BasicNameValuePair("cidReq",cidReq.getId() + ""));
+			args.add(new BasicNameValuePair("cidReq",cidReq.getSysCode()));
 		case getCourseList:
 		case getUpdates:
 		case getUserData:
@@ -50,7 +50,7 @@ public class CallbackArgs {
 		switch (operation) {
 		case getSingleAnnounce:
 		case getAnnounceList:
-			args.add(new BasicNameValuePair("Package","Annonce"));
+			args.add(new BasicNameValuePair("Package","Announce"));
 			break;
 		case getDocList:
 			args.add(new BasicNameValuePair("Package","Documents"));

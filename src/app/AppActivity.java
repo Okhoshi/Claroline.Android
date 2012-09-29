@@ -12,6 +12,8 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
@@ -21,6 +23,18 @@ import dataStorage.Repository;
 
 public abstract class AppActivity extends Activity implements RepositoryRefreshListener { 
 
+
+	public static Handler handler = new Handler(){
+		public void handleMessage(Message mess){
+			switch (mess.what) {
+			case 0:
+				GlobalApplication.setProgressIndicator(false);
+				break;
+			default:
+				break;
+			}
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -32,14 +46,17 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 		setOverflowMenu();
 	}	
 
-	@Override
-	public void onRestart(){
-		Repository.Open();
-		super.onRestart();
-	}
+//	@Override
+//	public void onRestart(){
+//		Repository.Open();
+//		super.onRestart();
+//	}
 
 	@Override
 	public void onResume(){
+		if(!Repository.isOpen()){
+			Repository.Open();
+		}
 		Repository.addOnRepositoryRefreshListener(this);
 		super.onResume();
 	}
@@ -47,12 +64,17 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 	@Override
 	public void onPause(){
 		Repository.remOnRepositoryRefreshListener(this);
+		if(Repository.isOpen()){
+			Repository.Close();
+		}
 		super.onPause();
 	}
 
 	@Override
-	public void onStop(){
-		Repository.Close();
+	public void onDestroy(){
+		if(Repository.isOpen()){
+			Repository.Close();
+		}
 		super.onStop();
 	}
 
@@ -104,7 +126,7 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 	// Met les propriétés de l'action bar
 	public void setActionBar()
 	{
-		ActionBar actionBar = getActionBar();
+		final ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true); 
 	}
 
