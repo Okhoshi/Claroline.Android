@@ -63,7 +63,7 @@ public class CoursAdapter extends BaseAdapter {
 		if(v==null)
 		{
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = (LinearLayout) inflater.inflate(R.layout.two_lines_details_list_item, parent, false);
+			v = (LinearLayout) inflater.inflate(R.layout.two_lines_item, parent, false);
 		}
 		
 		if(cours != null){

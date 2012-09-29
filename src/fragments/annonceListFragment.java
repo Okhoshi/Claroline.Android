@@ -7,6 +7,7 @@ import model.Annonce;
 import model.Cours;
 import adapter.AnnonceAdapter;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -53,6 +54,9 @@ public class annonceListFragment extends ListFragment {
 	
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id){
-		Toast.makeText(getActivity(), "Item Clicked! :D", Toast.LENGTH_SHORT).show();
+		Annonce item = (Annonce) getListAdapter().getItem(position);
+		Intent intent = new Intent(getActivity(), activity.detailsAnnonce.class);
+		intent.putExtra("annID", item.getId());
+		startActivity(intent);
 	}
 }

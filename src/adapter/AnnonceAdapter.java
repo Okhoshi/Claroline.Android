@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 public class AnnonceAdapter extends BaseAdapter {
 	
-	private int RESOURCE = R.layout.two_lines_details_list_item;
+	private int RESOURCE = R.layout.two_lines_item;
 	private List<Annonce> listeAnnonce;
 	private Context context;
 

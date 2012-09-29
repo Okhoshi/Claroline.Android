@@ -1,52 +1,35 @@
 package activity;
 
-import java.text.SimpleDateFormat;
-
 import mobile.claroline.R;
 import model.Annonce;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.MenuItem;
-import android.widget.TextView;
 import app.AppActivity;
 import app.GlobalApplication;
 import connectivity.AllowedOperations;
 import dataStorage.AnnonceRepository;
+import fragments.annonceDetailFragment;
 
 public class detailsAnnonce extends AppActivity
 {
 
-
-	
 	Annonce currentAnnonce;
-
-	public void onCreate(Bundle savedInstanceState) {
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.details_annonce);
-
 		
 		Bundle extras = getIntent().getExtras();
 	    if (extras != null)
-
 	    {
-	        int annID = extras.getInt("annID");
-	        currentAnnonce=AnnonceRepository.GetById(annID);
-	        TextView t1 = (TextView) findViewById(R.id.details_annonce_tv1);
-			TextView t2 = (TextView) findViewById(R.id.details_annonce_tv2);
-			TextView t3 = (TextView) findViewById(R.id.details_annonce_tv3);
-			TextView t4 = (TextView) findViewById(R.id.details_annonce_tv4);
-
-			t1.setText(currentAnnonce.getCours().getTitle());
-			t2.setText(currentAnnonce.getTitle());
-			t3.setText((new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(currentAnnonce.getDate()));
-			t4.setText(currentAnnonce.getContent());
-	        
+	        currentAnnonce = AnnonceRepository.GetById(extras.getInt("annID"));		
 	    }
 	    
-		
-		
-
+	    Bundle args = new Bundle();
+	    args.putInt("annID", currentAnnonce.getId());
+	    annonceDetailFragment frag = (annonceDetailFragment) Fragment.instantiate(this, annonceDetailFragment.class.getName(), args);
+	    getFragmentManager().beginTransaction().add(android.R.id.content, frag, "annonce_detail").commit();
 	}
 
 	@Override
@@ -63,20 +46,10 @@ public class detailsAnnonce extends AppActivity
 	}
 
 	public void onRepositoryRefresh(String type) {
-		// TODO Auto-generated method stub
-
-	}
-	
-	public static Handler handler = new Handler(){
-		public void handleMessage(Message mess){
-			switch (mess.what) {
-			case 0:
-				GlobalApplication.setProgressIndicator(false);
-				break;
-			default:
-				break;
-			}
+		if(type.equals(AnnonceRepository.REPO_TYPE)){
+			annonceDetailFragment frag = (annonceDetailFragment) getFragmentManager().findFragmentByTag("annonce_detail");
+			if(frag != null)
+				frag.refreshList.sendEmptyMessage(0);
 		}
-	};
-
+	}
 }

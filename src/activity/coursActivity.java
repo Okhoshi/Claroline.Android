@@ -49,14 +49,14 @@ public class coursActivity extends AppActivity
         switch (item.getItemId()) {
         case R.id.menu_refresh:
             switch(getActionBar().getSelectedNavigationIndex()){
-/*            case 0: //Annonce
+            case 0: //Annonce
             	GlobalApplication.setProgressIndicator(this, true);
     			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getAnnounceList, currentCours))).start();
     			break;
             case 1: //Documents
             	GlobalApplication.setProgressIndicator(this, true);
     			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getDocList, currentCours))).start();
-    			break;*/
+    			break;
     		default:
             	GlobalApplication.setProgressIndicator(this, true);
     			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.updateCompleteCourse, currentCours))).start();
@@ -84,9 +84,9 @@ public class coursActivity extends AppActivity
         Bundle args = new Bundle();
         args.putInt("coursID", currentCours.getId());
         
-        bar.addTab(bar.newTab().setText("TEST")
+        bar.addTab(bar.newTab().setText(getString(R.string.onglet_annonces))
                 .setTabListener(new TabListener<annonceListFragment>(this, "announce", annonceListFragment.class, args)));
-        bar.addTab(bar.newTab().setText(getString(R.string.onglet_documents)).setTag("documents")
+        bar.addTab(bar.newTab().setText(getString(R.string.onglet_documents))
                 .setTabListener(new TabListener<documentsListFragment>(this, "documents", documentsListFragment.class, args)));
     }
 

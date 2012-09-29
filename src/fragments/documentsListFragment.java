@@ -7,6 +7,8 @@ import model.Cours;
 import model.Documents;
 import adapter.DocumentsAdapter;
 import android.app.ListFragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,10 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
+import app.GlobalApplication;
 import dataStorage.CoursRepository;
 import dataStorage.DocumentsRepository;
 
-public class documentsListFragment extends ListFragment {
+public class documentsListFragment extends ListFragment { // TODO Context. menu with "Save" option...
 
 	private Cours currentCours;
 	
@@ -51,7 +54,12 @@ public class documentsListFragment extends ListFragment {
 	}
 	
 	@Override
-	public void onListItemClick(ListView l, View v, int position, long id){
-		Toast.makeText(getActivity(), "Item Clicked! :D", Toast.LENGTH_SHORT).show();
+	public void onListItemClick(ListView l, View v, int position, long id){ // TODO Need more documentations !
+		Documents item = (Documents) getListAdapter().getItem(position);
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+									Uri.parse("http://" + item.getUrl() + 
+											"&login=" + GlobalApplication.getPreferences().getString("login", "qdevos") + 
+											"&password=" + GlobalApplication.getPreferences().getString("password", "elegie24")));
+		startActivity(browserIntent);
 	}
 }
