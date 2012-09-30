@@ -49,14 +49,6 @@ public class coursActivity extends AppActivity
         switch (item.getItemId()) {
         case R.id.menu_refresh:
             switch(getActionBar().getSelectedNavigationIndex()){
-            case 0: //Annonce
-            	GlobalApplication.setProgressIndicator(this, true);
-    			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getAnnounceList, currentCours))).start();
-    			break;
-            case 1: //Documents
-            	GlobalApplication.setProgressIndicator(this, true);
-    			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getDocList, currentCours))).start();
-    			break;
     		default:
             	GlobalApplication.setProgressIndicator(this, true);
     			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.updateCompleteCourse, currentCours))).start();
