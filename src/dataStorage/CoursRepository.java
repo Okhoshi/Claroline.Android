@@ -9,14 +9,12 @@ package dataStorage;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import model.Cours;
 //import model.Notification;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 
 public class CoursRepository extends Repository<Cours> {
@@ -163,19 +161,12 @@ public class CoursRepository extends Repository<Cours> {
 		Cours cours;
 		try {
 			cours = new Cours(
-										(new SimpleDateFormat("E MMM dd y HH:mm:ss")).parse(c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED)),
-										null, 
-										null, 
-										null,
-										c.getString(DBOpenHelper.COURS_NUM_COLUMN_OFFICIALEMAIL),
-										c.getString(DBOpenHelper.COURS_NUM_COLUMN_SYSCODE),
-										c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITLE),
-										c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITULAR)
-										// TODO
-										//c.getAnnonces(DBOpenHelper.COURS_NUM_COLUMN_ANNONCE)
-										//c.getDocuments(DBOpenHelper.COURS_NUM_COLUMN_DOCUMENTS)
-										//c.getNotifications(DBOpenHelper.COURS_NUM_COLUMN_NOTIFICATION)
-								   );
+					(new SimpleDateFormat("E MMM dd y HH:mm:ss")).parse(c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED)),
+					c.getString(DBOpenHelper.COURS_NUM_COLUMN_OFFICIALEMAIL),
+					c.getString(DBOpenHelper.COURS_NUM_COLUMN_SYSCODE),
+					c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITLE),
+					c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITULAR)
+					);
 		
 		   cours.setId(c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ID));
 		   cours.setAnnNotif((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ANNNOTIF) != 0));

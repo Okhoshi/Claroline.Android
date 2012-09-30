@@ -68,7 +68,6 @@ public class CallbackArgs {
 		try {
 			entity = new UrlEncodedFormEntity(args);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

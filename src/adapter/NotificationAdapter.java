@@ -6,12 +6,13 @@
  * 				   The Adapter provides access to the data items. 
  * 			       The Adapter is also responsible for making a View for each item in the data set. 
  */
-package model;
+package adapter;
 
 import java.util.List;
 
+import model.Notification;
+
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -19,13 +20,11 @@ import android.widget.BaseAdapter;
 public class NotificationAdapter extends BaseAdapter {
 
 	private List<Notification> listeNotification;
-	private LayoutInflater inflater;
 	private Context context;
 
 	public NotificationAdapter(Context context, List<Notification> listeNotification) {
 		this.listeNotification=listeNotification;
 		this.context=context;
-		this.inflater=LayoutInflater.from(context);
 	}
 	
 	public void setNotification(List<Notification> listeNotification)
@@ -48,11 +47,16 @@ public class NotificationAdapter extends BaseAdapter {
 		return listeNotification.get(position).getId();
 	}
 	
+	public Context getContext(){
+		return context;
+	}
+	
 	
 	public View getView(final int position, View view, ViewGroup viewGroup) 
 	{
+		
 		return null;
-		//TODO
+		//TODO When the notification system will be ready
 	}
 
 }

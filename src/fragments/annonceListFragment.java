@@ -2,7 +2,6 @@ package fragments;
 
 import java.util.List;
 
-import mobile.claroline.R;
 import model.Annonce;
 import model.Cours;
 import adapter.AnnonceAdapter;
@@ -15,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
 

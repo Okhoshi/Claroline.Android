@@ -4,10 +4,13 @@
  */
 package model;
 
-import java.util.ArrayList;
 import java.util.Date;
 //import java.util.Date;
 import java.util.List;
+
+import dataStorage.AnnonceRepository;
+import dataStorage.DocumentsRepository;
+import dataStorage.NotificationRepository;
 
 
 public class Cours 
@@ -18,11 +21,7 @@ public class Cours
 	
 	// Variables globales : propriétés
 	
-	private Date isLoaded; 
-	
-	private List<Annonce> Annonces;
-	private List<Documents> Documents;
-	private List<Notification> Notifications;
+	private Date isLoaded;
 	
 	private boolean annNotif;
 	private boolean dnlNotif;
@@ -40,12 +39,9 @@ public class Cours
 	
 	
 	// Contructeur
-	public Cours(Date isLoaded, List<Annonce> Annonces, List<model.Documents> Documents, List<Notification> Notifications, String officialEmail, String sysCode, String title, String titular)
+	public Cours(Date isLoaded, String officialEmail, String sysCode, String title, String titular)
 	{
 		this.isLoaded=isLoaded;
-		this.Annonces=new ArrayList<Annonce>();
-		this.Documents=new ArrayList<Documents>();
-		this.Notifications=new ArrayList<Notification>();
 		this.annNotif=true;
 		this.dnlNotif=true;
 		this.isAnn=false;
@@ -66,15 +62,15 @@ public class Cours
 	}
 	public List<Annonce> getAnnonces()
 	{
-		return this.Annonces;
+		return AnnonceRepository.GetAllAnnoncesByCoursId(Id);
 	}
 	public List<Documents> getDocuments()
 	{
-		return this.Documents;
+		return DocumentsRepository.GetDocListByCoursId(Id);
 	}
 	public List<Notification> getNotifications()
 	{
-		return this.Notifications;
+		return NotificationRepository.GetAllNotificationsByCoursId(Id);
 	}
 	public String getOfficialEmail()
 	{
@@ -132,18 +128,6 @@ public class Cours
 	public void setIsLoaded(Date isLoaded)
 	{
 		this.isLoaded=isLoaded;
-	}
-	public void setAnnonces(List<Annonce> Annonces)
-	{
-		this.Annonces=Annonces;
-	}
-	public void setDocuments(List<Documents> Documents)
-	{
-		this.Documents=Documents;
-	}
-	public void setNotifications(List<Notification> Notifications)
-	{
-		this.Notifications=Notifications;
 	}
 	public void setOfficialEmail(String officialEmail)
 	{

@@ -6,8 +6,6 @@ package model;
 
 import java.util.Date;
 
-import mobile.claroline.R;
-
 //import java.util.Date;
 
 public class Documents 
