@@ -79,6 +79,8 @@
     <string name="pref_user_password">Mot de passe</string>
     <string name="loading_default">Chargement en cours&#8230;</string>
     <string name="list_no_items">Aucun élément dans cette liste</string>
+    <string name="download_finished_KO">Le téléchargement a échoué</string>
+    <string name="download_finished_OK">Le fichier a été téléchargé dans le dossier \'ExternalStorage/%1$s/Downloaded_files/\'</string>
 
 
 </resources>

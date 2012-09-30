@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.widget.SearchView;
+import android.widget.Toast;
 import dataStorage.IRepository.RepositoryRefreshListener;
 import dataStorage.Repository;
 
@@ -29,6 +30,9 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			switch (mess.what) {
 			case 0:
 				GlobalApplication.setProgressIndicator(false);
+				if(mess.arg1 == 1){
+					Toast.makeText(GlobalApplication.getInstance().getApplicationContext(), (String) mess.obj, Toast.LENGTH_SHORT).show();
+				}
 				break;
 			case 1: //Set the progress with downloading informations
 				GlobalApplication.setProgressIndicator(null, true, (String) mess.obj, false, mess.arg1/mess.arg2, "%1d/%2d Ko");

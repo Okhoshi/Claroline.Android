@@ -119,6 +119,8 @@ public class ClaroClient implements Runnable {
 
 	public void run(){
 		CallbackArgs args;
+		String message = null;
+		
 		switch(op){
 		case authenticate:
 			args = new CallbackArgs(GlobalApplication.getPreferences().getString("user_login", "qdevos"),
@@ -152,7 +154,9 @@ public class ClaroClient implements Runnable {
 				break;
 			Documents doc = DocumentsRepository.GetById(resID);
 			if(doc != null)
-				DownloadFile(doc);
+				message = DownloadFile(doc)?GlobalApplication.getInstance().getResources().getString(R.string.download_finished_OK,
+												GlobalApplication.getInstance().getResources().getString(R.string.app_name)):
+											GlobalApplication.getInstance().getResources().getString(R.string.download_finished_KO);
 			break;
 		}
 		
@@ -160,6 +164,10 @@ public class ClaroClient implements Runnable {
 		if(handler != null){
 			Message msg = new Message();
 			msg.what = 0;
+			if(message != null){
+				msg.arg1 = 1;
+				msg.obj = message;
+			}
 			handler.sendMessage(msg);
 		}
 		return;
