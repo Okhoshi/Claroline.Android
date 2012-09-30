@@ -80,6 +80,5 @@ public class coursListFragment extends ListFragment
 		default:
 			return super.onContextItemSelected(item);
 		}
-
 	}
 }

@@ -16,5 +16,6 @@ public enum AllowedOperations {
 	getAnnounceList,
 	getSingleAnnounce,
 	updateCompleteCourse,
-	getUpdates
+	getUpdates,
+	downloadFile
 }
