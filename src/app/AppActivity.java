@@ -31,11 +31,10 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 				GlobalApplication.setProgressIndicator(false);
 				break;
 			case 1: //Set the progress with downloading informations
-				GlobalApplication.setProgressIndicator(null, true, (String) mess.obj, false, mess.arg1, "%1d/%2d o");
+				GlobalApplication.setProgressIndicator(null, true, (String) mess.obj, false, mess.arg1/mess.arg2, "%1d/%2d Ko");
 				break;
 			case 2: //Renew the progress status
-				//int value = 1000000*mess.arg1/mess.arg2;
-				GlobalApplication.incrementProgression(mess.arg1);
+				GlobalApplication.incrementProgression(mess.arg1/mess.arg2);
 				break;
 			default:
 				break;

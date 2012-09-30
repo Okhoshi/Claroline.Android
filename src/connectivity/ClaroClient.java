@@ -424,17 +424,19 @@ public class ClaroClient implements Runnable {
 	        int totalSize = urlConnection.getContentLength();	        
 	        //variable to store total downloaded bytes
 	        int downloadedSize = 0;
+	        int iterationSize = 1024;
 
 			if(handler != null){
 				Message msg = new Message();
 				msg.what = 1;
 				msg.obj = "Downloading " + file.getName() + "...";
 				msg.arg1 = totalSize;
+				msg.arg2 = iterationSize;
 				handler.sendMessage(msg);
 			}
 
 	        //create a buffer...
-	        byte[] buffer = new byte[1024];
+	        byte[] buffer = new byte[iterationSize];
 	        int bufferLength = 0; //used to store a temporary size of the buffer
 
 	        //now, read through the input buffer and write the contents to the file
@@ -449,7 +451,7 @@ public class ClaroClient implements Runnable {
 	    				Message msg = new Message();
 	    				msg.what = 2;
 	    				msg.arg1 = downloadedSize;
-	    				msg.arg2 = totalSize;
+	    				msg.arg2 = iterationSize;
 	    				handler.sendMessage(msg);
 	    			}
 	        }
