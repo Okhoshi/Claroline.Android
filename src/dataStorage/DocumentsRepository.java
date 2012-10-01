@@ -106,7 +106,11 @@ public class DocumentsRepository extends Repository<Documents> {
 		return documents;
 	}
 
-	public static Documents GetByPath(String path) {
+	/*
+	 * Static methods of DocumentsRepository
+	 */
+	
+	public static List<Documents> GetAllByPath(String path, int coursId) {
 		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
 	            new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
 							    DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,
@@ -121,17 +125,10 @@ public class DocumentsRepository extends Repository<Documents> {
 		                        DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
 		                        DBOpenHelper.DOCUMENTS_COLUMN_URL ,
 		                        DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
-		        DBOpenHelper.DOCUMENTS_COLUMN_PATH + "=?",
-		        new String[] { path }, null, null, null);
-		
-		Documents documents;
-		if(cursor.moveToFirst()){
-			documents = ConvertCursorToObject(cursor);
-		} else {
-			documents = null;
-		}
-		cursor.close();
-		return documents;
+		        DBOpenHelper.DOCUMENTS_COLUMN_PATH + "=? AND " + 
+		        DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
+		        new String[] { path, String.valueOf(coursId)}, null, null, null);
+		return ConvertCursorToListObject(cursor);
 	}
 
 	public static void Save(Documents entite) {

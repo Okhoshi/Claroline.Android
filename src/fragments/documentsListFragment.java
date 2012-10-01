@@ -31,6 +31,7 @@ import dataStorage.DocumentsRepository;
 public class documentsListFragment extends ListFragment {
 
 	private Cours currentCours;
+	private Documents currentDoc;
 	
 	public Handler refreshList = new Handler(){
 		public void handleMessage(Message mess){

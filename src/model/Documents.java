@@ -5,6 +5,9 @@
 package model;
 
 import java.util.Date;
+import java.util.List;
+
+import dataStorage.DocumentsRepository;
 
 import mobile.claroline.R;
 
@@ -160,6 +163,29 @@ public class Documents
 		public void setVisible(boolean visibility)
 		{
 			this.visibility=visibility;
+		}
+		
+		public List<Documents> getContent(){
+			if(IsFolder){
+				return DocumentsRepository.GetAllByPath(path + "/" + name, Cours.getId());
+			} else {
+				return null;
+			}
+		}
+		
+		public Documents getRoot(){
+            String Find = (IsFolder) ? ("/" + name) : ("/" + name + "." + Extension);
+            String rootPath = path.substring(0, path.lastIndexOf(Find));
+            if (rootPath == "")
+            {
+                Documents _doc = new Documents(Cours, null, "", "", "ROOT", "", "");
+                _doc.setFolder(true);
+                return _doc;
+            }
+            else
+            {
+                return DocumentsRepository.GetAllByPath(rootPath, Cours.getId()).get(0);
+            }
 		}
 		
 		@Override
