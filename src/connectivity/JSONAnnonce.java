@@ -29,7 +29,6 @@ public class JSONAnnonce extends Annonce {
 	public JSONAnnonce(model.Cours Cours, Date date, String title,
 			String content) {
 		super(Cours, date, title, content);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public int saveInDB(){

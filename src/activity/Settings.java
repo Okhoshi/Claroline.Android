@@ -3,8 +3,6 @@
  */
 package activity;
 
-import java.lang.reflect.Field;
-
 import mobile.claroline.R;
 import android.app.ActionBar;
 import android.content.Intent;
@@ -14,7 +12,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
-import android.view.ViewConfiguration;
 
 /**
  * @author Quentin

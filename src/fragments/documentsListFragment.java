@@ -2,9 +2,6 @@ package fragments;
 
 import java.util.List;
 
-import connectivity.AllowedOperations;
-
-import mobile.claroline.R;
 import model.Cours;
 import model.Documents;
 import adapter.DocumentsAdapter;
@@ -22,9 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ListView;
-import android.widget.Toast;
 import app.AppActivity;
 import app.GlobalApplication;
+import connectivity.AllowedOperations;
 import dataStorage.CoursRepository;
 import dataStorage.DocumentsRepository;
 

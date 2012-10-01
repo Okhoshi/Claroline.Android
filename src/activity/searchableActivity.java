@@ -3,7 +3,6 @@ package activity;
 import dataStorage.CoursProvider;
 import dataStorage.DBOpenHelper;
 import mobile.claroline.R;
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;

@@ -1,9 +1,8 @@
 /**
- * 
+ * author : Quentin
  */
 package connectivity;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,7 +10,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,6 +18,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
+import mobile.claroline.R;
 import model.Annonce;
 import model.Cours;
 import model.Documents;
@@ -36,19 +35,15 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import mobile.claroline.R;
-import android.content.SharedPreferences;
+
 import android.content.SharedPreferences.Editor;
-import android.content.res.Resources;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import app.GlobalApplication;
 import dataStorage.AnnonceRepository;
@@ -187,7 +182,8 @@ public class ClaroClient implements Runnable {
 			Execute(new CallbackArgs(args.cidReq, AllowedOperations.getCourseToolList));
 			Execute(new CallbackArgs(args.cidReq, AllowedOperations.getDocList));
 			Execute(new CallbackArgs(args.cidReq, AllowedOperations.getAnnounceList));
-			//TODO update the "isLoaded" property of args.cidReq
+			args.cidReq.setIsLoaded(new Date());
+			CoursRepository.Update(args.cidReq);
 		} else {
 			try {
 				Log.d("WEB", "Host:" + getClient(false, args).getURI().getHost()
@@ -242,7 +238,7 @@ public class ClaroClient implements Runnable {
 				case getUpdates:
 					if(_res != "[]"){
 						JSONObject JSONResp = new JSONObject(_res);
-						Iterator iterOnCours = JSONResp.keys();
+						Iterator<?> iterOnCours = JSONResp.keys();
 						while(iterOnCours.hasNext()){
 							Cours upCours;
 							String syscode = (String) iterOnCours.next();
@@ -254,7 +250,7 @@ public class ClaroClient implements Runnable {
 								continue;
 							} else {
 								JSONObject jsonCours = JSONResp.getJSONObject(syscode);
-								Iterator iterOnMod = jsonCours.keys();
+								Iterator<?> iterOnMod = jsonCours.keys();
 								while(iterOnMod.hasNext()){
 									String modKey = (String) iterOnMod.next();
 									if(modKey == "CLANN"){
@@ -266,7 +262,7 @@ public class ClaroClient implements Runnable {
 											continue;
 										} else {
 											JSONObject jsonAnn = jsonCours.getJSONObject(modKey);
-											Iterator iterOnAnn = jsonAnn.keys();
+											Iterator<?> iterOnAnn = jsonAnn.keys();
 											while(iterOnAnn.hasNext()){
 												int resID = Integer.parseInt((String) iterOnAnn.next());
 												Annonce upAnn;
@@ -290,7 +286,7 @@ public class ClaroClient implements Runnable {
 											continue;
 										} else {
 											JSONObject jsonDoc = jsonCours.getJSONObject(modKey);
-											Iterator iterOnDoc = jsonDoc.keys();
+											Iterator<?> iterOnDoc = jsonDoc.keys();
 											while(iterOnDoc.hasNext()){
 												String path = (String) iterOnDoc.next();
 												Documents upDoc;
@@ -329,22 +325,16 @@ public class ClaroClient implements Runnable {
 				response.getEntity().consumeContent();
 
 			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -472,19 +462,5 @@ public class ClaroClient implements Runnable {
 			Log.d("DownloadManager", "Error: " + e);
 		}
 		return false; // Something were wrong if it passes here
-	}
-
-	private String readResponse(HttpResponse response) throws IllegalStateException, IOException{
-		InputStream is = response.getEntity().getContent();
-		BufferedInputStream bis = new BufferedInputStream(is);
-		ByteArrayBuffer baf = new ByteArrayBuffer(10000000);
-
-		int current = 0;
-		while((current = bis.read()) != -1){
-			baf.append((byte)current);
-		}
-
-		/* Convert the Bytes read to a String. */
-		return new String(baf.toByteArray());
 	}
 }

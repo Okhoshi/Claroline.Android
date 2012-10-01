@@ -11,8 +11,6 @@ package adapter;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.xmlpull.v1.XmlPullParser;
-
 import mobile.claroline.R;
 import model.Annonce;
 

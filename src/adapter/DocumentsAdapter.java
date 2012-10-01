@@ -52,8 +52,6 @@ public class DocumentsAdapter extends BaseAdapter {
 	{
 		return listeDocuments.get(position).getId();
 	}
-	
-	
 
 	public Context getContext()
 	{

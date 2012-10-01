@@ -16,7 +16,6 @@ public class JSONDocument extends Documents {
 	public JSONDocument(model.Cours Cours, Date date, String Description,
 			String Extension, String name, String path, String url) {
 		super(Cours, date, Description, Extension, name, path, url);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public int saveInDB(){

@@ -9,8 +9,6 @@ import java.util.List;
 
 import dataStorage.DocumentsRepository;
 
-import mobile.claroline.R;
-
 //import java.util.Date;
 
 public class Documents 
