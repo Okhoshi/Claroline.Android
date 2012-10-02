@@ -70,8 +70,11 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 
 	@Override
 	public void onPause(){
-		Repository.remOnRepositoryRefreshListener(this);
 		super.onPause();
+		Repository.remOnRepositoryRefreshListener(this);
+		if(Repository.isOpen()){
+			Repository.Close();
+		}
 	}
 
 	@Override
@@ -79,7 +82,7 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 		if(Repository.isOpen()){
 			Repository.Close();
 		}
-		super.onStop();
+		super.onDestroy();
 	}
 
 	@Override

@@ -24,6 +24,7 @@ import app.GlobalApplication;
 import connectivity.AllowedOperations;
 import dataStorage.CoursRepository;
 import dataStorage.DocumentsRepository;
+import dataStorage.Repository;
 
 public class documentsListFragment extends ListFragment {
 
@@ -47,6 +48,10 @@ public class documentsListFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+		if(!Repository.isOpen()){
+			Repository.Open();
+		}
 
 		Bundle extras = getArguments();
 		if (extras != null)
@@ -82,9 +87,9 @@ public class documentsListFragment extends ListFragment {
 		       		i.setDataAndType(Uri.parse("http://" + item.getUrl() + 
 		       						"&login=" + GlobalApplication.getPreferences().getString("user_login", "qdevos") + 
 		       						"&password=" + GlobalApplication.getPreferences().getString("user_password", "elegie24")), mimeType);
-		       		if(getActivity().getPackageManager().resolveActivity(i, PackageManager.GET_INTENT_FILTERS) != null){
+		       		//if(getActivity().getPackageManager().resolveActivity(i, PackageManager.GET_INTENT_FILTERS) != null){
 		       			startActivity(i);
-		       		}
+		       		//}
 		       		dialog.dismiss();
 		           }
 		       })

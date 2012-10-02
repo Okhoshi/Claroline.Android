@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
+import dataStorage.Repository;
 
 public class annonceListFragment extends ListFragment {
 	
@@ -38,6 +39,10 @@ public class annonceListFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+		if(!Repository.isOpen()){
+			Repository.Open();
+		}
 
 		Bundle extras = getArguments();
 	    if (extras != null)

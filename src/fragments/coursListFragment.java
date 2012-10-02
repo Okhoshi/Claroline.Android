@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import dataStorage.CoursRepository;
+import dataStorage.Repository;
 
 public class coursListFragment extends ListFragment 
 {
@@ -42,6 +43,10 @@ public class coursListFragment extends ListFragment
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+		if(!Repository.isOpen()){
+			Repository.Open();
+		}
 		
 		List<Cours> liste = CoursRepository.GetAllCours();
 		CoursAdapter adapter = new CoursAdapter(getActivity(), liste);

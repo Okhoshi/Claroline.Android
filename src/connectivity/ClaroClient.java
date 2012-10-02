@@ -290,7 +290,7 @@ public class ClaroClient implements Runnable {
 											while(iterOnDoc.hasNext()){
 												String path = (String) iterOnDoc.next();
 												Documents upDoc;
-												if((upDoc = DocumentsRepository.GetByPath(path)) == null){
+												if((upDoc = DocumentsRepository.GetAllByPath(path, upCours.getId()).get(0)) == null){
 													Execute(new CallbackArgs(upCours, AllowedOperations.getDocList));
 												} else {
 													upDoc.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonDoc.optString(path)));
