@@ -7,9 +7,9 @@ import model.Documents;
 import adapter.DocumentsAdapter;
 import android.app.AlertDialog;
 import android.app.ListFragment;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ListView;
+import android.widget.Toast;
 import app.AppActivity;
 import app.GlobalApplication;
 import connectivity.AllowedOperations;
@@ -29,7 +30,6 @@ import dataStorage.Repository;
 public class documentsListFragment extends ListFragment {
 
 	private Cours currentCours;
-	private Documents currentDoc;
 	
 	public Handler refreshList = new Handler(){
 		public void handleMessage(Message mess){
@@ -77,7 +77,7 @@ public class documentsListFragment extends ListFragment {
 		       .setPositiveButton("Save", new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
 		       		GlobalApplication.setProgressIndicator(getActivity(), true);
-		       		(new Thread(GlobalApplication.getClient().makeOperation(AppActivity.handler, AllowedOperations.downloadFile, item.getId()))).start();
+		       		(new Thread(GlobalApplication.getClient().makeOperation(((AppActivity)getActivity()).handler, AllowedOperations.downloadFile, item.getId()))).start();
 		       		dialog.dismiss();
 		           }
 		       })
@@ -87,9 +87,11 @@ public class documentsListFragment extends ListFragment {
 		       		i.setDataAndType(Uri.parse("http://" + item.getUrl() + 
 		       						"&login=" + GlobalApplication.getPreferences().getString("user_login", "qdevos") + 
 		       						"&password=" + GlobalApplication.getPreferences().getString("user_password", "elegie24")), mimeType);
-		       		//if(getActivity().getPackageManager().resolveActivity(i, PackageManager.GET_INTENT_FILTERS) != null){
-		       			startActivity(i);
-		       		//}
+		       			try {
+							startActivity(i);
+						} catch (ActivityNotFoundException e) {
+							Toast.makeText(getActivity(), "Unable to find an app for that", Toast.LENGTH_LONG).show();
+						}
 		       		dialog.dismiss();
 		           }
 		       })

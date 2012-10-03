@@ -11,37 +11,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
-import android.widget.Toast;
 import dataStorage.IRepository.RepositoryRefreshListener;
 import dataStorage.Repository;
 
 public abstract class AppActivity extends Activity implements RepositoryRefreshListener { 
 
 
-	public static Handler handler = new Handler(){
-		public void handleMessage(Message mess){
-			switch (mess.what) {
-			case 0:
-				GlobalApplication.setProgressIndicator(false);
-				if(mess.arg1 == 1){
-					Toast.makeText(GlobalApplication.getInstance().getApplicationContext(), (String) mess.obj, Toast.LENGTH_SHORT).show();
-				}
-				break;
-			case 1: //Set the progress with downloading informations
-				GlobalApplication.setProgressIndicator(null, true, (String) mess.obj, false, mess.arg1/mess.arg2, "%1d/%2d Ko");
-				break;
-			case 2: //Renew the progress status
-				GlobalApplication.incrementProgression(mess.arg1/mess.arg2);
-				break;
-			default:
-				break;
-			}
-		}
-	};
+	public Handler handler = new AppHandler(this);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -53,11 +32,11 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 		setOverflowMenu();
 	}	
 
-//	@Override
-//	public void onRestart(){
-//		Repository.Open();
-//		super.onRestart();
-//	}
+	//	@Override
+	//	public void onRestart(){
+	//		Repository.Open();
+	//		super.onRestart();
+	//	}
 
 	@Override
 	public void onResume(){
@@ -95,7 +74,7 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 		searchView.setIconifiedByDefault(false);     
 		searchView.setSubmitButtonEnabled(true);
-*/
+		 */
 		return true;
 	}
 
@@ -122,9 +101,9 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			monIntent = new Intent(this,home.class);
 			startActivity(monIntent);
 			return true;
-        case R.id.menu_refresh:
-            // Comportement du bouton "Rafraichir"
-            return true;
+		case R.id.menu_refresh:
+			// Comportement du bouton "Rafraichir"
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

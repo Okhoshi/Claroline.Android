@@ -115,6 +115,7 @@ public class ClaroClient implements Runnable {
 	public void run(){
 		CallbackArgs args;
 		String message = null;
+		int ressource = -1;
 		
 		switch(op){
 		case authenticate:
@@ -148,10 +149,12 @@ public class ClaroClient implements Runnable {
 			if(resID < 0)
 				break;
 			Documents doc = DocumentsRepository.GetById(resID);
-			if(doc != null)
+			if(doc != null){
 				message = DownloadFile(doc)?GlobalApplication.getInstance().getResources().getString(R.string.download_finished_OK,
 												GlobalApplication.getInstance().getResources().getString(R.string.app_name)):
 											GlobalApplication.getInstance().getResources().getString(R.string.download_finished_KO);
+				ressource = doc.getId(); 
+			}
 			break;
 		}
 		
@@ -162,6 +165,8 @@ public class ClaroClient implements Runnable {
 			if(message != null){
 				msg.arg1 = 1;
 				msg.obj = message;
+				if(ressource != -1)
+					msg.arg2 = ressource;
 			}
 			handler.sendMessage(msg);
 		}
