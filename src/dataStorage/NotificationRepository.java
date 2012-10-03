@@ -96,7 +96,7 @@ public class NotificationRepository extends Repository<Notification> {
 
 
 
-	public static void Save(Notification entite) {
+	public static int Save(Notification entite) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ID, entite.getId());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCEID,entite.getRessourceId());
@@ -108,8 +108,9 @@ public class NotificationRepository extends Repository<Notification> {
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_TEXT,entite.getText());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_UPDATED, entite.isUpdated());
 
-		maBDD.insert(DBOpenHelper.NOTIFICATION_TABLE, null, contentValues);
+		int id = (int) maBDD.insert(DBOpenHelper.NOTIFICATION_TABLE, null, contentValues);
 		RefreshRepository(REPO_TYPE);
+		return id;
 	}
 
 	public static void Update(Notification entite) {

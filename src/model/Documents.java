@@ -164,17 +164,20 @@ public class Documents
 		}
 		
 		public List<Documents> getContent(){
+			List<Documents> liste;
 			if(IsFolder){
-				return DocumentsRepository.GetAllByPath(path + "/" + name, Cours.getId());
+				String added = name.equals("ROOT")?"": name + "/";
+				liste = DocumentsRepository.GetAllByPath(path + added , Cours.getId());
 			} else {
-				return null;
+				liste = null;
 			}
+			return liste;
 		}
 		
 		public Documents getRoot(){
-            String Find = (IsFolder) ? ("/" + name) : ("/" + name + "." + Extension);
+            String Find = (name + "/");
             String rootPath = path.substring(0, path.lastIndexOf(Find));
-            if (rootPath == "")
+            if (rootPath == "/")
             {
                 Documents _doc = new Documents(Cours, null, "", "", "ROOT", "", "");
                 _doc.setFolder(true);
@@ -213,5 +216,11 @@ public class Documents
 				}
 			}
 			return Math.round(getSize()) + " o";
+		}
+
+		public static Documents getEmptyRoot(Cours currentCours) {
+            Documents _doc = new Documents(currentCours, null, "", "", "ROOT", "/", "");
+            _doc.setFolder(true);
+            return _doc;
 		}
 }

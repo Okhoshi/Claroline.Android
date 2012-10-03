@@ -19,10 +19,10 @@ public class JSONDocument extends Documents {
 	}
 	
 	public int saveInDB(){
-		if(this.equals(DocumentsRepository.GetById(this.getId()))){
+		if(this.equals(DocumentsRepository.GetWithoutId(this))){
 			DocumentsRepository.Update(this);
 		} else {
-			DocumentsRepository.Save(this);
+			this.setId(DocumentsRepository.Save(this));
 		}
 		
 		return this.getId();
@@ -36,12 +36,19 @@ public class JSONDocument extends Documents {
 											object.optString("description"), 
 											object.optString("extension"), 
 											object.optString("name"), 
-											object.optString("path"), 
+											object.optString("path").replace(object.optBoolean("isFolder")?
+																			object.optString("name") :
+																			object.optString("name") + "." + object.optString("extension")
+																			, ""), 
 											object.optString("url"));
 		
+		doc.setFolder(object.optBoolean("isFolder"));
 		doc.setNotified(object.optBoolean("notified"));
-		doc.setSize(object.optDouble("size"));
 		doc.setVisible(object.optBoolean("visibility"));
+		
+		if(!doc.isFolder()){
+			doc.setSize(object.optDouble("size"));
+		}
 		
 		return doc;
 	}
