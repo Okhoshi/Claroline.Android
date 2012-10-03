@@ -63,9 +63,8 @@ public class AppHandler extends Handler {
 						final String mimeType = map.getMimeTypeFromExtension(item.getExtension());
 						
 						Intent i = new Intent(Intent.ACTION_VIEW);
-						i.setDataAndType(Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" +
-										context.getString(R.string.app_name) +
-										"/Downloaded_files"), mimeType);
+						i.setDataAndType(Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" +
+										context.getString(R.string.app_name)), mimeType);
 						try {
 							context.startActivity(i);
 						} catch (ActivityNotFoundException e) {
