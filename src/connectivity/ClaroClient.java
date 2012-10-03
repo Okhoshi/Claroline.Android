@@ -151,6 +151,7 @@ public class ClaroClient implements Runnable {
 			Documents doc = DocumentsRepository.GetById(resID);
 			if(doc != null){
 				message = DownloadFile(doc)?GlobalApplication.getInstance().getResources().getString(R.string.download_finished_OK,
+												Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
 												GlobalApplication.getInstance().getResources().getString(R.string.app_name)):
 											GlobalApplication.getInstance().getResources().getString(R.string.download_finished_KO);
 				ressource = doc.getId(); 
@@ -386,9 +387,9 @@ public class ClaroClient implements Runnable {
 			if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 				return false;
 
-			File root = Environment.getExternalStorageDirectory();               
+			File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);               
 
-			File dir = new File (root.getAbsolutePath() + "/" + GlobalApplication.getInstance().getResources().getString(R.string.app_name) + "/Downloaded_files");
+			File dir = new File (root.getAbsolutePath() + "/" + GlobalApplication.getInstance().getResources().getString(R.string.app_name));
 			if(dir.exists()==false) {
 				if(dir.mkdirs() == false)
 					//Exits if the directory asked cannot be created!
