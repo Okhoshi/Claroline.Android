@@ -19,6 +19,7 @@ import android.widget.Toast;
 public class AppHandler extends Handler {
 
 	private Context context;
+	private int resID;
 
 	public AppHandler() {
 		super();
@@ -42,6 +43,7 @@ public class AppHandler extends Handler {
 	}
 	
 	public void handleMessage(final Message mess){
+		resID = mess.arg2;
 		switch (mess.what) {
 		case 0:
 			GlobalApplication.setProgressIndicator(false);
@@ -57,7 +59,7 @@ public class AppHandler extends Handler {
 				})
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						final Documents item = DocumentsRepository.GetById(mess.arg2); //FIXME unaccessible variable
+						final Documents item = DocumentsRepository.GetById(resID); //FIXME unaccessible variable
 						
 						MimeTypeMap map = MimeTypeMap.getSingleton();
 						final String mimeType = map.getMimeTypeFromExtension(item.getExtension());
