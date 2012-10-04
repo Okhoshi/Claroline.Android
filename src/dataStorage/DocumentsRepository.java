@@ -129,7 +129,37 @@ public class DocumentsRepository extends Repository<Documents> {
 								new String[] {path, String.valueOf(coursId)}, null, null, null);
 		return ConvertCursorToListObject(cursor);
 	}
+	
+	public static Documents GetRootByPath(String name, String path, int coursId) {
+		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
+				new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
+				DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,
+				DBOpenHelper.DOCUMENTS_COLUMN_DATE ,
+				DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION ,
+				DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION ,
+				DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER ,
+				DBOpenHelper.DOCUMENTS_COLUMN_NAME ,
+				DBOpenHelper.DOCUMENTS_COLUMN_NOTIFIED ,
+				DBOpenHelper.DOCUMENTS_COLUMN_PATH ,
+				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
+				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
+				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
+				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
+				DBOpenHelper.DOCUMENTS_COLUMN_PATH + " = ? AND " +
+				DBOpenHelper.DOCUMENTS_COLUMN_NAME + " = ? AND " +
+				DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER + " = 1 AND " +
+				DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
+								new String[] {path, name, String.valueOf(coursId)}, null, null, null);
 
+		Documents documents;
+		if(cursor.moveToFirst()){
+			documents = ConvertCursorToObject(cursor);
+		} else {
+			documents = null;
+		}
+		cursor.close();
+		return documents;
+	}
 	public static int Save(Documents entite) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_COURSID,entite.getCours().getId());

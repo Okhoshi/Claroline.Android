@@ -2,6 +2,7 @@ package fragments;
 
 import java.util.List;
 
+import mobile.claroline.R;
 import model.Annonce;
 import model.Cours;
 import adapter.AnnonceAdapter;
@@ -32,8 +33,8 @@ public class annonceListFragment extends ListFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-		return super.onCreateView(inflater, container, savedInstanceState);
-		//return inflater.inflate(R.layout.standard_list, container);
+		super.onCreateView(inflater, container, savedInstanceState);
+		return inflater.inflate(R.layout.standard_list, null);
 	}
 	
 	@Override

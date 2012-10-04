@@ -175,24 +175,24 @@ public class Documents
 		}
 		
 		public Documents getRoot(){
-            String Find = (name + "/");
-            String rootPath = path.substring(0, path.lastIndexOf(Find));
-            if (rootPath == "/")
+            if (path.equals("/"))
             {
-                Documents _doc = new Documents(Cours, null, "", "", "ROOT", "", "");
-                _doc.setFolder(true);
-                return _doc;
+                return getEmptyRoot(Cours);
             }
             else
             {
-                return DocumentsRepository.GetAllByPath(rootPath, Cours.getId()).get(0);
+                String rootPath = path.substring(0, path.length()-1);
+                String rootName = rootPath.substring(rootPath.lastIndexOf("/")+1);
+                rootPath = rootPath.substring(0, rootPath.lastIndexOf(rootName));
+				return DocumentsRepository.GetRootByPath(rootName, rootPath, Cours.getId());
             }
 		}
 		
 		@Override
 		public boolean equals(Object o){
 			if(o instanceof Documents){
-				return ((Documents) o).getPath().equals(path) && ((Documents) o).getCours().equals(Cours);
+				return ((Documents) o).getPath().equals(path) && ((Documents) o).getCours().equals(Cours) &&
+						((Documents) o).getName().equals(name);
 			}
 			return false;
 		}
@@ -222,5 +222,9 @@ public class Documents
             Documents _doc = new Documents(currentCours, null, "", "", "ROOT", "/", "");
             _doc.setFolder(true);
             return _doc;
+		}
+
+		public String getFullPath() {
+		 return name.equals("ROOT")?"/":getPath() + getName() + "/";
 		}
 }

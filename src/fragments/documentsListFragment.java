@@ -2,6 +2,7 @@ package fragments;
 
 import java.util.List;
 
+import mobile.claroline.R;
 import model.Cours;
 import model.Documents;
 import adapter.DocumentsAdapter;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import app.AppActivity;
 import app.GlobalApplication;
@@ -30,19 +32,32 @@ public class documentsListFragment extends ListFragment {
 
 	private Cours currentCours;
 	private Documents currentRoot;
+	
+	private TextView currentPath;
 
 	public Handler refreshList = new Handler(){
 		public void handleMessage(Message mess){
-			List<Documents> liste = currentRoot.getContent();
-			DocumentsAdapter adapter = new DocumentsAdapter(getActivity(), liste);
-			setListAdapter(adapter);
+			switch(mess.what){
+			case 1:
+				currentRoot = currentRoot.getRoot();
+				currentPath.setText(currentRoot.getFullPath());
+			case 0:
+				List<Documents> liste = currentRoot.getContent();
+				DocumentsAdapter adapter = new DocumentsAdapter(getActivity(), liste);
+				setListAdapter(adapter);
+				break;
+			}
 		}
 	};
+	
+	public boolean isOnRoot(){
+		return currentRoot.equals(Documents.getEmptyRoot(currentCours));
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-		return super.onCreateView(inflater, container, savedInstanceState);
-		//return inflater.inflate(R.layout.standard_list, container);
+		super.onCreateView(inflater, container, savedInstanceState);
+		return inflater.inflate(R.layout.documents_list, null);
 	}
 
 	@Override
@@ -52,6 +67,8 @@ public class documentsListFragment extends ListFragment {
 		if(!Repository.isOpen()){
 			Repository.Open();
 		}
+		
+		currentPath = (TextView) getView().findViewById(R.id.currentPath);
 
 		Bundle extras = getArguments();
 		if (extras != null)
@@ -60,6 +77,7 @@ public class documentsListFragment extends ListFragment {
 		}
 		
 		currentRoot = Documents.getEmptyRoot(currentCours);
+		currentPath.setText(currentRoot.getFullPath());
 
 		List<Documents> liste = currentRoot.getContent();
 		DocumentsAdapter adapter = new DocumentsAdapter(getActivity(), liste);
@@ -72,6 +90,7 @@ public class documentsListFragment extends ListFragment {
 
 		if(item.isFolder()){
 			currentRoot = item;
+			currentPath.setText(currentRoot.getFullPath());
 			List<Documents> liste = currentRoot.getContent();
 			DocumentsAdapter adapter = new DocumentsAdapter(getActivity(), liste);
 			setListAdapter(adapter);
