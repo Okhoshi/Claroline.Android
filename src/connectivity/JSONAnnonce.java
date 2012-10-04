@@ -32,7 +32,7 @@ public class JSONAnnonce extends Annonce {
 	}
 	
 	public int saveInDB(){
-		if(this.equals(AnnonceRepository.GetByRessourceId(this.getId(), this.getCours().getId()))){
+		if(this.equals(AnnonceRepository.GetByRessourceId(this.getRessourceId(), this.getCours().getId()))){
 			AnnonceRepository.Update(this);
 		} else {
 			this.setId(AnnonceRepository.Save(this));
