@@ -115,6 +115,7 @@ public class ClaroClient implements Runnable {
 	public void run(){
 		CallbackArgs args;
 		String message = null;
+		int ressource = -1;
 		
 		switch(op){
 		case authenticate:
@@ -148,10 +149,13 @@ public class ClaroClient implements Runnable {
 			if(resID < 0)
 				break;
 			Documents doc = DocumentsRepository.GetById(resID);
-			if(doc != null)
+			if(doc != null){
 				message = DownloadFile(doc)?GlobalApplication.getInstance().getResources().getString(R.string.download_finished_OK,
+												Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
 												GlobalApplication.getInstance().getResources().getString(R.string.app_name)):
 											GlobalApplication.getInstance().getResources().getString(R.string.download_finished_KO);
+				ressource = doc.getId(); 
+			}
 			break;
 		}
 		
@@ -162,6 +166,8 @@ public class ClaroClient implements Runnable {
 			if(message != null){
 				msg.arg1 = 1;
 				msg.obj = message;
+				if(ressource != -1)
+					msg.arg2 = ressource;
 			}
 			handler.sendMessage(msg);
 		}
@@ -266,7 +272,7 @@ public class ClaroClient implements Runnable {
 											while(iterOnAnn.hasNext()){
 												int resID = Integer.parseInt((String) iterOnAnn.next());
 												Annonce upAnn;
-												if((upAnn = AnnonceRepository.GetByRessourceId(resID)) == null){
+												if((upAnn = AnnonceRepository.GetByRessourceId(resID, upCours.getId())) == null){
 													Execute(new CallbackArgs(upCours, AllowedOperations.getAnnounceList));
 												} else {
 													upAnn.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonAnn.optString(String.valueOf(resID))));
@@ -290,7 +296,7 @@ public class ClaroClient implements Runnable {
 											while(iterOnDoc.hasNext()){
 												String path = (String) iterOnDoc.next();
 												Documents upDoc;
-												if((upDoc = DocumentsRepository.GetByPath(path)) == null){
+												if((upDoc = DocumentsRepository.GetAllByPath(path, upCours.getId()).get(0)) == null){
 													Execute(new CallbackArgs(upCours, AllowedOperations.getDocList));
 												} else {
 													upDoc.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonDoc.optString(path)));
@@ -381,9 +387,9 @@ public class ClaroClient implements Runnable {
 			if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 				return false;
 
-			File root = Environment.getExternalStorageDirectory();               
+			File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);               
 
-			File dir = new File (root.getAbsolutePath() + "/" + GlobalApplication.getInstance().getResources().getString(R.string.app_name) + "/Downloaded_files");
+			File dir = new File (root.getAbsolutePath() + "/" + GlobalApplication.getInstance().getResources().getString(R.string.app_name));
 			if(dir.exists()==false) {
 				if(dir.mkdirs() == false)
 					//Exits if the directory asked cannot be created!

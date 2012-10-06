@@ -2,6 +2,7 @@ package fragments;
 
 import java.util.List;
 
+import mobile.claroline.R;
 import model.Annonce;
 import model.Cours;
 import adapter.AnnonceAdapter;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
+import dataStorage.Repository;
 
 public class annonceListFragment extends ListFragment {
 	
@@ -31,13 +33,17 @@ public class annonceListFragment extends ListFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-		return super.onCreateView(inflater, container, savedInstanceState);
-		//return inflater.inflate(R.layout.standard_list, container);
+		super.onCreateView(inflater, container, savedInstanceState);
+		return inflater.inflate(R.layout.standard_list, null);
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+		if(!Repository.isOpen()){
+			Repository.Open();
+		}
 
 		Bundle extras = getArguments();
 	    if (extras != null)

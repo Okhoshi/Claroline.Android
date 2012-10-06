@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import mobile.claroline.R;
 import model.Annonce;
 import dataStorage.AnnonceRepository;
+import dataStorage.Repository;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,6 +44,11 @@ public class annonceDetailFragment extends Fragment {
 		t2 = (TextView) view.findViewById(R.id.details_annonce_2);
 		t3 = (TextView) view.findViewById(R.id.details_annonce_3);
 		t4 = (TextView) view.findViewById(R.id.details_annonce_4);
+		
+
+		if(!Repository.isOpen()){
+			Repository.Open();
+		}
 
 		Bundle extras = getArguments();
 	    if (extras != null)

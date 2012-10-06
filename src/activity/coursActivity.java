@@ -58,6 +58,15 @@ public class coursActivity extends AppActivity
             return super.onOptionsItemSelected(item);
         }
     }
+    
+    @Override
+    public void onBackPressed(){
+    	documentsListFragment frag = (documentsListFragment) getFragmentManager().findFragmentByTag("documents");
+    	if(frag != null && !frag.isOnRoot()){
+			frag.refreshList.sendEmptyMessage(1);
+    	} else
+    		super.onBackPressed();
+    }
 	
     public void setTabs(){    	
     	final ActionBar bar = getActionBar();

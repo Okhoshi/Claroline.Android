@@ -21,7 +21,7 @@ public class JSONNotification extends Notification {
 		if(this.equals(NotificationRepository.GetById(this.getId()))){
 			NotificationRepository.Update(this);
 		} else {
-			NotificationRepository.Save(this);
+			this.setId(NotificationRepository.Save(this));
 		}
 		
 		return this.getId();

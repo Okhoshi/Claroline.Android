@@ -5,6 +5,9 @@
 package model;
 
 import java.util.Date;
+import java.util.List;
+
+import dataStorage.DocumentsRepository;
 
 //import java.util.Date;
 
@@ -160,10 +163,36 @@ public class Documents
 			this.visibility=visibility;
 		}
 		
+		public List<Documents> getContent(){
+			List<Documents> liste;
+			if(IsFolder){
+				String added = name.equals("ROOT")?"": name + "/";
+				liste = DocumentsRepository.GetAllByPath(path + added , Cours.getId());
+			} else {
+				liste = null;
+			}
+			return liste;
+		}
+		
+		public Documents getRoot(){
+            if (path.equals("/"))
+            {
+                return getEmptyRoot(Cours);
+            }
+            else
+            {
+                String rootPath = path.substring(0, path.length()-1);
+                String rootName = rootPath.substring(rootPath.lastIndexOf("/")+1);
+                rootPath = rootPath.substring(0, rootPath.lastIndexOf(rootName));
+				return DocumentsRepository.GetRootByPath(rootName, rootPath, Cours.getId());
+            }
+		}
+		
 		@Override
 		public boolean equals(Object o){
 			if(o instanceof Documents){
-				return ((Documents) o).getPath().equals(path) && ((Documents) o).getCours().equals(Cours);
+				return ((Documents) o).getPath().equals(path) && ((Documents) o).getCours().equals(Cours) &&
+						((Documents) o).getName().equals(name);
 			}
 			return false;
 		}
@@ -187,5 +216,15 @@ public class Documents
 				}
 			}
 			return Math.round(getSize()) + " o";
+		}
+
+		public static Documents getEmptyRoot(Cours currentCours) {
+            Documents _doc = new Documents(currentCours, null, "", "", "ROOT", "/", "");
+            _doc.setFolder(true);
+            return _doc;
+		}
+
+		public String getFullPath() {
+		 return name.equals("ROOT")?"/":getPath() + getName() + "/";
 		}
 }

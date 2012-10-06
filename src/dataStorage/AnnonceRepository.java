@@ -96,7 +96,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 		return annonce;
 	}
 
-	public static Annonce GetByRessourceId(int id) {
+	public static Annonce GetByRessourceId(int id, int coursid) {
 		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
 				new String[] { DBOpenHelper.ANNONCE_COLUMN_ID,
 				DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,
@@ -107,8 +107,9 @@ public class AnnonceRepository extends Repository<Annonce> {
 				DBOpenHelper.ANNONCE_COLUMN_UPDATED,
 				DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,
 				DBOpenHelper.ANNONCE_COLUMN_DATE },
-				DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID + "=?",
-						new String[] { String.valueOf(id) }, null, null, null);
+				DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID + "=? AND " + 
+				DBOpenHelper.ANNONCE_COLUMN_COURSID + "=?",
+						new String[] { String.valueOf(id), String.valueOf(coursid) }, null, null, null);
 		Annonce annonce;
 		if(cursor.moveToFirst()){
 			annonce = ConvertCursorToObject(cursor);
@@ -118,7 +119,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 		return annonce;
 	}
 	
-	public static void Save(Annonce entite) {
+	public static int Save(Annonce entite) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,entite.getRessourceId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours().getId());
@@ -129,8 +130,9 @@ public class AnnonceRepository extends Repository<Annonce> {
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,entite.isVisible());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate()));
 
-		maBDD.insert(DBOpenHelper.ANNONCE_TABLE, null, contentValues);
+		int id = (int) maBDD.insert(DBOpenHelper.ANNONCE_TABLE, null, contentValues);
 		RefreshRepository(REPO_TYPE);
+		return id;
 	}
 
 	public static void Update(Annonce entite) {
