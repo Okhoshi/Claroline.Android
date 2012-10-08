@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/details_annonce_1"
+            android:layout_below="@id/details_annonce_2"
             android:layout_toRightOf="@id/details_annonce_3"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
