@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-         
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:padding="5dp">
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="fill_parent"
+     android:layout_height="fill_parent"
+     android:orientation="vertical" >
+
+     <TextView
+         android:id="@+id/type_search"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:background="@android:drawable/title_bar"
+         android:textColor="?android:textColorPrimary"
+         android:textSize="17dp" />
 
      <TextView
          android:id="@+id/searchCounter"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:textAppearance="?android:attr/textAppearanceMedium" />
-
+
      <ListView
          android:id="@+id/searchList"
          android:layout_width="match_parent"

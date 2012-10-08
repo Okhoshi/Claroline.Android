@@ -93,7 +93,7 @@ public class DocumentsRepository extends Repository<Documents> {
 				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
 				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
 				DBOpenHelper.DOCUMENTS_COLUMN_ID + "=?",
-						new String[] { String.valueOf(id) }, null, null, null);
+				new String[] { String.valueOf(id) }, null, null, null);
 
 		Documents documents;
 		if(cursor.moveToFirst()){
@@ -125,11 +125,11 @@ public class DocumentsRepository extends Repository<Documents> {
 				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
 				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
 				DBOpenHelper.DOCUMENTS_COLUMN_PATH + " = ? AND " + 
-				DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
-								new String[] {path, String.valueOf(coursId)}, null, null, null);
+						DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
+						new String[] {path, String.valueOf(coursId)}, null, null, null);
 		return ConvertCursorToListObject(cursor);
 	}
-	
+
 	public static Documents GetRootByPath(String name, String path, int coursId) {
 		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
 				new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
@@ -146,10 +146,10 @@ public class DocumentsRepository extends Repository<Documents> {
 				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
 				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
 				DBOpenHelper.DOCUMENTS_COLUMN_PATH + " = ? AND " +
-				DBOpenHelper.DOCUMENTS_COLUMN_NAME + " = ? AND " +
-				DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER + " = 1 AND " +
-				DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
-								new String[] {path, name, String.valueOf(coursId)}, null, null, null);
+						DBOpenHelper.DOCUMENTS_COLUMN_NAME + " = ? AND " +
+						DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER + " = 1 AND " +
+						DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
+						new String[] {path, name, String.valueOf(coursId)}, null, null, null);
 
 		Documents documents;
 		if(cursor.moveToFirst()){
@@ -295,7 +295,28 @@ public class DocumentsRepository extends Repository<Documents> {
 				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
 				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
 				DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
-						new String[] {String.valueOf(coursId)}, null, null, null);			 
+				new String[] {String.valueOf(coursId)}, null, null, null);			 
+		return ConvertCursorToListObject(cursor);
+	}
+
+	public static List<Documents> QueryOnDB(String selection, String[] selectionArgs) {
+		// Récupération de la liste des documents
+		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
+				new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
+				DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,
+				DBOpenHelper.DOCUMENTS_COLUMN_DATE ,
+				DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION ,
+				DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION ,
+				DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER ,
+				DBOpenHelper.DOCUMENTS_COLUMN_NAME ,
+				DBOpenHelper.DOCUMENTS_COLUMN_NOTIFIED ,
+				DBOpenHelper.DOCUMENTS_COLUMN_PATH ,
+				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
+				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
+				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
+				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
+				selection, selectionArgs,
+				null, null, null);			 
 		return ConvertCursorToListObject(cursor);
 	}
 }

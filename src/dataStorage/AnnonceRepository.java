@@ -218,4 +218,20 @@ public class AnnonceRepository extends Repository<Annonce> {
 						new String[] {String.valueOf(coursId)}, null, null, null);			 
 		return ConvertCursorToListObject(cursor);
 	}
+	
+	public static List<Annonce> QueryOnDB(String selection, String[] selectionArgs){
+		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
+				new String[] {  DBOpenHelper.ANNONCE_COLUMN_ID ,
+				DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID ,
+				DBOpenHelper.ANNONCE_COLUMN_COURSID ,
+				DBOpenHelper.ANNONCE_COLUMN_TITLE ,
+				DBOpenHelper.ANNONCE_COLUMN_CONTENT ,
+				DBOpenHelper.ANNONCE_COLUMN_NOTIFIED ,
+				DBOpenHelper.ANNONCE_COLUMN_UPDATED ,
+				DBOpenHelper.ANNONCE_COLUMN_VISIBILITY ,
+				DBOpenHelper.ANNONCE_COLUMN_DATE  },
+				selection, selectionArgs,
+				null, null, null);
+		return ConvertCursorToListObject(cursor);
+	}
 }

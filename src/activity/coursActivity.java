@@ -9,6 +9,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.MenuItem;
 import app.AppActivity;
 import app.GlobalApplication;
@@ -31,12 +32,21 @@ public class coursActivity extends AppActivity
 		setContentView(R.layout.cours_activity);
 		
 		Bundle extras = getIntent().getExtras();
-	    if (extras != null)
+		int id = -1;
+		if (extras != null)
 	    {
-	        currentCours=CoursRepository.GetById(extras.getInt("coursID"));		
+	        currentCours=CoursRepository.GetById(extras.getInt("coursID"));
+			id  = extras.getInt("id", -1);
+	        getActionBar().setSelectedNavigationItem(extras.getInt("tab", 0));
 	    }
 	    
 	    setTabs();
+	    
+	    if(id >= 0){
+	    	Message mess = new Message();
+	    	mess.arg1 = id;
+	    	((annonceListFragment) getFragmentManager().findFragmentByTag("announce")).refreshList.sendMessage(mess);
+	    }
 
         if (savedInstanceState != null) {
             getActionBar().setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
