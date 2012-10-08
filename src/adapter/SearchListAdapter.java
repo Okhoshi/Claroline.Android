@@ -34,23 +34,19 @@ public class SearchListAdapter extends BaseAdapter {
 		this.query = query;
 	}
 
-	@Override
 	public int getCount() {
 		return searchList.size();
 	}
 
-	@Override
 	public Object getItem(int position) {
 		return searchList.get(position);
 	}
 
-	@Override
 	public long getItemId(int position) {
 		return searchList.indexOf(searchList.get(position));
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 
 		int type = 0;
@@ -136,7 +132,7 @@ public class SearchListAdapter extends BaseAdapter {
 							int position, long id) {
 						Intent wordIntent = new Intent(context,	coursActivity.class);
 						wordIntent.putExtra("coursID", ((Documents) parent.getItemAtPosition(position)).getCours().getId());
-						wordIntent.putExtra("tab", "Documents");
+						wordIntent.putExtra("tab", 1);
 						wordIntent.putExtra("id", ((Documents) parent.getItemAtPosition(position)).getId());
 						context.startActivity(wordIntent);
 					}

@@ -33,19 +33,18 @@ public class coursActivity extends AppActivity
 		
 		Bundle extras = getIntent().getExtras();
 		int id = -1;
+		int item = -1;
 		if (extras != null)
 	    {
 	        currentCours=CoursRepository.GetById(extras.getInt("coursID"));
 			id  = extras.getInt("id", -1);
-	        getActionBar().setSelectedNavigationItem(extras.getInt("tab", 0));
+			item  = extras.getInt("tab", -1);
 	    }
 	    
-	    setTabs();
+	    setTabs(id);
 	    
-	    if(id >= 0){
-	    	Message mess = new Message();
-	    	mess.arg1 = id;
-	    	((annonceListFragment) getFragmentManager().findFragmentByTag("announce")).refreshList.sendMessage(mess);
+	    if(item > -1){
+	        getActionBar().setSelectedNavigationItem(item);
 	    }
 
         if (savedInstanceState != null) {
@@ -78,7 +77,7 @@ public class coursActivity extends AppActivity
     		super.onBackPressed();
     }
 	
-    public void setTabs(){    	
+    public void setTabs(int id){    	
     	final ActionBar bar = getActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		if (getResources().getConfiguration().orientation != 
@@ -94,9 +93,11 @@ public class coursActivity extends AppActivity
         Bundle args = new Bundle();
         args.putInt("coursID", currentCours.getId());
         
-        bar.addTab(bar.newTab().setText(getString(R.string.onglet_annonces))
+        bar.addTab(bar.newTab().setText(getString(R.string.onglet_annonces)).setTag("annTab")
                 .setTabListener(new TabListener<annonceListFragment>(this, "announce", annonceListFragment.class, args)));
-        bar.addTab(bar.newTab().setText(getString(R.string.onglet_documents))
+        
+        args.putInt("docID", id);
+        bar.addTab(bar.newTab().setText(getString(R.string.onglet_documents)).setTag("docTab")
                 .setTabListener(new TabListener<documentsListFragment>(this, "documents", documentsListFragment.class, args)));
     }
 

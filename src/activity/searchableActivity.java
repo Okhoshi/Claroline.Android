@@ -113,7 +113,6 @@ public class searchableActivity extends AppActivity {
 
 }
 
-@Override
 public void onRepositoryRefresh(String type) {
 	// ignore
 }

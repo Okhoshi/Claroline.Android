@@ -26,6 +26,7 @@ import app.AppActivity;
 import app.GlobalApplication;
 import connectivity.AllowedOperations;
 import dataStorage.CoursRepository;
+import dataStorage.DocumentsRepository;
 import dataStorage.Repository;
 
 public class documentsListFragment extends ListFragment {
@@ -70,13 +71,19 @@ public class documentsListFragment extends ListFragment {
 		
 		currentPath = (TextView) getView().findViewById(R.id.currentPath);
 
+		int id = -1;
+		
 		Bundle extras = getArguments();
 		if (extras != null)
 		{
-			currentCours=CoursRepository.GetById(extras.getInt("coursID"));			
+			currentCours=CoursRepository.GetById(extras.getInt("coursID"));
+			id = extras.getInt("docID", -1);
 		}
-		
-		currentRoot = Documents.getEmptyRoot(currentCours);
+		if(id == -1){
+			currentRoot = Documents.getEmptyRoot(currentCours);
+		} else {
+			currentRoot = DocumentsRepository.GetById(id).getRoot();
+		}
 		currentPath.setText(currentRoot.getFullPath());
 
 		List<Documents> liste = currentRoot.getContent();
