@@ -5,38 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dataStorage.AnnonceRepository;
-import dataStorage.CoursProvider;
-import dataStorage.CoursRepository;
-import dataStorage.DBOpenHelper;
-import dataStorage.DocumentsRepository;
 import mobile.claroline.R;
 import model.Annonce;
 import model.Cours;
 import model.Documents;
-import adapter.AnnonceAdapter;
-import adapter.CoursAdapter;
 import adapter.SearchListAdapter;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.SimpleAdapter;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 import app.AppActivity;
+import dataStorage.AnnonceRepository;
+import dataStorage.CoursRepository;
+import dataStorage.DBOpenHelper;
+import dataStorage.DocumentsRepository;
 
 //@SuppressLint("ParserError")
 public class searchableActivity extends AppActivity {

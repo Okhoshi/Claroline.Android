@@ -82,6 +82,10 @@
     <string name="download_finished_KO">Le téléchargement a échoué</string>
     <string name="download_finished_OK">Le fichier a été téléchargé dans le dossier \'%1$s/%2$s/\'</string>
     <string name="onglet_cours">Cours</string>
+    <string name="app_not_found">Unable to find an app for that</string>
+    <string name="save_or_open_dialog">Do you want to save or just open this document ?</string>
+    <string name="open_dialog">Open</string>
+    <string name="save_dialog">Save</string>
 
 
 </resources>

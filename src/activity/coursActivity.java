@@ -9,7 +9,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.MenuItem;
 import app.AppActivity;
 import app.GlobalApplication;

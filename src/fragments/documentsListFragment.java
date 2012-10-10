@@ -79,10 +79,10 @@ public class documentsListFragment extends ListFragment {
 			currentCours=CoursRepository.GetById(extras.getInt("coursID"));
 			id = extras.getInt("docID", -1);
 		}
-		if(id == -1){
-			currentRoot = Documents.getEmptyRoot(currentCours);
-		} else {
+		if(id != -1){
 			currentRoot = DocumentsRepository.GetById(id).getRoot();
+		} else if(currentRoot == null){
+			currentRoot = Documents.getEmptyRoot(currentCours);
 		}
 		currentPath.setText(currentRoot.getFullPath());
 
@@ -106,25 +106,25 @@ public class documentsListFragment extends ListFragment {
 			final String mimeType = map.getMimeTypeFromExtension(item.getExtension());
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setMessage("Do you want to save or just open this document ?")
+			builder.setMessage(R.string.save_or_open_dialog)
 			.setCancelable(true)
-			.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+			.setPositiveButton(R.string.save_dialog, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					GlobalApplication.setProgressIndicator(getActivity(), true);
 					(new Thread(GlobalApplication.getClient().makeOperation(((AppActivity)getActivity()).handler, AllowedOperations.downloadFile, item.getId()))).start();
 					dialog.dismiss();
 				}
 			})
-			.setNegativeButton("Open", new DialogInterface.OnClickListener() {
+			.setNegativeButton(R.string.open_dialog, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					Intent i = new Intent(Intent.ACTION_VIEW);
-					i.setDataAndType(Uri.parse("http://" + item.getUrl() + 
+					i.setData(Uri.parse("http://" + item.getUrl() + 
 							"&login=" + GlobalApplication.getPreferences().getString("user_login", "qdevos") + 
-							"&password=" + GlobalApplication.getPreferences().getString("user_password", "elegie24")), mimeType);
+							"&password=" + GlobalApplication.getPreferences().getString("user_password", "elegie24")));
 					try {
 						startActivity(i);
 					} catch (ActivityNotFoundException e) {
-						Toast.makeText(getActivity(), "Unable to find an app for that", Toast.LENGTH_LONG).show();
+						Toast.makeText(getActivity(), getString(R.string.app_not_found), Toast.LENGTH_LONG).show();
 					}
 					dialog.dismiss();
 				}

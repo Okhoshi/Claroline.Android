@@ -65,12 +65,12 @@ public class AppHandler extends Handler {
 						final String mimeType = map.getMimeTypeFromExtension(item.getExtension());
 						
 						Intent i = new Intent(Intent.ACTION_VIEW);
-						i.setDataAndType(Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" +
-										context.getString(R.string.app_name)), mimeType);
+						i.setData(Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" +
+										context.getString(R.string.app_name)));
 						try {
 							context.startActivity(i);
 						} catch (ActivityNotFoundException e) {
-							Toast.makeText(context, "Unable to find an app for that", Toast.LENGTH_LONG).show();
+							Toast.makeText(context, context.getString(R.string.app_not_found), Toast.LENGTH_LONG).show();
 						}
 						dialog.dismiss();
 					}
