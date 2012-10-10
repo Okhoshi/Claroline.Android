@@ -97,92 +97,6 @@ public class CoursRepository extends Repository<Cours> {
 		return cours;
 	}
 
-	public static void Save(Cours entite) {
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ANNNOTIF,entite.isAnnNotif());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_DNLNOTIF, entite.isDnlNotif()); 
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ISANN,entite.isAnn());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ISDNL, entite.isDnL());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,(new SimpleDateFormat("E MMM dd y HH:mm:ss")).format(entite.getIsLoaded()));
-		contentValues.put(DBOpenHelper.COURS_COLUMN_NOTIFIED, entite.isNotified());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL,entite.getOfficialEmail());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_SYSCODE, entite.getSysCode());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_TITLE, entite.getTitle());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_TITULAR, entite.getTitular());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_UPDATED, entite.isUpdated());
-
-		maBDD.insert(DBOpenHelper.COURS_TABLE, null, contentValues);
-		RefreshRepository(REPO_TYPE);
-	}
-
-	public static void Update(Cours entite) {
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ANNNOTIF,entite.isAnnNotif());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_DNLNOTIF, entite.isDnlNotif()); 
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ISANN,entite.isAnn());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ISDNL, entite.isDnL());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,(new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getIsLoaded()));
-		contentValues.put(DBOpenHelper.COURS_COLUMN_NOTIFIED, entite.isNotified());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL,entite.getOfficialEmail());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_SYSCODE, entite.getSysCode());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_TITLE, entite.getTitle());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_TITULAR, entite.getTitular());
-		contentValues.put(DBOpenHelper.COURS_COLUMN_UPDATED, entite.isUpdated());
-
-		maBDD.update(DBOpenHelper.COURS_TABLE, contentValues,	
-				DBOpenHelper.COURS_COLUMN_ID + "=?",
-				new String[] { String.valueOf(entite.getId()) });
-		RefreshRepository(REPO_TYPE);
-
-	}
-
-	public static void Delete(int id) {
-		maBDD.delete(DBOpenHelper.COURS_TABLE,
-				DBOpenHelper.COURS_COLUMN_ID + "=?",
-				new String[] { String.valueOf(id) });
-		RefreshRepository(REPO_TYPE);
-	}
-
-	public static List<Cours> ConvertCursorToListObject(Cursor c) {
-		List<Cours> liste = new ArrayList<Cours>();
-		// Pour chaque item
-		while(c.moveToNext()){
-			Cours cours = ConvertCursorToObject(c);	 
-			liste.add(cours);
-		}
-
-		// Fermeture du curseur
-		c.close();
-
-		return liste;
-	}
-
-	public static Cours ConvertCursorToObject(Cursor c) {
-		Cours cours;
-		try {
-			cours = new Cours(
-					(new SimpleDateFormat("E MMM dd y HH:mm:ss")).parse(c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED)),
-					c.getString(DBOpenHelper.COURS_NUM_COLUMN_OFFICIALEMAIL),
-					c.getString(DBOpenHelper.COURS_NUM_COLUMN_SYSCODE),
-					c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITLE),
-					c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITULAR)
-					);
-
-			cours.setId(c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ID));
-			cours.setAnnNotif((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ANNNOTIF) != 0));
-			cours.setDnlNotif((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_DNLNOTIF) != 0));
-			cours.setAnn((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ISANN) 		   != 0));
-			cours.setDnL((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ISDNL) 		   != 0));
-			cours.setNotified((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_NOTIFIED) != 0));
-			cours.setUpdated((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_UPDATED)   != 0));
-
-			return cours;
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
 	public static Cours GetBySysCode(String sysCode) {
 		Cursor cursor = maBDD.query(DBOpenHelper.COURS_TABLE,
 				new String[] {  DBOpenHelper.COURS_COLUMN_ID ,
@@ -243,5 +157,114 @@ public class CoursRepository extends Repository<Cours> {
 				DBOpenHelper.COURS_COLUMN_UPDATED  }, selection, selectionArgs,
 				null, null, null);
 		return ConvertCursorToListObject(cursor);
+	}
+
+	public static void Save(Cours entite) {
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(DBOpenHelper.COURS_COLUMN_ANNNOTIF,entite.isAnnNotif());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_DNLNOTIF, entite.isDnlNotif()); 
+		contentValues.put(DBOpenHelper.COURS_COLUMN_ISANN,entite.isAnn());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_ISDNL, entite.isDnL());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,(new SimpleDateFormat("E MMM dd y HH:mm:ss")).format(entite.getIsLoaded()));
+		contentValues.put(DBOpenHelper.COURS_COLUMN_NOTIFIED, entite.isNotified());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL,entite.getOfficialEmail());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_SYSCODE, entite.getSysCode());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_TITLE, entite.getTitle());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_TITULAR, entite.getTitular());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_UPDATED, entite.isUpdated());
+
+		maBDD.insert(DBOpenHelper.COURS_TABLE, null, contentValues);
+		RefreshRepository(REPO_TYPE);
+	}
+
+	public static void Update(Cours entite) {
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(DBOpenHelper.COURS_COLUMN_ANNNOTIF,entite.isAnnNotif());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_DNLNOTIF, entite.isDnlNotif()); 
+		contentValues.put(DBOpenHelper.COURS_COLUMN_ISANN,entite.isAnn());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_ISDNL, entite.isDnL());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,(new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getIsLoaded()));
+		contentValues.put(DBOpenHelper.COURS_COLUMN_NOTIFIED, entite.isNotified());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL,entite.getOfficialEmail());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_SYSCODE, entite.getSysCode());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_TITLE, entite.getTitle());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_TITULAR, entite.getTitular());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_UPDATED, entite.isUpdated());
+
+		maBDD.update(DBOpenHelper.COURS_TABLE, contentValues,	
+				DBOpenHelper.COURS_COLUMN_ID + "=?",
+				new String[] { String.valueOf(entite.getId()) });
+		RefreshRepository(REPO_TYPE);
+
+	}
+
+	public static void Delete(int id) {
+		DocumentsRepository.CleanTable(DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?", new String[] {String.valueOf(id)});
+		AnnonceRepository.CleanTable(DBOpenHelper.ANNONCE_COLUMN_COURSID + "=?", new String[] {String.valueOf(id)});
+		maBDD.delete(DBOpenHelper.COURS_TABLE,
+				DBOpenHelper.COURS_COLUMN_ID + "=?",
+				new String[] { String.valueOf(id) });
+		RefreshRepository(REPO_TYPE);
+	}
+	
+	public static void ResetTable(){
+		ContentValues cv = new ContentValues();
+		cv.put(DBOpenHelper.COURS_COLUMN_UPDATED, false);
+		maBDD.update(DBOpenHelper.COURS_TABLE, cv, DBOpenHelper.COURS_COLUMN_UPDATED + "=?", new String[]{"1"});
+	}
+
+	public static void CleanTable(String selection, String[] selectionArgs){
+		maBDD.delete(DBOpenHelper.COURS_TABLE,
+				selection,
+				selectionArgs);
+		RefreshRepository(REPO_TYPE);
+	}
+	
+	public static void CleanNotUpdated(){
+		List<Cours> cours = QueryOnDB(DBOpenHelper.COURS_COLUMN_UPDATED + "=?", new String[] {"0"});
+		for (Cours _c : cours) {
+			Delete(_c.getId());
+		}
+		ResetTable();
+	}
+
+	public static List<Cours> ConvertCursorToListObject(Cursor c) {
+		List<Cours> liste = new ArrayList<Cours>();
+		// Pour chaque item
+		while(c.moveToNext()){
+			Cours cours = ConvertCursorToObject(c);	 
+			liste.add(cours);
+		}
+
+		// Fermeture du curseur
+		c.close();
+
+		return liste;
+	}
+
+	public static Cours ConvertCursorToObject(Cursor c) {
+		Cours cours;
+		try {
+			cours = new Cours(
+					(new SimpleDateFormat("E MMM dd y HH:mm:ss")).parse(c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED)),
+					c.getString(DBOpenHelper.COURS_NUM_COLUMN_OFFICIALEMAIL),
+					c.getString(DBOpenHelper.COURS_NUM_COLUMN_SYSCODE),
+					c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITLE),
+					c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITULAR)
+					);
+
+			cours.setId(c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ID));
+			cours.setAnnNotif((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ANNNOTIF) != 0));
+			cours.setDnlNotif((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_DNLNOTIF) != 0));
+			cours.setAnn((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ISANN) 		   != 0));
+			cours.setDnL((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_ISDNL) 		   != 0));
+			cours.setNotified((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_NOTIFIED) != 0));
+			cours.setUpdated((c.getInt(DBOpenHelper.COURS_NUM_COLUMN_UPDATED)   != 0));
+
+			return cours;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

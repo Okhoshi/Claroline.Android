@@ -43,6 +43,7 @@ public class JSONCours extends Cours {
 							 object.optString("titular"));
 		cours.setId(object.optInt("cours_id"));
 		cours.setNotified(object.optBoolean("notified"));
+		cours.setUpdated(true);
 		return cours;
 	}
 

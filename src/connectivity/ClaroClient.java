@@ -116,7 +116,7 @@ public class ClaroClient implements Runnable {
 		CallbackArgs args;
 		String message = null;
 		int ressource = -1;
-		
+
 		switch(op){
 		case authenticate:
 			args = new CallbackArgs(GlobalApplication.getPreferences().getString("user_login", "qdevos"),
@@ -151,14 +151,14 @@ public class ClaroClient implements Runnable {
 			Documents doc = DocumentsRepository.GetById(resID);
 			if(doc != null){
 				message = DownloadFile(doc)?GlobalApplication.getInstance().getResources().getString(R.string.download_finished_OK,
-												Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-												GlobalApplication.getInstance().getResources().getString(R.string.app_name)):
-											GlobalApplication.getInstance().getResources().getString(R.string.download_finished_KO);
+						Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+						GlobalApplication.getInstance().getResources().getString(R.string.app_name)):
+							GlobalApplication.getInstance().getResources().getString(R.string.download_finished_KO);
 				ressource = doc.getId(); 
 			}
 			break;
 		}
-		
+
 		// Dismiss the ProgressDialog at the end of the treating thread
 		if(handler != null){
 			Message msg = new Message();
@@ -195,7 +195,7 @@ public class ClaroClient implements Runnable {
 				Log.d("WEB", "Host:" + getClient(false, args).getURI().getHost()
 						+ "Path:" + getClient(false, args).getURI().getPath()
 						+ " " + EntityUtils.toString(getClient(false, args).getEntity()));
-				
+
 				HttpResponse response = client.execute(getClient(false, args), httpContext);
 				String _res = EntityUtils.toString(response.getEntity());
 				//String _res = readResponse(response);
@@ -209,18 +209,17 @@ public class ClaroClient implements Runnable {
 						JSONObject object = JSONresponse.getJSONObject(i);
 						JSONCours.fromJSONObject(object).saveInDB();
 					}
+					CoursRepository.CleanNotUpdated();
 					break;
 				case getCourseToolList:
-					JSONresponse = new JSONArray(_res);
-					for(int i = 0; i < JSONresponse.length(); i++){
-						JSONObject object = JSONresponse.getJSONObject(i);
-						JSONCours cours = (JSONCours) CoursRepository.GetBySysCode(object.optString("sysCode"));
-						cours.setAnn(object.optBoolean("isAnn"));
-						cours.setAnnNotif(object.optBoolean("annNotif"));
-						cours.setDnL(object.optBoolean("isDnL"));
-						cours.setDnlNotif(object.optBoolean("dnlNotif"));
-						cours.saveInDB();
-					}
+					JSONObject jsonRes = new JSONObject(_res);
+					JSONCours cours = (JSONCours) CoursRepository.GetBySysCode(jsonRes.optString("sysCode"));
+					cours.setAnn(jsonRes.optBoolean("isAnn"));
+					cours.setAnnNotif(jsonRes.optBoolean("annNotif"));
+					cours.setDnL(jsonRes.optBoolean("isDnL"));
+					cours.setDnlNotif(jsonRes.optBoolean("dnlNotif"));
+					cours.setNotified(true);
+					cours.saveInDB();
 					break;
 				case getAnnounceList:
 					JSONresponse = new JSONArray(_res);
@@ -228,6 +227,7 @@ public class ClaroClient implements Runnable {
 						JSONObject object = JSONresponse.getJSONObject(i);
 						JSONAnnonce.fromJSONObject(object).saveInDB();
 					}
+					AnnonceRepository.CleanNotUpdated(args.cidReq.getId());
 					break;
 				case getDocList:
 					JSONresponse = new JSONArray(_res);
@@ -235,6 +235,7 @@ public class ClaroClient implements Runnable {
 						JSONObject object = JSONresponse.getJSONObject(i);
 						JSONDocument.fromJSONObject(object).saveInDB();
 					}
+					DocumentsRepository.CleanNotUpdated(args.cidReq.getId());
 					break;
 				case getSingleAnnounce:
 					JSONresponse = new JSONArray(_res);
@@ -329,6 +330,9 @@ public class ClaroClient implements Runnable {
 				}
 
 				response.getEntity().consumeContent();
+				CoursRepository.ResetTable();
+				DocumentsRepository.ResetTable();
+				AnnonceRepository.ResetTable();
 
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
@@ -397,38 +401,38 @@ public class ClaroClient implements Runnable {
 			}
 
 			File file = new File(dir, doc.getName() + "." + doc.getExtension());
-			
 
-	        //create the new connection
+
+			//create the new connection
 			URL url = new URL("http://" + doc.getUrl());
-	        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-	      //Do this so that Java.net impl should work
-	        List<Cookie> cookList = cookies.getCookies();
-	        String requiredCookies = "";
+			//Do this so that Java.net impl should work
+			List<Cookie> cookList = cookies.getCookies();
+			String requiredCookies = "";
 			for (int i = 0; i < cookList.size(); i++) {
-	             requiredCookies += cookList.get(i).getName()+"="+cookList.get(i).getValue()+";";
-	        }
-	        
-	        //set up some things on the connection
-	        urlConnection.setRequestProperty("Cookie", requiredCookies);
-	        urlConnection.setRequestMethod("GET");
-	        urlConnection.setDoOutput(true);
+				requiredCookies += cookList.get(i).getName()+"="+cookList.get(i).getValue()+";";
+			}
 
-	        //and connect!
-	        urlConnection.connect();
+			//set up some things on the connection
+			urlConnection.setRequestProperty("Cookie", requiredCookies);
+			urlConnection.setRequestMethod("GET");
+			urlConnection.setDoOutput(true);
 
-		       //this will be used to write the downloaded data into the file we created
-	        FileOutputStream fileOutput = new FileOutputStream(file);
+			//and connect!
+			urlConnection.connect();
 
-	        //this will be used in reading the data from the Internet
-	        InputStream inputStream = urlConnection.getInputStream();
+			//this will be used to write the downloaded data into the file we created
+			FileOutputStream fileOutput = new FileOutputStream(file);
 
-	        //this is the total size of the file
-	        int totalSize = urlConnection.getContentLength();	        
-	        //variable to store total downloaded bytes
-	        int downloadedSize = 0;
-	        int iterationSize = 1024;
+			//this will be used in reading the data from the Internet
+			InputStream inputStream = urlConnection.getInputStream();
+
+			//this is the total size of the file
+			int totalSize = urlConnection.getContentLength();	        
+			//variable to store total downloaded bytes
+			int downloadedSize = 0;
+			int iterationSize = 1024;
 
 			if(handler != null){
 				Message msg = new Message();
@@ -439,31 +443,31 @@ public class ClaroClient implements Runnable {
 				handler.sendMessage(msg);
 			}
 
-	        //create a buffer...
-	        byte[] buffer = new byte[iterationSize];
-	        int bufferLength = 0; //used to store a temporary size of the buffer
+			//create a buffer...
+			byte[] buffer = new byte[iterationSize];
+			int bufferLength = 0; //used to store a temporary size of the buffer
 
-	        //now, read through the input buffer and write the contents to the file
-	        while ( (bufferLength = inputStream.read(buffer)) > 0 ) {
-	                //add the data in the buffer to the file in the file output stream (the file on the sd card)
-	                fileOutput.write(buffer, 0, bufferLength);
-	                //add up the size so we know how much is downloaded
-	                downloadedSize += bufferLength;
-	                
-	                //Reports the progress to the UI
-	    			if(handler != null){
-	    				Message msg = new Message();
-	    				msg.what = 2;
-	    				msg.arg1 = downloadedSize;
-	    				msg.arg2 = iterationSize;
-	    				handler.sendMessage(msg);
-	    			}
-	        }
-	        //close the output stream when done
-	        fileOutput.close();
-	        
-	        return true;
-	        
+			//now, read through the input buffer and write the contents to the file
+			while ( (bufferLength = inputStream.read(buffer)) > 0 ) {
+				//add the data in the buffer to the file in the file output stream (the file on the sd card)
+				fileOutput.write(buffer, 0, bufferLength);
+				//add up the size so we know how much is downloaded
+				downloadedSize += bufferLength;
+
+				//Reports the progress to the UI
+				if(handler != null){
+					Message msg = new Message();
+					msg.what = 2;
+					msg.arg1 = downloadedSize;
+					msg.arg2 = iterationSize;
+					handler.sendMessage(msg);
+				}
+			}
+			//close the output stream when done
+			fileOutput.close();
+
+			return true;
+
 		} catch (IOException e) {
 			Log.d("DownloadManager", "Error: " + e);
 		}

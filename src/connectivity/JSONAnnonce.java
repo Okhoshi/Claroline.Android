@@ -53,6 +53,7 @@ public class JSONAnnonce extends Annonce {
 		annonce.setRessourceId(object.optInt("ressourceId"));
 		annonce.setNotified(object.optBoolean("notified"));
 		annonce.setVisible(object.optBoolean("visibility"));
+		annonce.setUpdated(true);
 		
 		return annonce;
 	}

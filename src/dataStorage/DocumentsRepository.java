@@ -12,11 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Documents;
-//import model.Notification;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+//import model.Notification;
 
 public class DocumentsRepository extends Repository<Documents> {
 
@@ -160,6 +159,72 @@ public class DocumentsRepository extends Repository<Documents> {
 		cursor.close();
 		return documents;
 	}
+	public static Documents GetWithoutId(Documents entite) {
+		String[] contentValues = new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
+				DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,
+				DBOpenHelper.DOCUMENTS_COLUMN_DATE ,
+				DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION ,
+				DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION ,
+				DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER ,
+				DBOpenHelper.DOCUMENTS_COLUMN_NAME ,
+				DBOpenHelper.DOCUMENTS_COLUMN_NOTIFIED ,
+				DBOpenHelper.DOCUMENTS_COLUMN_PATH ,
+				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
+				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
+				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
+				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  };
+
+		Cursor c = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE, contentValues,	
+				DBOpenHelper.DOCUMENTS_COLUMN_PATH + " LIKE ? AND " + 
+						DBOpenHelper.DOCUMENTS_COLUMN_NAME + " LIKE ? AND " + 
+						DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION + " LIKE ?",
+						new String[] { entite.getPath(), entite.getName(), entite.getExtension() }, null, null, null);
+		List<Documents> list = ConvertCursorToListObject(c);
+		return list.isEmpty()?null:list.get(0);
+	}
+
+	public static List<Documents> GetDocListByCoursId(int coursId) {
+		// Récupération de la liste des documents
+		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
+				new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
+				DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,
+				DBOpenHelper.DOCUMENTS_COLUMN_DATE ,
+				DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION ,
+				DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION ,
+				DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER ,
+				DBOpenHelper.DOCUMENTS_COLUMN_NAME ,
+				DBOpenHelper.DOCUMENTS_COLUMN_NOTIFIED ,
+				DBOpenHelper.DOCUMENTS_COLUMN_PATH ,
+				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
+				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
+				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
+				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
+				DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
+				new String[] {String.valueOf(coursId)}, null, null, null);			 
+		return ConvertCursorToListObject(cursor);
+	}
+
+	public static List<Documents> QueryOnDB(String selection, String[] selectionArgs) {
+		// Récupération de la liste des documents
+		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
+				new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
+				DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,
+				DBOpenHelper.DOCUMENTS_COLUMN_DATE ,
+				DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION ,
+				DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION ,
+				DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER ,
+				DBOpenHelper.DOCUMENTS_COLUMN_NAME ,
+				DBOpenHelper.DOCUMENTS_COLUMN_NOTIFIED ,
+				DBOpenHelper.DOCUMENTS_COLUMN_PATH ,
+				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
+				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
+				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
+				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
+				selection, selectionArgs,
+				null, null, null);			 
+		return ConvertCursorToListObject(cursor);
+	}
+
 	public static int Save(Documents entite) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_COURSID,entite.getCours().getId());
@@ -201,35 +266,41 @@ public class DocumentsRepository extends Repository<Documents> {
 		RefreshRepository(REPO_TYPE);
 	}
 
-	public static Documents GetWithoutId(Documents entite) {
-		String[] contentValues = new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
-				DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,
-				DBOpenHelper.DOCUMENTS_COLUMN_DATE ,
-				DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION ,
-				DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION ,
-				DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER ,
-				DBOpenHelper.DOCUMENTS_COLUMN_NAME ,
-				DBOpenHelper.DOCUMENTS_COLUMN_NOTIFIED ,
-				DBOpenHelper.DOCUMENTS_COLUMN_PATH ,
-				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
-				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
-				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
-				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  };
-
-		Cursor c = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE, contentValues,	
-				DBOpenHelper.DOCUMENTS_COLUMN_PATH + " LIKE ? AND " + 
-						DBOpenHelper.DOCUMENTS_COLUMN_NAME + " LIKE ? AND " + 
-						DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION + " LIKE ?",
-						new String[] { entite.getPath(), entite.getName(), entite.getExtension() }, null, null, null);
-		List<Documents> list = ConvertCursorToListObject(c);
-		return list.isEmpty()?null:list.get(0);
-	}
-
 	public static void Delete(int id) {
+		CleanDocumentsContent(GetById(id));
 		maBDD.delete(DBOpenHelper.DOCUMENTS_TABLE,
 				DBOpenHelper.DOCUMENTS_COLUMN_ID + "=?",
 				new String[] { String.valueOf(id) });
 		RefreshRepository(REPO_TYPE);
+	}
+	
+	public static void ResetTable(){
+		ContentValues cv = new ContentValues();
+		cv.put(DBOpenHelper.DOCUMENTS_COLUMN_UPDATED, false);
+		maBDD.update(DBOpenHelper.DOCUMENTS_TABLE, cv, DBOpenHelper.DOCUMENTS_COLUMN_UPDATED + "=?", new String[]{"1"});
+	}
+
+	public static void CleanTable(String whereClause, String[] whereArgs){
+		maBDD.delete(DBOpenHelper.DOCUMENTS_TABLE,
+				whereClause,
+				whereArgs);
+		RefreshRepository(REPO_TYPE);
+	}
+	
+	public static void CleanNotUpdated(int coursId){
+
+		CleanTable(DBOpenHelper.DOCUMENTS_COLUMN_UPDATED + "=? AND " + 
+				DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
+				new String[] {"0",
+				String.valueOf(coursId)});
+		ResetTable();
+	}
+
+	public static void CleanDocumentsContent(Documents docToDel){
+		CleanTable(DBOpenHelper.DOCUMENTS_COLUMN_PATH + " LIKE ? AND " + 
+				DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
+				new String[] {docToDel.getFullPath() + "%",
+				String.valueOf(docToDel.getCours().getId())});
 	}
 
 	public static List<Documents> ConvertCursorToListObject(Cursor c) {
@@ -276,47 +347,5 @@ public class DocumentsRepository extends Repository<Documents> {
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-	public static List<Documents> GetDocListByCoursId(int coursId) {
-		// Récupération de la liste des documents
-		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
-				new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
-				DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,
-				DBOpenHelper.DOCUMENTS_COLUMN_DATE ,
-				DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION ,
-				DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION ,
-				DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER ,
-				DBOpenHelper.DOCUMENTS_COLUMN_NAME ,
-				DBOpenHelper.DOCUMENTS_COLUMN_NOTIFIED ,
-				DBOpenHelper.DOCUMENTS_COLUMN_PATH ,
-				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
-				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
-				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
-				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
-				DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
-				new String[] {String.valueOf(coursId)}, null, null, null);			 
-		return ConvertCursorToListObject(cursor);
-	}
-
-	public static List<Documents> QueryOnDB(String selection, String[] selectionArgs) {
-		// Récupération de la liste des documents
-		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
-				new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
-				DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,
-				DBOpenHelper.DOCUMENTS_COLUMN_DATE ,
-				DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION ,
-				DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION ,
-				DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER ,
-				DBOpenHelper.DOCUMENTS_COLUMN_NAME ,
-				DBOpenHelper.DOCUMENTS_COLUMN_NOTIFIED ,
-				DBOpenHelper.DOCUMENTS_COLUMN_PATH ,
-				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
-				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
-				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
-				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
-				selection, selectionArgs,
-				null, null, null);			 
-		return ConvertCursorToListObject(cursor);
 	}
 }

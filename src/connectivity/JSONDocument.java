@@ -49,6 +49,7 @@ public class JSONDocument extends Documents {
 		if(!doc.isFolder()){
 			doc.setSize(object.optDouble("size"));
 		}
+		doc.setUpdated(true);
 		
 		return doc;
 	}

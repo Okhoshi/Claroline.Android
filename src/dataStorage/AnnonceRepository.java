@@ -158,6 +158,25 @@ public class AnnonceRepository extends Repository<Annonce> {
 				new String[] { String.valueOf(id) });
 		RefreshRepository(REPO_TYPE);
 	}
+	
+	public static void ResetTable(){
+		ContentValues cv = new ContentValues();
+		cv.put(DBOpenHelper.ANNONCE_COLUMN_UPDATED, false);
+		maBDD.update(DBOpenHelper.ANNONCE_TABLE, cv, DBOpenHelper.ANNONCE_COLUMN_UPDATED + "=?", new String[]{"1"});
+	}
+
+
+	public static void CleanTable(String whereClause, String[] whereArgs){
+		maBDD.delete(DBOpenHelper.ANNONCE_TABLE,
+				whereClause,
+				whereArgs);
+		RefreshRepository(REPO_TYPE);
+	}
+	
+	public static void CleanNotUpdated(int coursId){
+		CleanTable(DBOpenHelper.ANNONCE_COLUMN_COURSID + "=? AND " + DBOpenHelper.ANNONCE_COLUMN_UPDATED + "=?", new String[] {String.valueOf(coursId), "0"});
+		ResetTable();
+	}
 
 	public static List<Annonce> ConvertCursorToListObject(Cursor c) {
 		List<Annonce> liste = new ArrayList<Annonce>();
