@@ -213,7 +213,7 @@ public class ClaroClient implements Runnable {
 					break;
 				case getCourseToolList:
 					JSONObject jsonRes = new JSONObject(_res);
-					JSONCours cours = (JSONCours) CoursRepository.GetBySysCode(jsonRes.optString("sysCode"));
+					Cours cours = CoursRepository.GetBySysCode(jsonRes.optString("sysCode"));
 					cours.setAnn(jsonRes.optBoolean("isAnn"));
 					cours.setAnnNotif(jsonRes.optBoolean("annNotif"));
 					cours.setDnL(jsonRes.optBoolean("isDnL"));
@@ -397,6 +397,7 @@ public class ClaroClient implements Runnable {
 			if(dir.exists()==false) {
 				if(dir.mkdirs() == false)
 					//Exits if the directory asked cannot be created!
+					Log.d("DownloadManager", "Missing SDCard");
 					return false;
 			}
 

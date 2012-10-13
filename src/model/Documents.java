@@ -227,4 +227,14 @@ public class Documents
 		public String getFullPath() {
 		 return name.equals("ROOT")?"/":getPath() + getName() + "/";
 		}
+
+		public int saveInDB(){
+			if(this.equals(DocumentsRepository.GetWithoutId(this))){
+				DocumentsRepository.Update(this);
+			} else {
+				this.setId(DocumentsRepository.Save(this));
+			}
+			
+			return this.getId();
+		}
 }

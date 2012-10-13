@@ -9,7 +9,6 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
-import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
 
 import model.Annonce;
@@ -29,15 +28,6 @@ public class JSONAnnonce extends Annonce {
 	public JSONAnnonce(model.Cours Cours, Date date, String title,
 			String content) {
 		super(Cours, date, title, content);
-	}
-	
-	public int saveInDB(){
-		if(this.equals(AnnonceRepository.GetByRessourceId(this.getRessourceId(), this.getCours().getId()))){
-			AnnonceRepository.Update(this);
-		} else {
-			this.setId(AnnonceRepository.Save(this));
-		}
-		return this.getId();
 	}
 	
 	public static JSONAnnonce fromJSONObject(JSONObject object) throws ParseException{

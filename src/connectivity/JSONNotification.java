@@ -7,7 +7,6 @@ import java.util.Date;
 import org.json.JSONObject;
 
 import dataStorage.CoursRepository;
-import dataStorage.NotificationRepository;
 
 import model.Notification;
 
@@ -15,16 +14,6 @@ public class JSONNotification extends Notification {
 
 	public JSONNotification(model.Cours Cours, Date date, int ressourceType) {
 		super(Cours, date, ressourceType);
-	}
-	
-	public int saveInDb(){		
-		if(this.equals(NotificationRepository.GetById(this.getId()))){
-			NotificationRepository.Update(this);
-		} else {
-			this.setId(NotificationRepository.Save(this));
-		}
-		
-		return this.getId();
 	}
 	
 	public static JSONNotification fromJSONObject(JSONObject object, String sysCode, int ressourceType) throws ParseException{		

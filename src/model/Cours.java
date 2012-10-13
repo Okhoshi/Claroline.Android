@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import dataStorage.AnnonceRepository;
+import dataStorage.CoursRepository;
 import dataStorage.DocumentsRepository;
 import dataStorage.NotificationRepository;
 
@@ -180,6 +181,15 @@ public class Cours
 			return (((Cours) o).getSysCode().equals(this.getSysCode()) && ((Cours) o).getId() == this.getId());
 		}
 		return false;
+	}
+
+	public int saveInDB(){
+		if(this.equals(CoursRepository.GetById(this.getId()))){
+			CoursRepository.Update(this);
+		} else {
+			CoursRepository.Save(this);
+		}
+		return this.getId();
 	}
 	
 }

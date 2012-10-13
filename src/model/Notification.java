@@ -6,6 +6,8 @@ package model;
 
 import java.util.Date;
 
+import dataStorage.NotificationRepository;
+
 //import java.util.Date;
 
 public class Notification 
@@ -126,5 +128,15 @@ public class Notification
 			return ((Notification) o).getRessourceType() == ressourceType && ((Notification) o).ressourceId == ressourceId && ((Notification) o).getCours().equals(Cours);
 		}
 		return false;
+	}
+
+	public int saveInDb(){		
+		if(this.equals(NotificationRepository.GetById(this.getId()))){
+			NotificationRepository.Update(this);
+		} else {
+			this.setId(NotificationRepository.Save(this));
+		}
+		
+		return this.getId();
 	}
 }

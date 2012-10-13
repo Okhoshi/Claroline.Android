@@ -6,6 +6,8 @@ package model;
 
 import java.util.Date;
 
+import dataStorage.AnnonceRepository;
+
 //import java.util.Date;
 
 public class Annonce 
@@ -126,6 +128,15 @@ public class Annonce
 			return ((Annonce) o).getCours().equals(Cours) && ((Annonce) o).getRessourceId() == ressourceId;
 		}
 		return false;
+	}
+
+	public int saveInDB(){
+		if(this.equals(AnnonceRepository.GetByRessourceId(this.getRessourceId(), this.getCours().getId()))){
+			AnnonceRepository.Update(this);
+		} else {
+			this.setId(AnnonceRepository.Save(this));
+		}
+		return this.getId();
 	}
 
 }
