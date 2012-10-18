@@ -3,6 +3,10 @@
  */
 package activity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+
 import mobile.claroline.R;
 import android.app.ActionBar;
 import android.content.Intent;
@@ -11,7 +15,10 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
+import app.GlobalApplication;
 
 /**
  * @author Quentin
@@ -19,6 +26,9 @@ import android.view.MenuItem;
  */
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
+	private ArrayList<String> onScreenSettings = new ArrayList<String>(Arrays.asList(new String[]
+								{"platform_host", "platform_module", "user_login"}));
+	
 	/**
 	 * 
 	 */
@@ -27,6 +37,19 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 		setActionBar();
+		
+		Map<String,?> keys = GlobalApplication.getPreferences().getAll();
+
+		for(Map.Entry<String,?> entry : keys.entrySet()){
+			if(onScreenSettings.contains(entry.getKey())){
+		            Log.d("map values",entry.getKey() + ": " + 
+		                                   entry.getValue().toString());
+		            Preference Pref = findPreference(entry.getKey());
+		            // Set summary to be the user-description for the selected value
+		            Pref.setSummary(GlobalApplication.getPreferences().getString(entry.getKey(), ""));
+			}
+		 }
+
 	}
 	
 	@Override
