@@ -33,15 +33,17 @@ public class home extends AppActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
-		
+
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(false);
-		
+
 		if(GlobalApplication.getPreferences().getString("user_login", "").isEmpty()){
 			Intent settings_intent = new Intent(this, Settings.class);
 			startActivity(settings_intent);
 		} else {
-			(new Thread(GlobalApplication.getClient().makeOperation(null, AllowedOperations.getUserData))).start();
+			if(GlobalApplication.getPreferences().getString("firstName", "").isEmpty()){
+				(new Thread(GlobalApplication.getClient().makeOperation(null, AllowedOperations.getUserData))).start();
+			}
 			GlobalApplication.setProgressIndicator(this, true);
 			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getUpdates))).start();
 		}
