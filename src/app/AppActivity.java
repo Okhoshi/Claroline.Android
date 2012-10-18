@@ -108,6 +108,7 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			return true;
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
+			// Doit être implémenter dans chaque activité
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
