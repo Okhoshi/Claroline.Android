@@ -3,6 +3,7 @@ package app;
 import mobile.claroline.R;
 import model.Documents;
 import dataStorage.DocumentsRepository;
+import activity.Settings;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -49,15 +50,15 @@ public class AppHandler extends Handler {
 			GlobalApplication.setProgressIndicator(false);
 			if(mess.arg1 == 1){
 				AlertDialog.Builder builder = new AlertDialog.Builder(context);
-				builder.setTitle("Do you want to open the document now ?")
+				builder.setTitle(R.string.open_saved_doc_dialog)
 				.setMessage((String) mess.obj)
 				.setCancelable(true)
-				.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				.setNegativeButton(R.string.alert_no, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.dismiss();
 					}
 				})
-				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				.setPositiveButton(R.string.alert_yes, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						final Documents item = DocumentsRepository.GetById(resID); //FIXME unaccessible variable
 						
@@ -84,6 +85,23 @@ public class AppHandler extends Handler {
 		case 2: //Renew the progress status
 			GlobalApplication.incrementProgression(mess.arg1/mess.arg2);
 			break;
+		case 3:
+			AlertDialog.Builder builder = new AlertDialog.Builder(context);
+			builder.setTitle(R.string.alert_auth_failed)
+			.setMessage((Integer) mess.obj)
+			.setCancelable(true)
+			.setNegativeButton(R.string.alert_no, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.dismiss();
+				}
+			})
+			.setPositiveButton(R.string.alert_yes, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					Intent settings_intent = new Intent(context, Settings.class);
+					context.startActivity(settings_intent);
+				}
+			})
+			.show();
 		default:
 			break;
 		}

@@ -180,6 +180,13 @@ public class ClaroClient implements Runnable {
 					GlobalApplication.getPreferences().getString("user_password", ""),
 					AllowedOperations.authenticate))){
 				Log.e(this.toString(), "Authentication Failed!");
+				//Reports the failure to the user
+				if(handler != null){
+					Message msg = new Message();
+					msg.what = 3;
+					msg.obj = R.string.failure_message;
+					handler.sendMessage(msg);
+				}
 				return;
 			}
 		}
@@ -198,7 +205,7 @@ public class ClaroClient implements Runnable {
 
 				HttpResponse response = client.execute(getClient(false, args), httpContext);
 				String _res = EntityUtils.toString(response.getEntity());
-				//String _res = readResponse(response);
+				
 				Log.i("ClaroClient", "Response:" + _res);
 				JSONArray JSONresponse;
 

@@ -86,6 +86,11 @@
     <string name="save_or_open_dialog">Do you want to save or just open this document ?</string>
     <string name="open_dialog">Open</string>
     <string name="save_dialog">Save</string>
+    <string name="alert_auth_failed">L\'authentification a échoué</string>
+    <string name="alert_yes">Oui</string>
+    <string name="alert_no">Non</string>
+    <string name="open_saved_doc_dialog">Voulez vous ouvrir ce document maintenant ?</string>
+    <string name="failure_message">Voulez-vous vous rendre dans les préférences pour vérifier vos identifiants ?</string>
 
 
 </resources>
