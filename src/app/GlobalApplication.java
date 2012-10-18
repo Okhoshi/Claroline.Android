@@ -72,7 +72,7 @@ public class GlobalApplication extends Application {
 			if(!progress.isShowing()){
 				progress.show();
 			}
-		} else {
+		} else if(progress != null){
 			progress.dismiss();
 			progress = null;
 		}
@@ -89,7 +89,6 @@ public class GlobalApplication extends Application {
 		super.onCreate();
 		singleton = this;
 		client = new ClaroClient();
-		(new Thread(client.makeOperation(null, AllowedOperations.getUserData))).start();
 		Repository.SetOpenHelper(getApplicationContext());
 	}
 }

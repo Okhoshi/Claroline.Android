@@ -8,12 +8,15 @@ import activity.about_us;
 import activity.home;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
+import android.widget.SearchView;
 import dataStorage.IRepository.RepositoryRefreshListener;
 import dataStorage.Repository;
 
@@ -69,12 +72,12 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 		getMenuInflater().inflate(R.menu.actionbar, menu);
 
 		// Get the SearchView and set the searchable configuration
-		/*SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 		searchView.setIconifiedByDefault(false);     
 		searchView.setSubmitButtonEnabled(true);
-		 */
+		
 		return true;
 	}
 

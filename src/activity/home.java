@@ -3,6 +3,7 @@ package activity;
 
 import mobile.claroline.R;
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -15,11 +16,6 @@ import fragments.coursListFragment;
 
 public class home extends AppActivity
 {
-	/**
-	 *  Used to know which course is the current course
-	 */
-	public static final String ANNONCE_ID = "annonce_id";
-	public static final String DOCUMENTS_ID = "documents_id";
 
 	/**
 	 * Used to know which Tab is selected
@@ -40,6 +36,15 @@ public class home extends AppActivity
 		
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(false);
+		
+		if(GlobalApplication.getPreferences().getString("user_login", "").isEmpty()){
+			Intent settings_intent = new Intent(this, Settings.class);
+			startActivity(settings_intent);
+		} else {
+			(new Thread(GlobalApplication.getClient().makeOperation(null, AllowedOperations.getUserData))).start();
+			GlobalApplication.setProgressIndicator(this, true);
+			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.getUpdates))).start();
+		}
 	}
 
 	/*
