@@ -100,8 +100,10 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			startActivity(settings_intent);
 			return true;
 		case android.R.id.home:
-			// Comportement du bouton qui permet de retourner a l'activite precedente
+			// Comportement du bouton qui permet de retourner a l'activite d'accueil
 			monIntent = new Intent(this,home.class);
+			monIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+								Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(monIntent);
 			return true;
 		case R.id.menu_refresh:
