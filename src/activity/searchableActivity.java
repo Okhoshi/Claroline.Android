@@ -1,9 +1,7 @@
 package activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import mobile.claroline.R;
 import model.Annonce;
@@ -14,29 +12,34 @@ import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ListView;
+import android.util.SparseArray;
+import android.view.View;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import app.AppActivity;
 import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
 import dataStorage.DBOpenHelper;
 import dataStorage.DocumentsRepository;
 
-//@SuppressLint("ParserError")
-public class searchableActivity extends AppActivity {
+public class searchableActivity extends AppActivity implements OnChildClickListener {
 
 	private static final String LIKE_SEL = " LIKE ? ";
-	private ListView mListView;
+	private static final int COURS = 0;
+	private static final int ANNONCE = 1;
+	private static final int DOCUMENTS = 2;
+	private ExpandableListView mListView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.standard_list);
+		setContentView(R.layout.result);
 
 		// permet de retourner sur la vue précédente
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
-		mListView = (ListView) findViewById(android.R.id.list);
+		mListView = (ExpandableListView) findViewById(android.R.id.list);
 
 		handleIntent(getIntent());
 	}
@@ -66,38 +69,67 @@ public class searchableActivity extends AppActivity {
 				new String[] {"%" + query + "%",
 				"%" + query + "%"});
 
-		Map<String,List<?>> resultC = new HashMap<String,List<?>>();
-		resultC.put("Cours",courses);
+		SparseArray<List<?>> resultC = new SparseArray<List<?>>();
+		resultC.put(COURS,courses);
 
 		List<Annonce> annonces = AnnonceRepository.QueryOnDB(DBOpenHelper.ANNONCE_COLUMN_CONTENT + LIKE_SEL + "OR "+
 				DBOpenHelper.ANNONCE_COLUMN_TITLE + LIKE_SEL,
 				new String[] {"%" + query + "%",
-				"%" + query + "%"});
+				"%" + query + "%"},
+				DBOpenHelper.ANNONCE_COLUMN_COURSID);
 
-		Map<String,List<?>> resultA = new HashMap<String,List<?>>();
-		resultA.put("Annonce",annonces);
+		SparseArray<List<?>> resultA = new SparseArray<List<?>>();
+		resultA.put(ANNONCE,annonces);
 
 		List<Documents> documents = DocumentsRepository.QueryOnDB(DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION + LIKE_SEL + "OR "+
 				DBOpenHelper.DOCUMENTS_COLUMN_NAME + LIKE_SEL + "OR " +
 				DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION + LIKE_SEL, new String[] {"%" + query + "%",
 				"%" + query + "%",
-				"%" + query + "%"});
+				"%" + query + "%"},
+				DBOpenHelper.DOCUMENTS_COLUMN_COURSID);
 
-		Map<String,List<?>> resultD = new HashMap<String,List<?>>();
-		resultD.put("Documents",documents);
+		SparseArray<List<?>> resultD = new SparseArray<List<?>>();
+		resultD.put(DOCUMENTS,documents);
 
-		List<Map<String,List<?>>> results = new ArrayList<Map<String,List<?>>>();
+		List<SparseArray<List<?>>> results = new ArrayList<SparseArray<List<?>>>();
 		results.add(resultC);
 		results.add(resultA);
 		results.add(resultD);
 
 		SearchListAdapter adapter = new SearchListAdapter(this, results, query);
 		mListView.setAdapter(adapter);
+		mListView.setOnChildClickListener(this);
+	}
 
-}
+	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+		Intent i;
+		switch (groupPosition) {
+		case COURS:
+			i = new Intent(this, coursActivity.class);
+			i.putExtra("coursID", ((Cours) parent.getExpandableListAdapter().getChild(groupPosition, childPosition)).getId());
+			startActivity(i);
+			break;
+		case ANNONCE:
+			i = new Intent(this, detailsAnnonce.class);
+			i.putExtra("annID", ((Annonce) parent.getExpandableListAdapter().getChild(groupPosition, childPosition)).getId());
+			i.putExtra("tab", 0);
+			startActivity(i);
+			break;
+		case DOCUMENTS:
+			i = new Intent(this, coursActivity.class);
+			i.putExtra("coursID", ((Documents) parent.getExpandableListAdapter().getChild(groupPosition, childPosition)).getCours().getId());
+			i.putExtra("tab", 1);
+			i.putExtra("id", ((Documents) parent.getExpandableListAdapter().getChild(groupPosition, childPosition)).getId());
+			startActivity(i);
+			break;
+		default:
+			return false;
+		}
+		return true;
+	}
 
-public void onRepositoryRefresh(String type) {
-	// ignore
-}
+	public void onRepositoryRefresh(String type) {
+		// ignore
+	}
 
 }

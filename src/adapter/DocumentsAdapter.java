@@ -19,7 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class DocumentsAdapter extends BaseAdapter {
@@ -60,13 +60,13 @@ public class DocumentsAdapter extends BaseAdapter {
 	
 	public View getView(final int position, View view, ViewGroup viewGroup)
 	{
-		LinearLayout v = (LinearLayout) view;
+		RelativeLayout v = (RelativeLayout) view;
 		Documents doc = getItem(position);
 		
 		if(v==null)
 		{
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = (LinearLayout) inflater.inflate(RESOURCE, viewGroup, false);
+			v = (RelativeLayout) inflater.inflate(RESOURCE, viewGroup, false);
 		}
 		
 		if(doc != null){
@@ -75,6 +75,7 @@ public class DocumentsAdapter extends BaseAdapter {
 			TextView detail_2 = (TextView) v.findViewById(R.id.detail_2);
 			TextView detail_3 = (TextView) v.findViewById(R.id.detail_3);
 			ImageView img = (ImageView) v.findViewById(R.id.ext_logo);
+			TextView syscode = (TextView) v.findViewById(R.id.syscode);
 			
 			if(name != null){
 				name.setText(doc.getName());
@@ -90,6 +91,9 @@ public class DocumentsAdapter extends BaseAdapter {
 			}
 			if(img != null){
 				img.setImageResource(getResFromExt(doc.getExtension()));
+			}
+			if(syscode != null){
+				syscode.setVisibility(View.GONE);
 			}
 		}
 		

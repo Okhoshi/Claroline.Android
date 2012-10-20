@@ -205,7 +205,7 @@ public class DocumentsRepository extends Repository<Documents> {
 		return ConvertCursorToListObject(cursor);
 	}
 
-	public static List<Documents> QueryOnDB(String selection, String[] selectionArgs) {
+	public static List<Documents> QueryOnDB(String selection, String[] selectionArgs, String orderBy) {
 		// Récupération de la liste des documents
 		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
 				new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
@@ -222,7 +222,7 @@ public class DocumentsRepository extends Repository<Documents> {
 				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
 				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
 				selection, selectionArgs,
-				null, null, null);			 
+				null, null, orderBy);			 
 		return ConvertCursorToListObject(cursor);
 	}
 

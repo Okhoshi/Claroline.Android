@@ -1,57 +1,97 @@
 package adapter;
 
 import java.util.List;
-import java.util.Map;
 
 import mobile.claroline.R;
 import model.Annonce;
 import model.Cours;
 import model.Documents;
-import activity.coursActivity;
-import activity.detailsAnnonce;
 import android.content.Context;
-import android.content.Intent;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import app.GlobalApplication;
 
-public class SearchListAdapter extends BaseAdapter {
+public class SearchListAdapter extends BaseExpandableListAdapter{
 
-	private List<Map<String, List<?>>> searchList;
+	private List<SparseArray< List<?>>> searchList;
 	private Context context;
 	private String query;
 
-	public SearchListAdapter(Context context, List<Map<String,List<?>>> searchList, String query) {
+	private static final int COURS = 0;
+	private static final int ANNONCE = 1;
+	private static final int DOCUMENTS = 2;
+
+	public SearchListAdapter(Context context, List<SparseArray<List<?>>> searchList, String query) {
 		this.context=context;
 		this.searchList=searchList;
 		this.query = query;
 	}
 
-	public int getCount() {
-		return searchList.size();
+	public Object getChild(int groupPosition, int childPosition) {
+		return searchList.get(groupPosition).get(groupPosition).get(childPosition);
 	}
 
-	public Object getItem(int position) {
-		return searchList.get(position);
-	}
-
-	public long getItemId(int position) {
-		return searchList.indexOf(searchList.get(position));
+	public long getChildId(int groupPosition, int childPosition) {
+		return childPosition;
 	}
 
 	@SuppressWarnings("unchecked")
-	public View getView(int position, View view, ViewGroup parent) {
+	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view, ViewGroup parent) {
+		BaseAdapter adapter = null;
+		int state = View.GONE;
+		String SysCode = "";
+		
+		switch (groupPosition) {
+		case COURS:
+			adapter = new CoursAdapter(context, (List<Cours>) getGroup(groupPosition));
+			break;
+		case ANNONCE:
+			adapter = new AnnonceAdapter(context, (List<Annonce>) getGroup(groupPosition));
+			SysCode = ((Annonce) getChild(groupPosition, childPosition)).getCours().getSysCode();
+			state = View.VISIBLE;
+			break;
+		case DOCUMENTS:
+			adapter = new DocumentsAdapter(context, (List<Documents>) getGroup(groupPosition));
+			SysCode = ((Documents) getChild(groupPosition, childPosition)).getCours().getSysCode();
+			state = View.VISIBLE;
+			break;
+		default:
+			return view;
+		}
+		//Log.d("SearchList","GP : " + groupPosition + " - View : " + (view == null?"null":((TextView) view.findViewById(R.id.name_item)).getText()));
+		view = adapter.getView(childPosition, null, parent);
+		TextView syscode = (TextView) view.findViewById(R.id.syscode);
+		if(syscode != null){
+			syscode.setText(SysCode);
+			syscode.setVisibility(state);
+		}
+		return view;
+	}
 
-		int type = 0;
-		List<?> list = null;
-		Map<String,List<?>> result = (Map<String, List<?>>) getItem(position);
+	public int getChildrenCount(int groupPosition) {
+		return searchList.get(groupPosition).get(groupPosition).size();
+	}
+
+	public Object getGroup(int groupPosition) {
+		return searchList.get(groupPosition).get(groupPosition);
+	}
+
+	public int getGroupCount() {
+		return searchList.size();
+	}
+
+	public long getGroupId(int groupPosition) {
+		return groupPosition;
+	}
+
+	public View getGroupView(int groupPosition, boolean isExpanded,	View view, ViewGroup parent) {
+
+		List<?> result = (List<?>) getGroup(groupPosition);
 		LinearLayout v = (LinearLayout) view;
 
 		if(v==null)
@@ -62,21 +102,20 @@ public class SearchListAdapter extends BaseAdapter {
 
 		TextView mTextView = (TextView) v.findViewById(R.id.searchCounter);
 		TextView mTypeTextView = (TextView) v.findViewById(R.id.type_search);
-		ListView mListView = (ListView) v.findViewById(R.id.searchList);
 
-		if((list = result.get("Cours"))!= null){
+		switch (groupPosition) {
+		case COURS:			
 			mTypeTextView.setText(R.string.onglet_cours);
-			type = 1;
-		}
-		else if((list = result.get("Annonce")) != null){
+			break;
+		case ANNONCE:
 			mTypeTextView.setText(R.string.onglet_annonces);
-			type = 2;
-		}
-		else if((list = result.get("Documents"))!= null){
+			break;
+		case DOCUMENTS:
 			mTypeTextView.setText(R.string.onglet_documents);
-			type = 3;
+			break;
+		default:
+			return v;
 		}
-		else return v;
 
 		if (result.isEmpty()) {
 			// There are no results
@@ -84,65 +123,21 @@ public class SearchListAdapter extends BaseAdapter {
 					new Object[] { query }));
 		} else {
 			// Display the number of results
-			int count = list.size();
+			int count = getChildrenCount(groupPosition);
 			String countString = context.getResources().getQuantityString(
 					R.plurals.search_results, count,
 					new Object[] { count, query });
 			mTextView.setText(countString);
-
-			BaseAdapter adapter = null;
-			switch(type){
-			case 1:
-				adapter = new CoursAdapter(context, (List<Cours>) list);
-				mListView.setAdapter(adapter);
-				// Define the on-click listener for the list items
-				mListView.setOnItemClickListener(new OnItemClickListener() {
-
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						Intent wordIntent = new Intent(context,	coursActivity.class);
-						wordIntent.putExtra("coursID", ((Cours) parent.getItemAtPosition(position)).getId());
-						context.startActivity(wordIntent);
-					}
-				});
-				break;
-			case 2:
-				adapter = new AnnonceAdapter(context, (List<Annonce>) list);
-				mListView.setAdapter(adapter);
-
-				// Define the on-click listener for the list items
-				mListView.setOnItemClickListener(new OnItemClickListener() {
-
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						Intent wordIntent = new Intent(context,	detailsAnnonce.class);
-						wordIntent.putExtra("annID", ((Annonce) parent.getItemAtPosition(position)).getId());
-						context.startActivity(wordIntent);
-					}
-				});
-				break;
-			case 3:
-				adapter = new DocumentsAdapter(context, (List<Documents>) list);
-				mListView.setAdapter(adapter);
-
-				// Define the on-click listener for the list items
-				mListView.setOnItemClickListener(new OnItemClickListener() {
-
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						Intent wordIntent = new Intent(context,	coursActivity.class);
-						wordIntent.putExtra("coursID", ((Documents) parent.getItemAtPosition(position)).getCours().getId());
-						wordIntent.putExtra("tab", 1);
-						wordIntent.putExtra("id", ((Documents) parent.getItemAtPosition(position)).getId());
-						context.startActivity(wordIntent);
-					}
-				});
-				break;
-			}
-			mListView.getLayoutParams().height = count*75;
 		}
 
 		return v;
 	}
 
+	public boolean hasStableIds() {
+		return true;
+	}
+
+	public boolean isChildSelectable(int groupPosition, int childPosition) {
+		return true;
+	}
 }

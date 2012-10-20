@@ -8,7 +8,7 @@
     <!-- TextView's de l'activite about_us --> 
     <string name="about_us_authors">Auteurs : \n Devos Quentin \n Uytterhoeven Dimitri</string>
     <string name="about_us_version">Version 1.0</string>
-    <string name="about_us_contact_us">Nous contacter aux adresses suivantes :\n q.devos@student.uclouvain.be \n dimitri.uytterhoeven@student.uclouvain.be</string>
+    <string name="about_us_contact_us">Nous contacter aux adresses suivantes :\n support.develop@live.be</string>
     <string name="about_us_remerciements">Remerciements : \n S. Sluysmans \n L. Delvaux \n Pr K. Mens (UCL) \n Claroline Dev Team</string>
     <string name="about_us_mail_quentin">q.devos@student.uclouvain.be</string>
     <string name="about_us_mail_dimitri">dimitri.uytterhoeven@student.uclouvain.be</string>
@@ -25,6 +25,7 @@
     <!-- Strings des onglets Documents et Annonces -->
     <string name="onglet_documents">Documents</string>
     <string name="onglet_annonces">Annonces</string>
+    <string name="onglet_cours">Cours</string>
     
     
     <!-- Menu contextuel -->
@@ -35,7 +36,7 @@
     
     
     <!-- String concernant la searchView -->
-    <string name="search_hint">Rechercher un cours</string>
+    <string name="search_hint">Tapez les mots-clés à chercher</string>
     
     
      <!-- Shown above search results when we receive a search request. -->
@@ -51,24 +52,6 @@
     <!-- Search failure message. -->
     <string name="no_results">Aucun résultat pour \"%s\"</string>
     
-    <!-- Label TextView CoursActivity. -->
-    <string name="label">Nom du Cours ici"</string>
-    
-    
-    <!-- Choisir sa color of background -->
-    <string name="skin">Fonds d\'écran</string>
-    <string name="basic_skin">Couleurs de base</string>
-    <string name="upload_a_skin">Télécharger un fond d\'écran</string>
-    <string name="your_skins">Mes fonds d\'écran</string>
-    <string name="white">Blanc</string>
-    <string name="yellow">Jaune</string>
-    <string name="green">Vert</string>
-    <string name="red">Rouge</string>
-    <string name="black">Noir</string>
-    
-    <!-- Image a choisir dans la galerie -->
-    <string name="select_a_picture">Choisissez une image</string>
-    
     <!-- Settings -->
     <string name="pref_cat_host">Paramètres de la plateforme</string>
     <string name="pref_platform_host">Adresse de la plateforme</string>
@@ -77,20 +60,27 @@
     <string name="pref_cat_user">Paramètres de l\'utilisateur</string>
     <string name="pref_user_login">Nom d\'utilisateur</string>
     <string name="pref_user_password">Mot de passe</string>
-    <string name="loading_default">Chargement en cours&#8230;</string>
+    
+    <!-- Divers -->
     <string name="list_no_items">Aucun élément dans cette liste</string>
+    <string name="extension_image_desc">Extension</string>
+    
+    <!-- Connectivité -->
+    <string name="loading_default">Chargement en cours&#8230;</string>
+    <string name="alert_auth_failed">L\'authentification a échoué</string>
     <string name="download_finished_KO">Le téléchargement a échoué</string>
     <string name="download_finished_OK">Le fichier a été téléchargé dans le dossier \'%1$s/%2$s/\'</string>
-    <string name="onglet_cours">Cours</string>
-    <string name="app_not_found">Unable to find an app for that</string>
-    <string name="save_or_open_dialog">Do you want to save or just open this document ?</string>
-    <string name="open_dialog">Open</string>
-    <string name="save_dialog">Save</string>
-    <string name="alert_auth_failed">L\'authentification a échoué</string>
+    <string name="app_not_found">Aucune application trouvée pour ouvrir ce fichier</string>
+    <string name="failure_message">Voulez-vous vous rendre dans les préférences pour vérifier vos identifiants ?</string>
+    
+    <!-- Dialogue -->
+    <string name="save_or_open_dialog">Voulez vous ouvrir ou sauver ce document ?</string>
+    <string name="open_dialog">Ouvrir</string>
+    <string name="save_dialog">Sauver</string>
     <string name="alert_yes">Oui</string>
     <string name="alert_no">Non</string>
     <string name="open_saved_doc_dialog">Voulez vous ouvrir ce document maintenant ?</string>
-    <string name="failure_message">Voulez-vous vous rendre dans les préférences pour vérifier vos identifiants ?</string>
-
+    
+    <!-- a trier -->
 
 </resources>

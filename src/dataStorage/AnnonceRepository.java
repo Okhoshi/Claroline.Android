@@ -239,7 +239,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 		return ConvertCursorToListObject(cursor);
 	}
 	
-	public static List<Annonce> QueryOnDB(String selection, String[] selectionArgs){
+	public static List<Annonce> QueryOnDB(String selection, String[] selectionArgs, String orderBy){
 		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
 				new String[] {  DBOpenHelper.ANNONCE_COLUMN_ID ,
 				DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID ,
@@ -251,7 +251,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 				DBOpenHelper.ANNONCE_COLUMN_VISIBILITY ,
 				DBOpenHelper.ANNONCE_COLUMN_DATE  },
 				selection, selectionArgs,
-				null, null, null);
+				null, null, orderBy);
 		return ConvertCursorToListObject(cursor);
 	}
 }
