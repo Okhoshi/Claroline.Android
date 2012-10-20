@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
@@ -21,30 +22,30 @@ import dataStorage.IRepository.RepositoryRefreshListener;
 import dataStorage.Repository;
 
 public abstract class AppActivity extends Activity implements RepositoryRefreshListener { 
-
+	
+	private boolean dbOpenHere = false;
 
 	public Handler handler = new AppHandler(this);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
+		Log.d("DB", "DB Open in onCreate");
 		Repository.Open();
+		dbOpenHere = true;
 
 		super.onCreate(savedInstanceState);
 		setActionBar();
 		setOverflowMenu();
-	}	
-
-	//	@Override
-	//	public void onRestart(){
-	//		Repository.Open();
-	//		super.onRestart();
-	//	}
+	}
 
 	@Override
 	public void onResume(){
-		if(!Repository.isOpen()){
+		Log.d("DB", "DB Test Open in onResume");
+		if(!Repository.isOpen() && !dbOpenHere){
+			Log.d("DB", "DB Open in onResume");
 			Repository.Open();
+			dbOpenHere = true;
 		}
 		Repository.addOnRepositoryRefreshListener(this);
 		super.onResume();
@@ -54,15 +55,21 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 	public void onPause(){
 		super.onPause();
 		Repository.remOnRepositoryRefreshListener(this);
-		if(Repository.isOpen()){
+		Log.d("DB", "DB Test Close in onPause");
+		if(Repository.isOpen() && dbOpenHere){
+			Log.d("DB", "DB Close in onPause");
 			Repository.Close();
+			dbOpenHere = false;
 		}
 	}
 
 	@Override
 	public void onDestroy(){
-		if(Repository.isOpen()){
+		Log.d("DB", "DB Test Close in onDestroy");
+		if(Repository.isOpen() && dbOpenHere){
+			Log.d("DB", "DB Close in onDestroy");
 			Repository.Close();
+			dbOpenHere = false;
 		}
 		super.onDestroy();
 	}
@@ -108,7 +115,7 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			return true;
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
-			// Doit être implémenter dans chaque activité
+			// Doit Ítre implÈmenter dans chaque activitÈ
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
