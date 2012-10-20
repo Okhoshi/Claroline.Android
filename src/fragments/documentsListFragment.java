@@ -103,7 +103,7 @@ public class documentsListFragment extends ListFragment {
 			setListAdapter(adapter);
 		} else {
 			MimeTypeMap map = MimeTypeMap.getSingleton();
-			final String mimeType = map.getMimeTypeFromExtension(item.getExtension());
+			final String mimeType = map.getMimeTypeFromExtension(item.getExtension()).toLowerCase();
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setMessage(R.string.save_or_open_dialog)
@@ -118,9 +118,10 @@ public class documentsListFragment extends ListFragment {
 			.setNegativeButton(R.string.open_dialog, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					Intent i = new Intent(Intent.ACTION_VIEW);
-					i.setData(Uri.parse("http://" + item.getUrl() + 
+					i.setDataAndType(Uri.parse("http://" + item.getUrl() + 
 							"&login=" + GlobalApplication.getPreferences().getString("user_login", "qdevos") + 
-							"&password=" + GlobalApplication.getPreferences().getString("user_password", "elegie24")));
+							"&password=" + GlobalApplication.getPreferences().getString("user_password", "elegie24")),
+							mimeType);
 					try {
 						startActivity(i);
 					} catch (ActivityNotFoundException e) {

@@ -1,5 +1,7 @@
 package app;
 
+import java.io.File;
+
 import mobile.claroline.R;
 import model.Documents;
 import dataStorage.DocumentsRepository;
@@ -45,7 +47,7 @@ public class AppHandler extends Handler {
 	
 	public void handleMessage(final Message mess){
 		resID = mess.arg2;
-		switch (mess.what) {
+		switch (mess.what){
 		case 0:
 			GlobalApplication.setProgressIndicator(false);
 			if(mess.arg1 == 1){
@@ -63,11 +65,11 @@ public class AppHandler extends Handler {
 						final Documents item = DocumentsRepository.GetById(resID);
 						
 						MimeTypeMap map = MimeTypeMap.getSingleton();
-						final String mimeType = map.getMimeTypeFromExtension(item.getExtension());
+						final String mimeType = map.getMimeTypeFromExtension(item.getExtension().toLowerCase());
 						
 						Intent i = new Intent(Intent.ACTION_VIEW);
-						i.setData(Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" +
-										context.getString(R.string.app_name)));
+						i.setDataAndType(Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" +
+										context.getString(R.string.app_name) + "/" + item.getName() + "." + item.getExtension())), mimeType);
 						try {
 							context.startActivity(i);
 						} catch (ActivityNotFoundException e) {
