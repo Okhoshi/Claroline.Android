@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     
-    <PreferenceCategory android:title="@+string/pref_cat_host"
+    <PreferenceCategory android:title="@string/pref_cat_host"
         				android:key="pref_cat_platform">
         				
         <EditTextPreference android:key="platform_host" 
-            				android:title="@+string/pref_platform_host"
+            				android:title="@string/pref_platform_host"
             				android:defaultValue="http://mesconsult.be/clarodev"/>
         <EditTextPreference android:key="platform_module"
-            				android:title="@+string/pref_platform_module"
+            				android:title="@string/pref_platform_module"
             				android:defaultValue="/module/MOBILE/" android:summary="/module/MOBILE/"/>
         
         
-    </PreferenceCategory><PreferenceCategory android:key="pref_cat_user" android:title="@+string/pref_cat_user" >
-        <EditTextPreference android:title="@+string/pref_user_login" android:key="user_login" android:defaultValue="qdevos"/>
-        <EditTextPreference android:title="@+string/pref_user_password" android:key="user_password" android:inputType="textPassword" android:defaultValue="elegie24"/>
+    </PreferenceCategory><PreferenceCategory android:key="pref_cat_user" android:title="@string/pref_cat_user" >
+        <EditTextPreference android:title="@string/pref_user_login" android:key="user_login" android:defaultValue="qdevos"/>
+        <EditTextPreference android:title="@string/pref_user_password" android:key="user_password" android:inputType="textPassword" android:defaultValue="elegie24"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

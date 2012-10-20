@@ -13,6 +13,7 @@ import android.os.Message;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import dataStorage.Repository;
 public class coursListFragment extends ListFragment 
 {
 	
-	private static final int MAIL_ID = R.id.itemMails;
+	private static final int MAIL_ID = 0;
 	
 	public Handler refreshList = new Handler(){
 		public void handleMessage(Message mess){
@@ -69,7 +70,7 @@ public class coursListFragment extends ListFragment
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.setHeaderTitle(getString(R.string.contextual_header));
-		menu.add(0, MAIL_ID, 0, getString(R.string.contextual_mail));
+		menu.add(Menu.NONE, MAIL_ID, Menu.NONE, getString(R.string.contextual_mail));
 	}
 
 	public boolean onContextItemSelected(MenuItem item) {
