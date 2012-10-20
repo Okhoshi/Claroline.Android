@@ -26,7 +26,6 @@ import model.Documents;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.client.protocol.ClientContext;
@@ -34,7 +33,6 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,28 +55,31 @@ import dataStorage.DocumentsRepository;
  */
 public class ClaroClient implements Runnable {
 
-	private HttpClient client;
-	private HttpContext httpContext;
-
-	private CookieStore cookies;
-	private Date cookieCreation;
+	private static final String TAG = "ClaroClient";
+	private static CookieStore cookies = new BasicCookieStore();;
+	private static Date cookieCreation = new Date(0);;
 
 	private AllowedOperations op = AllowedOperations.authenticate;
 	private Cours reqCours = null;
 	private int resID = -1;
 	private Handler handler = null;
 
+	public ClaroClient(Handler handler, AllowedOperations op, Cours reqCours, int resID){
+		this.op = op;
+		this.reqCours = reqCours;
+		this.resID = resID;
+		this.handler = handler;
+	}
+	
 	public ClaroClient(){
-
-		cookieCreation = new Date(0);
-		cookies = new BasicCookieStore();
-
-		httpContext = new BasicHttpContext();
-		httpContext.setAttribute(ClientContext.COOKIE_STORE, cookies);
-		client = new DefaultHttpClient();
+		this(null, null, null, -1);
 	}
 
-	public HttpPost getClient(boolean forAuth, CallbackArgs args) throws UnsupportedEncodingException{
+	private String getResponse(boolean forAuth, CallbackArgs args) throws UnsupportedEncodingException, IOException{
+		DefaultHttpClient client = new DefaultHttpClient();
+		BasicHttpContext httpContext = new BasicHttpContext();
+		httpContext.setAttribute(ClientContext.COOKIE_STORE, cookies);
+		
 		HttpPost postMessage;
 		if(forAuth){
 			postMessage = new HttpPost(GlobalApplication.getPreferences().getString("platform_host", "") + "/claroline/auth/login.php");
@@ -89,27 +90,17 @@ public class ClaroClient implements Runnable {
 		postMessage.addHeader("Content-Type", "application/x-www-form-urlencoded");
 		postMessage.setEntity(args.entity);
 		HttpClientParams.setRedirecting(postMessage.getParams(), false);
-		return postMessage;
-	}
 
-	public ClaroClient makeOperation(Handler handler, AllowedOperations op, Cours reqCours, int resID){
-		this.op = op;
-		this.reqCours = reqCours;
-		this.resID = resID;
-		this.handler = handler;
-		return this;
-	}
+		Log.d(TAG, "Host:" + postMessage.getURI().getHost()
+				+ "Path:" + postMessage.getURI().getPath()
+				+ " " + EntityUtils.toString(postMessage.getEntity()));
 
-	public ClaroClient makeOperation(Handler handler, AllowedOperations op){
-		return this.makeOperation(handler, op, null, -1);
-	}
+		HttpResponse response = client.execute(postMessage, httpContext);
+		String result =  EntityUtils.toString(response.getEntity());
+		response.getEntity().consumeContent();
+		Log.i(TAG, "Response:" + result);
+		return result;
 
-	public ClaroClient makeOperation(Handler handler, AllowedOperations op, Cours reqCours){
-		return this.makeOperation(handler, op, reqCours, -1);
-	}
-
-	public ClaroClient makeOperation(Handler handler, AllowedOperations op, int resID){
-		return this.makeOperation(handler, op, null, resID);
 	}
 
 	public void run(){
@@ -175,11 +166,11 @@ public class ClaroClient implements Runnable {
 	}
 
 	public void Execute(CallbackArgs args){
-		if(!isExpired()){
+		if(isExpired()){
 			if(!getSessionCookie(new CallbackArgs(GlobalApplication.getPreferences().getString("user_login", ""),
 					GlobalApplication.getPreferences().getString("user_password", ""),
 					AllowedOperations.authenticate))){
-				Log.e(this.toString(), "Authentication Failed!");
+				Log.e(TAG, "Authentication Failed!");
 				//Reports the failure to the user
 				if(handler != null){
 					Message msg = new Message();
@@ -199,14 +190,8 @@ public class ClaroClient implements Runnable {
 			CoursRepository.Update(args.cidReq);
 		} else {
 			try {
-				Log.d("WEB", "Host:" + getClient(false, args).getURI().getHost()
-						+ "Path:" + getClient(false, args).getURI().getPath()
-						+ " " + EntityUtils.toString(getClient(false, args).getEntity()));
-
-				HttpResponse response = client.execute(getClient(false, args), httpContext);
-				String _res = EntityUtils.toString(response.getEntity());
+				String _res = getResponse(false, args);
 				
-				Log.i("ClaroClient", "Response:" + _res);
 				JSONArray JSONresponse;
 
 				switch(args.operation){
@@ -250,7 +235,7 @@ public class ClaroClient implements Runnable {
 					JSONAnnonce.fromJSONObject(object).saveInDB();
 					break;
 				case getUpdates:
-					if(_res != "[]"){
+					if(!_res.equals("[]")){
 						JSONObject JSONResp = new JSONObject(_res);
 						Iterator<?> iterOnCours = JSONResp.keys();
 						while(iterOnCours.hasNext()){
@@ -336,7 +321,6 @@ public class ClaroClient implements Runnable {
 					break;
 				}
 
-				response.getEntity().consumeContent();
 				CoursRepository.ResetTable();
 				DocumentsRepository.ResetTable();
 				AnnonceRepository.ResetTable();
@@ -357,28 +341,24 @@ public class ClaroClient implements Runnable {
 		}
 	}
 
-	public void invalidateClient(){
+	public static void invalidateClient(){
 		cookieCreation = new Date(0);
 		cookies.clear();
 	}
 
-	public boolean isExpired(){
+	public static boolean isExpired(){
 		GregorianCalendar temp = new GregorianCalendar();
 		temp.setTime(cookieCreation);
 		temp.add(Calendar.HOUR_OF_DAY, 2);
-		return cookieCreation.after(temp.getTime());
+		return (new GregorianCalendar()).getTime().after(temp.getTime());
 	}
 
 	public boolean getSessionCookie(CallbackArgs args){
 		try {
-			Log.i("WEB", "Host:" + getClient(true, args).getURI().getHost()
-					+ "Path:" + getClient(true, args).getURI().getPath());
-			HttpResponse response = client.execute(getClient(true, args), httpContext);
-			boolean empty =  EntityUtils.toString(response.getEntity()).isEmpty();
+			boolean empty =  getResponse(true, args).isEmpty();
 			if(empty){
 				cookieCreation = new Date();
 			}
-			response.getEntity().consumeContent();
 			return empty;
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -395,8 +375,10 @@ public class ClaroClient implements Runnable {
 	private boolean DownloadFile(Documents doc) {
 		try {
 			//Exits the function if the storage is not writable!
-			if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+			if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+				Log.d("DownloadManager", "Missing SDCard");
 				return false;
+			}
 
 			File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);               
 
@@ -404,8 +386,8 @@ public class ClaroClient implements Runnable {
 			if(dir.exists()==false) {
 				if(dir.mkdirs() == false)
 					//Exits if the directory asked cannot be created!
-					Log.d("DownloadManager", "Missing SDCard");
-					return false;
+					Log.d("DownloadManager", "Unable to write on SDCard");
+				return false;
 			}
 
 			File file = new File(dir, doc.getName() + "." + doc.getExtension());
