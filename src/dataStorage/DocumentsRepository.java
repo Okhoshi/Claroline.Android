@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import model.Documents;
 import android.content.ContentValues;
@@ -228,7 +229,7 @@ public class DocumentsRepository extends Repository<Documents> {
 	public static int Save(Documents entite) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_COURSID,entite.getCours().getId());
-		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate())); 
+		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(entite.getDate())); 
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION,entite.getDescription());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION, entite.getExtension());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER,entite.isFolder());
@@ -248,7 +249,7 @@ public class DocumentsRepository extends Repository<Documents> {
 	public static void Update(Documents entite) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_COURSID,entite.getCours().getId());
-		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate())); 
+		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(entite.getDate())); 
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION,entite.getDescription());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION, entite.getExtension());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER,entite.isFolder());
@@ -327,7 +328,7 @@ public class DocumentsRepository extends Repository<Documents> {
 		try {
 			documents = new Documents(
 					CoursRepository.GetById(c.getInt(DBOpenHelper.DOCUMENTS_NUM_COLUMN_COURSID)),
-					(new SimpleDateFormat("E MMM y dd HH:mm:ss")).parse(c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_DATE)),
+					(new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).parse(c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_DATE)),
 					c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_DESCRIPTION),
 					c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_EXTENSION),
 					c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_NAME),

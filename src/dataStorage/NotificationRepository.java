@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import model.Notification;
 
@@ -104,7 +105,7 @@ public class NotificationRepository extends Repository<Notification> {
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ISOLDRESSOURCE,entite.isOldRessource());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_NOTIFIED, entite.isNotified());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); 
-		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate()));
+		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(entite.getDate()));
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_TEXT,entite.getText());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_UPDATED, entite.isUpdated());
 
@@ -121,7 +122,7 @@ public class NotificationRepository extends Repository<Notification> {
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_ISOLDRESSOURCE,entite.isOldRessource());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_NOTIFIED, entite.isNotified());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCETYPE,entite.getRessourceType()); 
-		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate()));
+		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(entite.getDate()));
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_TEXT,entite.getText());
 		contentValues.put(DBOpenHelper.NOTIFICATION_COLUMN_UPDATED, entite.isUpdated());
 

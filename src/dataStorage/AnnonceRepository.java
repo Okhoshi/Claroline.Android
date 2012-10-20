@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import model.Annonce;
 import dataStorage.CoursRepository;
@@ -128,7 +129,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_NOTIFIED,entite.isNotified());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_UPDATED, entite.isUpdated());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,entite.isVisible());
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate()));
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(entite.getDate()));
 
 		int id = (int) maBDD.insert(DBOpenHelper.ANNONCE_TABLE, null, contentValues);
 		RefreshRepository(REPO_TYPE);
@@ -144,7 +145,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_NOTIFIED,entite.isNotified());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_UPDATED, entite.isUpdated());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,entite.isVisible());
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss")).format(entite.getDate()));
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(entite.getDate()));
 
 		maBDD.update(DBOpenHelper.ANNONCE_TABLE, contentValues,	
 				DBOpenHelper.ANNONCE_COLUMN_ID + "=?",
@@ -203,7 +204,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 		try {
 			annonce = new Annonce(
 					CoursRepository.GetById(c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_COURSID)),
-					(new SimpleDateFormat("E MMM y dd HH:mm:ss")).parse(c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_DATE)),
+					(new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).parse(c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_DATE)),
 					c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_TITLE), 
 					c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_CONTENT)
 					);
