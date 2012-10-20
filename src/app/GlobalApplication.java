@@ -1,10 +1,12 @@
 package app;
 
 import mobile.claroline.R;
+import model.Cours;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import connectivity.AllowedOperations;
 import connectivity.ClaroClient;
@@ -18,10 +20,18 @@ public class GlobalApplication extends Application {
 		return singleton;
 	}
 	
-	private static ClaroClient client;
+	//private static ClaroClient client;
 	
-	public static ClaroClient getClient(){
-		return client;
+	public static ClaroClient getClient(Handler handler, AllowedOperations op, Cours reqCours, int resId){
+		return new ClaroClient(handler, op, reqCours, resId);
+	}
+	
+	public static ClaroClient getClient(Handler handler, AllowedOperations op){
+		return getClient(handler, op, null, -1);
+	}
+	
+	public static ClaroClient getClient(Handler handler, AllowedOperations op, Cours reqCours){
+		return getClient(handler, op, reqCours, -1);
 	}
 	
 	public static SharedPreferences getPreferences(){
@@ -88,7 +98,7 @@ public class GlobalApplication extends Application {
 	public void onCreate(){
 		super.onCreate();
 		singleton = this;
-		client = new ClaroClient();
+		//client = new ClaroClient();
 		Repository.SetOpenHelper(getApplicationContext());
 	}
 }

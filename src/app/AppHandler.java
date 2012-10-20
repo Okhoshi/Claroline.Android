@@ -60,7 +60,7 @@ public class AppHandler extends Handler {
 				})
 				.setPositiveButton(R.string.alert_yes, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						final Documents item = DocumentsRepository.GetById(resID); //FIXME unaccessible variable
+						final Documents item = DocumentsRepository.GetById(resID);
 						
 						MimeTypeMap map = MimeTypeMap.getSingleton();
 						final String mimeType = map.getMimeTypeFromExtension(item.getExtension());

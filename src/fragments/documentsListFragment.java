@@ -111,7 +111,7 @@ public class documentsListFragment extends ListFragment {
 			.setPositiveButton(R.string.save_dialog, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					GlobalApplication.setProgressIndicator(getActivity(), true);
-					(new Thread(GlobalApplication.getClient().makeOperation(((AppActivity)getActivity()).handler, AllowedOperations.downloadFile, item.getId()))).start();
+					(new Thread(GlobalApplication.getClient(((AppActivity)getActivity()).handler, AllowedOperations.downloadFile, item.getCours(), item.getId()))).start();
 					dialog.dismiss();
 				}
 			})

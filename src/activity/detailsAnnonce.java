@@ -38,7 +38,7 @@ public class detailsAnnonce extends AppActivity
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
 			GlobalApplication.setProgressIndicator(this, true);
-			new Thread(GlobalApplication.getClient().makeOperation(handler,AllowedOperations.getSingleAnnounce, currentAnnonce.getCours(), currentAnnonce.getRessourceId())).start();
+			new Thread(GlobalApplication.getClient(handler,AllowedOperations.getSingleAnnounce, currentAnnonce.getCours(), currentAnnonce.getRessourceId())).start();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

@@ -58,7 +58,7 @@ public class coursActivity extends AppActivity
             switch(getActionBar().getSelectedNavigationIndex()){
     		default:
             	GlobalApplication.setProgressIndicator(this, true);
-    			(new Thread(GlobalApplication.getClient().makeOperation(handler, AllowedOperations.updateCompleteCourse, currentCours))).start();
+    			(new Thread(GlobalApplication.getClient(handler, AllowedOperations.updateCompleteCourse, currentCours))).start();
     			break;
             }
             return true;
