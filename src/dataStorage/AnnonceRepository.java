@@ -10,6 +10,7 @@ package dataStorage;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,7 +72,8 @@ public class AnnonceRepository extends Repository<Annonce> {
 				DBOpenHelper.ANNONCE_COLUMN_NOTIFIED ,
 				DBOpenHelper.ANNONCE_COLUMN_UPDATED ,
 				DBOpenHelper.ANNONCE_COLUMN_VISIBILITY ,
-				DBOpenHelper.ANNONCE_COLUMN_DATE  }, null, null, null, null, null);			 
+				DBOpenHelper.ANNONCE_COLUMN_DATE ,
+				DBOpenHelper.ANNONCE_COLUMN_LOADED  }, null, null, null, null, null);			 
 		return ConvertCursorToListObject(cursor);
 	}
 
@@ -85,7 +87,8 @@ public class AnnonceRepository extends Repository<Annonce> {
 				DBOpenHelper.ANNONCE_COLUMN_NOTIFIED,
 				DBOpenHelper.ANNONCE_COLUMN_UPDATED,
 				DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,
-				DBOpenHelper.ANNONCE_COLUMN_DATE },
+				DBOpenHelper.ANNONCE_COLUMN_DATE ,
+				DBOpenHelper.ANNONCE_COLUMN_LOADED},
 				DBOpenHelper.ANNONCE_COLUMN_ID + "=?",
 						new String[] { String.valueOf(id) }, null, null, null);
 		Annonce annonce;
@@ -107,7 +110,8 @@ public class AnnonceRepository extends Repository<Annonce> {
 				DBOpenHelper.ANNONCE_COLUMN_NOTIFIED,
 				DBOpenHelper.ANNONCE_COLUMN_UPDATED,
 				DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,
-				DBOpenHelper.ANNONCE_COLUMN_DATE },
+				DBOpenHelper.ANNONCE_COLUMN_DATE ,
+				DBOpenHelper.ANNONCE_COLUMN_LOADED},
 				DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID + "=? AND " + 
 				DBOpenHelper.ANNONCE_COLUMN_COURSID + "=?",
 						new String[] { String.valueOf(id), String.valueOf(coursid) }, null, null, null);
@@ -130,6 +134,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_UPDATED, entite.isUpdated());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,entite.isVisible());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(entite.getDate()));
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_LOADED, (new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(new Date()));
 
 		int id = (int) maBDD.insert(DBOpenHelper.ANNONCE_TABLE, null, contentValues);
 		RefreshRepository(REPO_TYPE);
@@ -146,6 +151,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_UPDATED, entite.isUpdated());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,entite.isVisible());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_DATE, (new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(entite.getDate()));
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_LOADED, (new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(new Date()));
 
 		maBDD.update(DBOpenHelper.ANNONCE_TABLE, contentValues,	
 				DBOpenHelper.ANNONCE_COLUMN_ID + "=?",
@@ -214,7 +220,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 			annonce.setNotified((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_NOTIFIED) != 0));
 			annonce.setUpdated((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_UPDATED) != 0));
 			annonce.setVisible((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_VISIBILITY) != 0));
-
+			annonce.setLoaded((new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).parse(c.getString(DBOpenHelper.ANNONCE_NUM_COLUMN_LOADED)));
 			return annonce;
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -233,7 +239,8 @@ public class AnnonceRepository extends Repository<Annonce> {
 				DBOpenHelper.ANNONCE_COLUMN_NOTIFIED ,
 				DBOpenHelper.ANNONCE_COLUMN_UPDATED ,
 				DBOpenHelper.ANNONCE_COLUMN_VISIBILITY ,
-				DBOpenHelper.ANNONCE_COLUMN_DATE  },
+				DBOpenHelper.ANNONCE_COLUMN_DATE,
+				DBOpenHelper.ANNONCE_COLUMN_LOADED  },
 				DBOpenHelper.ANNONCE_COLUMN_COURSID + "=?", 
 						new String[] {String.valueOf(coursId)}, null, null, null);			 
 		return ConvertCursorToListObject(cursor);
@@ -249,7 +256,8 @@ public class AnnonceRepository extends Repository<Annonce> {
 				DBOpenHelper.ANNONCE_COLUMN_NOTIFIED ,
 				DBOpenHelper.ANNONCE_COLUMN_UPDATED ,
 				DBOpenHelper.ANNONCE_COLUMN_VISIBILITY ,
-				DBOpenHelper.ANNONCE_COLUMN_DATE  },
+				DBOpenHelper.ANNONCE_COLUMN_DATE,
+				DBOpenHelper.ANNONCE_COLUMN_LOADED  },
 				selection, selectionArgs,
 				null, null, orderBy);
 		return ConvertCursorToListObject(cursor);

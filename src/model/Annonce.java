@@ -4,7 +4,9 @@
  */
 package model;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import dataStorage.AnnonceRepository;
 
@@ -15,7 +17,8 @@ public class Annonce
 	// Variables globales : propriétés
 	
 	private Cours Cours;
-	private Date date; 
+	private Date date;
+	private Date loaded;
 	
 	private int Id;
 	private int ressourceId;
@@ -68,6 +71,13 @@ public class Annonce
 	}
 	
 	
+	/**
+	 * @return the loaded
+	 */
+	public Date getLoaded() {
+		return loaded;
+	}
+
 	// Methodes Booleennes
 	public boolean isNotified()
 	{
@@ -122,6 +132,13 @@ public class Annonce
 		this.visibility=visibility;
 	}
 	
+	/**
+	 * @param loaded the loaded to set
+	 */
+	public void setLoaded(Date loaded) {
+		this.loaded = loaded;
+	}
+
 	@Override
 	public boolean equals(Object o){
 		if(o instanceof Annonce){
@@ -137,6 +154,13 @@ public class Annonce
 			this.setId(AnnonceRepository.Save(this));
 		}
 		return this.getId();
+	}
+	
+	public boolean isExpired(){
+		GregorianCalendar temp = new GregorianCalendar();
+		temp.setTime(getLoaded());
+		temp.add(Calendar.DAY_OF_YEAR, 7);
+		return (new GregorianCalendar()).after(temp);
 	}
 
 }

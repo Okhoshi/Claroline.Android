@@ -4,7 +4,9 @@
  */
 package model;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 //import java.util.Date;
 import java.util.List;
 
@@ -206,6 +208,13 @@ public class Cours
 			CoursRepository.Save(this);
 		}
 		return this.getId();
+	}
+	
+	public boolean isExpired(){
+		GregorianCalendar temp = new GregorianCalendar();
+		temp.setTime(isLoaded);
+		temp.add(Calendar.DAY_OF_YEAR, 7);
+		return (new GregorianCalendar()).getTime().after(temp.getTime());
 	}
 	
 }

@@ -71,7 +71,7 @@ public class AppHandler extends Handler {
 						i.setDataAndType(Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" +
 										context.getString(R.string.app_name) + "/" + item.getName() + "." + item.getExtension())), mimeType);
 						try {
-							context.startActivity(i);
+							context.startActivity(Intent.createChooser(i,context.getString(R.string.dialog_choose_app)));
 						} catch (ActivityNotFoundException e) {
 							Toast.makeText(context, context.getString(R.string.app_not_found), Toast.LENGTH_LONG).show();
 						}
@@ -100,7 +100,7 @@ public class AppHandler extends Handler {
 			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					Intent settings_intent = new Intent(context, Settings.class);
-					context.startActivity(Intent.createChooser(settings_intent,context.getString(R.string.dialog_choose_app)));
+					context.startActivity(settings_intent);
 				}
 			})
 			.show();

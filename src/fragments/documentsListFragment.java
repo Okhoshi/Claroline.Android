@@ -1,5 +1,6 @@
 package fragments;
 
+import java.io.File;
 import java.util.List;
 
 import mobile.claroline.R;
@@ -13,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -94,6 +96,8 @@ public class documentsListFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id){
 		final Documents item = (Documents) getListAdapter().getItem(position);
+		MimeTypeMap map = MimeTypeMap.getSingleton();
+		final String mime = map.getMimeTypeFromExtension(item.getExtension());
 
 		if(item.isFolder()){
 			currentRoot = item;
@@ -102,18 +106,22 @@ public class documentsListFragment extends ListFragment {
 			DocumentsAdapter adapter = new DocumentsAdapter(getActivity(), liste);
 			setListAdapter(adapter);
 		} else {
-			MimeTypeMap map = MimeTypeMap.getSingleton();
-			String mime = map.getMimeTypeFromExtension(item.getExtension());
-
 			if(mime != null){
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 				builder.setMessage(R.string.save_or_open_dialog)
 				.setCancelable(true)
 				.setPositiveButton(R.string.save_dialog, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						GlobalApplication.setProgressIndicator(getActivity(), true);
-						(new Thread(GlobalApplication.getClient(((AppActivity)getActivity()).handler, AllowedOperations.downloadFile, item.getCours(), item.getId()))).start();
-						dialog.dismiss();
+						if(item.isOnMemory()){
+							Intent i = new Intent(Intent.ACTION_VIEW);
+							i.setDataAndType(Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" +
+									getString(R.string.app_name) + "/" + item.getName() + "." + item.getExtension())), mime.toLowerCase());
+							startActivity(Intent.createChooser(i,getString(R.string.dialog_choose_app)));
+						} else {
+							GlobalApplication.setProgressIndicator(getActivity(), true);
+							(new Thread(GlobalApplication.getClient(((AppActivity)getActivity()).handler, AllowedOperations.downloadFile, item.getCours(), item.getId()))).start();
+							dialog.dismiss();
+						}
 					}
 				})
 				.setNegativeButton(R.string.open_dialog, new DialogInterface.OnClickListener() {
@@ -136,7 +144,7 @@ public class documentsListFragment extends ListFragment {
 				i.setData(Uri.parse("http://" + item.getUrl() + 
 						"&login=" + GlobalApplication.getPreferences().getString("user_login", "qdevos") + 
 						"&password=" + GlobalApplication.getPreferences().getString("user_password", "elegie24")));
-					startActivity(i);
+				startActivity(i);
 			}
 		}
 	}

@@ -9,6 +9,7 @@ package dataStorage;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -73,7 +74,8 @@ public class DocumentsRepository extends Repository<Documents> {
 				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
 				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
 				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
-				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  }, null, null, null, null, null);			 
+				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY ,
+				DBOpenHelper.DOCUMENTS_COLUMN_LOADED  }, null, null, null, null, null);			 
 		return ConvertCursorToListObject(cursor);
 	}
 
@@ -91,7 +93,8 @@ public class DocumentsRepository extends Repository<Documents> {
 				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
 				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
 				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
-				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
+				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY ,
+				DBOpenHelper.DOCUMENTS_COLUMN_LOADED  },
 				DBOpenHelper.DOCUMENTS_COLUMN_ID + "=?",
 				new String[] { String.valueOf(id) }, null, null, null);
 
@@ -123,7 +126,8 @@ public class DocumentsRepository extends Repository<Documents> {
 				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
 				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
 				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
-				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
+				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY ,
+				DBOpenHelper.DOCUMENTS_COLUMN_LOADED  },
 				DBOpenHelper.DOCUMENTS_COLUMN_PATH + " = ? AND " + 
 						DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
 						new String[] {path, String.valueOf(coursId)}, null, null, null);
@@ -144,7 +148,8 @@ public class DocumentsRepository extends Repository<Documents> {
 				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
 				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
 				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
-				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
+				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY ,
+				DBOpenHelper.DOCUMENTS_COLUMN_LOADED  },
 				DBOpenHelper.DOCUMENTS_COLUMN_PATH + " = ? AND " +
 						DBOpenHelper.DOCUMENTS_COLUMN_NAME + " = ? AND " +
 						DBOpenHelper.DOCUMENTS_COLUMN_ISFOLDER + " = 1 AND " +
@@ -173,7 +178,8 @@ public class DocumentsRepository extends Repository<Documents> {
 				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
 				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
 				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
-				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  };
+				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY ,
+				DBOpenHelper.DOCUMENTS_COLUMN_LOADED  };
 
 		Cursor c = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE, contentValues,	
 				DBOpenHelper.DOCUMENTS_COLUMN_PATH + " LIKE ? AND " + 
@@ -199,7 +205,8 @@ public class DocumentsRepository extends Repository<Documents> {
 				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
 				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
 				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
-				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
+				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY ,
+				DBOpenHelper.DOCUMENTS_COLUMN_LOADED  },
 				DBOpenHelper.DOCUMENTS_COLUMN_COURSID + "=?",
 				new String[] {String.valueOf(coursId)}, null, null, null);			 
 		return ConvertCursorToListObject(cursor);
@@ -220,7 +227,8 @@ public class DocumentsRepository extends Repository<Documents> {
 				DBOpenHelper.DOCUMENTS_COLUMN_SIZE ,
 				DBOpenHelper.DOCUMENTS_COLUMN_UPDATED ,
 				DBOpenHelper.DOCUMENTS_COLUMN_URL ,
-				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY  },
+				DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY ,
+				DBOpenHelper.DOCUMENTS_COLUMN_LOADED  },
 				selection, selectionArgs,
 				null, null, orderBy);			 
 		return ConvertCursorToListObject(cursor);
@@ -240,6 +248,7 @@ public class DocumentsRepository extends Repository<Documents> {
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_UPDATED, entite.isUpdated());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_URL, entite.getUrl());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY, entite.isVisible());
+		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_LOADED, (new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(new Date(0))); 
 
 		int id = (int) maBDD.insert(DBOpenHelper.DOCUMENTS_TABLE, null, contentValues);
 		RefreshRepository(REPO_TYPE);
@@ -260,6 +269,7 @@ public class DocumentsRepository extends Repository<Documents> {
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_UPDATED, entite.isUpdated());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_URL, entite.getUrl());
 		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_VISIBILITY, entite.isVisible());
+		contentValues.put(DBOpenHelper.DOCUMENTS_COLUMN_LOADED, (new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(entite.getLoaded())); 
 
 		maBDD.update(DBOpenHelper.DOCUMENTS_TABLE, contentValues,	
 				DBOpenHelper.DOCUMENTS_COLUMN_ID + "=?",
@@ -342,6 +352,7 @@ public class DocumentsRepository extends Repository<Documents> {
 			documents.setNotified((c.getInt(DBOpenHelper.DOCUMENTS_NUM_COLUMN_NOTIFIED) != 0));
 			documents.setUpdated((c.getInt(DBOpenHelper.DOCUMENTS_NUM_COLUMN_UPDATED) != 0));
 			documents.setVisible((c.getInt(DBOpenHelper.DOCUMENTS_NUM_COLUMN_VISIBILITY) != 0));
+			documents.setLoaded((new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).parse(c.getString(DBOpenHelper.DOCUMENTS_NUM_COLUMN_LOADED)));
 
 			return documents;
 		} catch (ParseException e) {

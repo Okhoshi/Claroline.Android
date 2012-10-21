@@ -55,6 +55,8 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	public static final int ANNONCE_NUM_COLUMN_VISIBILITY    = 7;
 	public static final String ANNONCE_COLUMN_DATE     		 = "DATE";
 	public static final int ANNONCE_NUM_COLUMN_DATE   		 = 8;
+	public static final String ANNONCE_COLUMN_LOADED     	 = "LOADED";
+	public static final int ANNONCE_NUM_COLUMN_LOADED   	 = 9;
 	
 	
 	// Description des colonnes de la table Cours
@@ -113,6 +115,8 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	public static final int DOCUMENTS_NUM_COLUMN_URL		 = 11;
 	public static final String DOCUMENTS_COLUMN_VISIBILITY 	 = "VISIBILITY";
 	public static final int DOCUMENTS_NUM_COLUMN_VISIBILITY  = 12;
+	public static final String DOCUMENTS_COLUMN_LOADED 	 	 = "LOADED";
+	public static final int DOCUMENTS_NUM_COLUMN_LOADED  	 = 13;
 	
 	// Description des colonnes de la table Notification
 	public static final String NOTIFICATION_COLUMN_ID 		 		= "ID";
@@ -157,7 +161,8 @@ public class DBOpenHelper extends SQLiteOpenHelper
 				   ANNONCE_COLUMN_NOTIFIED  	+ " INTEGER NOT NULL, " +
 				   ANNONCE_COLUMN_UPDATED  		+ " INTEGER NOT NULL, " +
 				   ANNONCE_COLUMN_VISIBILITY 	+ " INTEGER NOT NULL, " +
-				   ANNONCE_COLUMN_DATE  		+ " INTEGER NOT NULL" +
+				   ANNONCE_COLUMN_DATE  		+ " INTEGER NOT NULL," +
+				   ANNONCE_COLUMN_LOADED  		+ " INTEGER NOT NULL" +
 			");";
 
 	private static final String CREATE_TABLE_COURS =
@@ -191,7 +196,8 @@ public class DBOpenHelper extends SQLiteOpenHelper
 				   DOCUMENTS_COLUMN_SIZE 		+" TEXT," + 
 				   DOCUMENTS_COLUMN_UPDATED 	+" INTEGER NOT NULL," +
 				   DOCUMENTS_COLUMN_URL 		+" TEXT," +
-				   DOCUMENTS_COLUMN_VISIBILITY 	+" INTEGER NOT NULL" +
+				   DOCUMENTS_COLUMN_VISIBILITY 	+" INTEGER NOT NULL," +
+				   DOCUMENTS_COLUMN_LOADED		+" INTEGER NOT NULL" +
 			");";
 			
 	private static final String CREATE_TABLE_NOTIFICATION =

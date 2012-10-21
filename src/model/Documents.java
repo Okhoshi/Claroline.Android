@@ -4,8 +4,16 @@
  */
 package model;
 
+import java.io.File;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+
+import mobile.claroline.R;
+import android.os.Environment;
+import android.util.Log;
+import app.GlobalApplication;
 
 import dataStorage.DocumentsRepository;
 
@@ -17,6 +25,7 @@ public class Documents
 	
 	private Cours Cours;
 	private Date date; 
+	private Date loaded;
 	
 	private boolean IsFolder;
 	private boolean notified;
@@ -90,6 +99,13 @@ public class Documents
 		
 		// Méthodes booleennes
 		
+		/**
+		 * @return the loaded
+		 */
+		public Date getLoaded() {
+			return loaded;
+		}
+
 		public boolean isFolder()
 		{
 			return this.IsFolder;
@@ -163,6 +179,13 @@ public class Documents
 			this.visibility=visibility;
 		}
 		
+		/**
+		 * @param loaded the loaded to set
+		 */
+		public void setLoaded(Date loaded) {
+			this.loaded = loaded;
+		}
+
 		public List<Documents> getContent(){
 			List<Documents> liste;
 			if(IsFolder){
@@ -230,11 +253,32 @@ public class Documents
 
 		public int saveInDB(){
 			if(this.equals(DocumentsRepository.GetWithoutId(this))){
+				this.setLoaded(new Date(0));
 				DocumentsRepository.Update(this);
 			} else {
 				this.setId(DocumentsRepository.Save(this));
 			}
 			
 			return this.getId();
+		}
+
+		public boolean isOnMemory() {
+			GregorianCalendar temp = new GregorianCalendar();
+			temp.setTime(getLoaded());
+			temp.add(Calendar.DAY_OF_YEAR, 7);
+
+			if((new GregorianCalendar()).before(temp)){
+				//Exits the function if the storage is not writable!
+				if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+					Log.d("ClaroClient", "Missing SDCard");
+					return false;
+				}
+
+				File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);               
+
+				File file = new File (root.getAbsolutePath() + "/" + GlobalApplication.getInstance().getResources().getString(R.string.app_name), getName() + "." + getExtension());
+				return file.exists() && file.canRead();
+			}
+			return false;
 		}
 }
