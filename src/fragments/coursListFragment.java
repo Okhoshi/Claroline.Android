@@ -2,6 +2,8 @@ package fragments;
 
 import java.util.List;
 
+import connectivity.AllowedOperations;
+
 import mobile.claroline.R;
 import model.Cours;
 import adapter.CoursAdapter;
@@ -19,6 +21,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
+import app.AppActivity;
+import app.AppHandler;
+import app.GlobalApplication;
 import dataStorage.CoursRepository;
 import dataStorage.Repository;
 
@@ -57,7 +62,9 @@ public class coursListFragment extends ListFragment
 	
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id){
+		
 		Cours item = (Cours) getListAdapter().getItem(position);
+		
 		Intent intent = new Intent(getActivity(), activity.coursActivity.class);
 		intent.putExtra("coursID", item.getId());
 		startActivity(intent);

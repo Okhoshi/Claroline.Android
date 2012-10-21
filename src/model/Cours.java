@@ -205,6 +205,7 @@ public class Cours
 		if(this.equals(CoursRepository.GetById(this.getId()))){
 			CoursRepository.Update(this);
 		} else {
+			setIsLoaded(new Date(0));
 			CoursRepository.Save(this);
 		}
 		return this.getId();
@@ -214,6 +215,13 @@ public class Cours
 		GregorianCalendar temp = new GregorianCalendar();
 		temp.setTime(isLoaded);
 		temp.add(Calendar.DAY_OF_YEAR, 7);
+		return (new GregorianCalendar()).getTime().after(temp.getTime());
+	}
+	
+	public boolean isTimeToUpdate(){
+		GregorianCalendar temp = new GregorianCalendar();
+		temp.setTime(isLoaded);
+		temp.add(Calendar.HOUR_OF_DAY, 2);
 		return (new GregorianCalendar()).getTime().after(temp.getTime());
 	}
 	

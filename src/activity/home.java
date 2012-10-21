@@ -45,7 +45,11 @@ public class home extends AppActivity
 				(new Thread(GlobalApplication.getClient(null, AllowedOperations.getUserData))).start();
 			}
 			GlobalApplication.setProgressIndicator(this, true);
-			(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getUpdates))).start();
+			if(CoursRepository.GetAll().size() == 0){
+				(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getCourseList))).start();
+			} else {
+				(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getUpdates))).start();
+			}
 		}
 	}
 
@@ -62,7 +66,11 @@ public class home extends AppActivity
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
 			GlobalApplication.setProgressIndicator(this, true);
-			(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getCourseList))).start();
+			if(CoursRepository.GetAll().size() == 0){
+				(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getCourseList))).start();
+			} else {
+				(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getUpdates))).start();
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

@@ -42,6 +42,14 @@ public class coursActivity extends AppActivity
 	    
 	    setTabs(id);
 	    
+		if(currentCours.isExpired()){
+			GlobalApplication.setProgressIndicator(this, true);
+			(new Thread(GlobalApplication.getClient(handler, AllowedOperations.updateCompleteCourse, currentCours))).start();
+		} else if(currentCours.isTimeToUpdate()){
+			GlobalApplication.setProgressIndicator(this, true);
+			(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getUpdates))).start();
+		}
+	    
 	    if(item > -1){
 	        getActionBar().setSelectedNavigationItem(item);
 	    }
@@ -58,7 +66,11 @@ public class coursActivity extends AppActivity
             switch(getActionBar().getSelectedNavigationIndex()){
     		default:
             	GlobalApplication.setProgressIndicator(this, true);
-    			(new Thread(GlobalApplication.getClient(handler, AllowedOperations.updateCompleteCourse, currentCours))).start();
+    			if(currentCours.isExpired()){
+    				(new Thread(GlobalApplication.getClient(handler, AllowedOperations.updateCompleteCourse, currentCours))).start();
+    			} else {
+        			(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getUpdates))).start();
+    			}
     			break;
             }
             return true;

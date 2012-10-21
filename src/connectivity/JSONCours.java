@@ -34,6 +34,7 @@ public class JSONCours extends Cours {
 		cours.setId(object.optInt("cours_id"));
 		cours.setNotified(object.optBoolean("notified"));
 		cours.setUpdated(true);
+		cours.setIsLoaded(new Date());
 		return cours;
 	}
 

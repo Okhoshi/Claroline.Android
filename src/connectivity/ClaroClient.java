@@ -60,8 +60,8 @@ import dataStorage.DocumentsRepository;
 public class ClaroClient implements Runnable {
 
 	private static final String TAG = "ClaroClient";
-	private static CookieStore cookies = new BasicCookieStore();;
-	private static Date cookieCreation = new Date(0);;
+	private static CookieStore cookies = new BasicCookieStore();
+	private static Date cookieCreation = new Date(0);
 
 	private AllowedOperations op = AllowedOperations.authenticate;
 	private Cours reqCours = null;
