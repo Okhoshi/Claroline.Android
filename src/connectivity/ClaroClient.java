@@ -24,6 +24,7 @@ import model.Cours;
 import model.Documents;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpPost;
@@ -99,9 +100,23 @@ public class ClaroClient implements Runnable {
 				+ " " + EntityUtils.toString(postMessage.getEntity()));
 
 		HttpResponse response = client.execute(postMessage, httpContext);
-		String result =  EntityUtils.toString(response.getEntity());
+
+		Log.d(TAG, "Status: " + response.getStatusLine().getStatusCode() + " - " + response.getStatusLine().getReasonPhrase());
+		String result = null;
+		
+		switch(response.getStatusLine().getStatusCode()){
+		case HttpStatus.SC_ACCEPTED:
+		case HttpStatus.SC_OK:
+		case HttpStatus.SC_MOVED_TEMPORARILY:
+			result =  EntityUtils.toString(response.getEntity());
+			break;
+		case HttpStatus.SC_FORBIDDEN:
+			invalidateClient();
+		default:
+			throw new NotOKResponseCode(response.getStatusLine().getStatusCode() + " - " + response.getStatusLine().getReasonPhrase());
+		}
 		response.getEntity().consumeContent();
-		Log.i(TAG, "Response:" + result);
+		Log.d(TAG, "Response:" + result);
 		return result;
 
 	}
@@ -469,6 +484,9 @@ public class ClaroClient implements Runnable {
 			//close the output stream when done
 			fileOutput.close();
 
+			doc.setLoaded(new Date());
+			DocumentsRepository.Update(doc);
+
 			return true;
 
 		} catch (IOException e) {
@@ -476,4 +494,15 @@ public class ClaroClient implements Runnable {
 		}
 		return false; // Something were wrong if it passes here
 	}
+
+	class NotOKResponseCode extends IOException{
+
+		public NotOKResponseCode(String string) {
+			super(string);
+		}
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 4367959832676790410L;}
 }
