@@ -78,7 +78,7 @@ public class CoursAdapter extends BaseAdapter {
 				detail_1.setText(cours.getTitular());
 			}
 			if(detail_2 != null){
-				detail_2.setText(cours.getSysCode());
+				detail_2.setText(cours.getOfficialCode());
 			}
 		}
 		

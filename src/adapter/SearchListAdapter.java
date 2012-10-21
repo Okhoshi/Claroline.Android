@@ -52,12 +52,12 @@ public class SearchListAdapter extends BaseExpandableListAdapter{
 			break;
 		case ANNONCE:
 			adapter = new AnnonceAdapter(context, (List<Annonce>) getGroup(groupPosition));
-			SysCode = ((Annonce) getChild(groupPosition, childPosition)).getCours().getSysCode();
+			SysCode = ((Annonce) getChild(groupPosition, childPosition)).getCours().getOfficialCode();
 			state = View.VISIBLE;
 			break;
 		case DOCUMENTS:
 			adapter = new DocumentsAdapter(context, (List<Documents>) getGroup(groupPosition));
-			SysCode = ((Documents) getChild(groupPosition, childPosition)).getCours().getSysCode();
+			SysCode = ((Documents) getChild(groupPosition, childPosition)).getCours().getOfficialCode();
 			state = View.VISIBLE;
 			break;
 		default:

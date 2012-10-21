@@ -65,6 +65,7 @@ public class CoursRepository extends Repository<Cours> {
 				DBOpenHelper.COURS_COLUMN_ISLOADED ,
 				DBOpenHelper.COURS_COLUMN_NOTIFIED ,
 				DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL ,
+				DBOpenHelper.COURS_COLUMN_OFFICIALCODE ,
 				DBOpenHelper.COURS_COLUMN_SYSCODE ,
 				DBOpenHelper.COURS_COLUMN_TITLE ,
 				DBOpenHelper.COURS_COLUMN_TITULAR ,
@@ -82,6 +83,7 @@ public class CoursRepository extends Repository<Cours> {
 				DBOpenHelper.COURS_COLUMN_ISLOADED ,
 				DBOpenHelper.COURS_COLUMN_NOTIFIED ,
 				DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL ,
+				DBOpenHelper.COURS_COLUMN_OFFICIALCODE ,
 				DBOpenHelper.COURS_COLUMN_SYSCODE ,
 				DBOpenHelper.COURS_COLUMN_TITLE ,
 				DBOpenHelper.COURS_COLUMN_TITULAR ,
@@ -108,6 +110,7 @@ public class CoursRepository extends Repository<Cours> {
 				DBOpenHelper.COURS_COLUMN_ISLOADED ,
 				DBOpenHelper.COURS_COLUMN_NOTIFIED ,
 				DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL ,
+				DBOpenHelper.COURS_COLUMN_OFFICIALCODE ,
 				DBOpenHelper.COURS_COLUMN_SYSCODE ,
 				DBOpenHelper.COURS_COLUMN_TITLE ,
 				DBOpenHelper.COURS_COLUMN_TITULAR ,
@@ -135,6 +138,7 @@ public class CoursRepository extends Repository<Cours> {
 				DBOpenHelper.COURS_COLUMN_ISLOADED ,
 				DBOpenHelper.COURS_COLUMN_NOTIFIED ,
 				DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL ,
+				DBOpenHelper.COURS_COLUMN_OFFICIALCODE ,
 				DBOpenHelper.COURS_COLUMN_SYSCODE ,
 				DBOpenHelper.COURS_COLUMN_TITLE ,
 				DBOpenHelper.COURS_COLUMN_TITULAR ,
@@ -152,6 +156,7 @@ public class CoursRepository extends Repository<Cours> {
 				DBOpenHelper.COURS_COLUMN_ISLOADED ,
 				DBOpenHelper.COURS_COLUMN_NOTIFIED ,
 				DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL ,
+				DBOpenHelper.COURS_COLUMN_OFFICIALCODE ,
 				DBOpenHelper.COURS_COLUMN_SYSCODE ,
 				DBOpenHelper.COURS_COLUMN_TITLE ,
 				DBOpenHelper.COURS_COLUMN_TITULAR ,
@@ -169,6 +174,7 @@ public class CoursRepository extends Repository<Cours> {
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,(new SimpleDateFormat("E MMM dd y HH:mm:ss", Locale.US)).format(entite.getIsLoaded()));
 		contentValues.put(DBOpenHelper.COURS_COLUMN_NOTIFIED, entite.isNotified());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL,entite.getOfficialEmail());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_OFFICIALCODE,entite.getOfficialCode());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_SYSCODE, entite.getSysCode());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_TITLE, entite.getTitle());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_TITULAR, entite.getTitular());
@@ -187,6 +193,7 @@ public class CoursRepository extends Repository<Cours> {
 		contentValues.put(DBOpenHelper.COURS_COLUMN_ISLOADED,(new SimpleDateFormat("E MMM y dd HH:mm:ss", Locale.US)).format(entite.getIsLoaded()));
 		contentValues.put(DBOpenHelper.COURS_COLUMN_NOTIFIED, entite.isNotified());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_OFFICIALEMAIL,entite.getOfficialEmail());
+		contentValues.put(DBOpenHelper.COURS_COLUMN_OFFICIALCODE,entite.getOfficialCode());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_SYSCODE, entite.getSysCode());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_TITLE, entite.getTitle());
 		contentValues.put(DBOpenHelper.COURS_COLUMN_TITULAR, entite.getTitular());
@@ -250,6 +257,7 @@ public class CoursRepository extends Repository<Cours> {
 					(new SimpleDateFormat("E MMM dd y HH:mm:ss", Locale.US)).parse(c.getString(DBOpenHelper.COURS_NUM_COLUMN_ISLOADED)),
 					c.getString(DBOpenHelper.COURS_NUM_COLUMN_OFFICIALEMAIL),
 					c.getString(DBOpenHelper.COURS_NUM_COLUMN_SYSCODE),
+					c.getString(DBOpenHelper.COURS_NUM_COLUMN_OFFICIALCODE),
 					c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITLE),
 					c.getString(DBOpenHelper.COURS_NUM_COLUMN_TITULAR)
 					);

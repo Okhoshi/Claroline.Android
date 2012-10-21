@@ -35,12 +35,13 @@ public class Cours
 	private String sysCode;
 	private String title;
 	private String titular;
-		
+	private String officialCode;
 	private int Id;
+
 	
 	
 	// Contructeur
-	public Cours(Date isLoaded, String officialEmail, String sysCode, String title, String titular)
+	public Cours(Date isLoaded, String officialEmail, String sysCode, String officialCode,String title, String titular)
 	{
 		this.isLoaded=isLoaded;
 		this.annNotif=true;
@@ -51,6 +52,7 @@ public class Cours
 		this.Updated=true;
 		this.officialEmail=officialEmail;
 		this.sysCode=sysCode;
+		this.officialCode = officialCode;
 		this.title=title;
 		this.titular=titular;
 	}
@@ -80,6 +82,12 @@ public class Cours
 	public String getSysCode()
 	{
 		return this.sysCode;
+	}
+	/**
+	 * @return the officialCode
+	 */
+	public String getOfficialCode() {
+		return officialCode;
 	}
 	public String getTitle()
 	{
@@ -138,6 +146,14 @@ public class Cours
 	{
 		this.sysCode=sysCode;
 	}
+
+	/**
+	 * @param officialCode the officialCode to set
+	 */
+	public void setOfficialCode(String officialCode) {
+		this.officialCode = officialCode;
+	}
+
 	public void setTitle(String title)
 	{
 		this.title=title;

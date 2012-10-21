@@ -74,14 +74,16 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	public static final int COURS_NUM_COLUMN_NOTIFIED		 = 6;
 	public static final String COURS_COLUMN_OFFICIALEMAIL	 = "OFFICIALEMAIL";
 	public static final int COURS_NUM_COLUMN_OFFICIALEMAIL	 = 7;
+	public static final String COURS_COLUMN_OFFICIALCODE	 = "OFFICIALCODE";
+	public static final int COURS_NUM_COLUMN_OFFICIALCODE	 = 8;
 	public static final String COURS_COLUMN_SYSCODE		 	 = "SYSCODE";
-	public static final int COURS_NUM_COLUMN_SYSCODE		 = 8;
+	public static final int COURS_NUM_COLUMN_SYSCODE		 = 9;
 	public static final String COURS_COLUMN_TITLE			 = "TITLE";
-	public static final int COURS_NUM_COLUMN_TITLE			 = 9;
+	public static final int COURS_NUM_COLUMN_TITLE			 = 10;
 	public static final String COURS_COLUMN_TITULAR			 = "TITULAR";
-	public static final int COURS_NUM_COLUMN_TITULAR		 = 10;
+	public static final int COURS_NUM_COLUMN_TITULAR		 = 11;
 	public static final String COURS_COLUMN_UPDATED		 	 = "UPDATED";
-	public static final int COURS_NUM_COLUMN_UPDATED		 = 11;
+	public static final int COURS_NUM_COLUMN_UPDATED		 = 12;
 	
 	
 	// Description des colonnes de la table Documents
@@ -168,6 +170,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 				   COURS_COLUMN_ISLOADED 		+ " INTEGER NOT NULL," +
 				   COURS_COLUMN_NOTIFIED 		+ " INTEGER NOT NULL," +
 				   COURS_COLUMN_OFFICIALEMAIL 	+ " TEXT," +
+				   COURS_COLUMN_OFFICIALCODE 	+ " TEXT," +
 				   COURS_COLUMN_SYSCODE 		+ " TEXT NOT NULL," +
 				   COURS_COLUMN_TITLE 			+ " TEXT NOT NULL," +
 				   COURS_COLUMN_TITULAR 		+ " TEXT NOT NULL," +
