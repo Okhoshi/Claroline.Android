@@ -33,7 +33,7 @@ public class documentsListFragment extends ListFragment {
 
 	private Cours currentCours;
 	private Documents currentRoot;
-	
+
 	private TextView currentPath;
 
 	public Handler refreshList = new Handler(){
@@ -50,7 +50,7 @@ public class documentsListFragment extends ListFragment {
 			}
 		}
 	};
-	
+
 	public boolean isOnRoot(){
 		return currentRoot.equals(Documents.getEmptyRoot(currentCours));
 	}
@@ -68,11 +68,11 @@ public class documentsListFragment extends ListFragment {
 		if(!Repository.isOpen()){
 			Repository.Open();
 		}
-		
+
 		currentPath = (TextView) getView().findViewById(R.id.currentPath);
 
 		int id = -1;
-		
+
 		Bundle extras = getArguments();
 		if (extras != null)
 		{
@@ -103,34 +103,43 @@ public class documentsListFragment extends ListFragment {
 			setListAdapter(adapter);
 		} else {
 			MimeTypeMap map = MimeTypeMap.getSingleton();
-			final String mimeType = map.getMimeTypeFromExtension(item.getExtension()).toLowerCase();
+			String mime = map.getMimeTypeFromExtension(item.getExtension());
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setMessage(R.string.save_or_open_dialog)
-			.setCancelable(true)
-			.setPositiveButton(R.string.save_dialog, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					GlobalApplication.setProgressIndicator(getActivity(), true);
-					(new Thread(GlobalApplication.getClient(((AppActivity)getActivity()).handler, AllowedOperations.downloadFile, item.getCours(), item.getId()))).start();
-					dialog.dismiss();
-				}
-			})
-			.setNegativeButton(R.string.open_dialog, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					Intent i = new Intent(Intent.ACTION_VIEW);
-					i.setDataAndType(Uri.parse("http://" + item.getUrl() + 
-							"&login=" + GlobalApplication.getPreferences().getString("user_login", "qdevos") + 
-							"&password=" + GlobalApplication.getPreferences().getString("user_password", "elegie24")),
-							mimeType);
-					try {
-						startActivity(i);
-					} catch (ActivityNotFoundException e) {
-						Toast.makeText(getActivity(), getString(R.string.app_not_found), Toast.LENGTH_LONG).show();
+			if(mime != null){
+				final String mimeType = mime.toLowerCase();
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				builder.setMessage(R.string.save_or_open_dialog)
+				.setCancelable(true)
+				.setPositiveButton(R.string.save_dialog, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						GlobalApplication.setProgressIndicator(getActivity(), true);
+						(new Thread(GlobalApplication.getClient(((AppActivity)getActivity()).handler, AllowedOperations.downloadFile, item.getCours(), item.getId()))).start();
+						dialog.dismiss();
 					}
-					dialog.dismiss();
-				}
-			})
-			.show();
+				})
+				.setNegativeButton(R.string.open_dialog, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						Intent i = new Intent(Intent.ACTION_VIEW);
+						i.setDataAndType(Uri.parse("http://" + item.getUrl() + 
+								"&login=" + GlobalApplication.getPreferences().getString("user_login", "qdevos") + 
+								"&password=" + GlobalApplication.getPreferences().getString("user_password", "elegie24")),
+								mimeType);
+						try {
+							startActivity(i);
+						} catch (ActivityNotFoundException e) {
+							Toast.makeText(getActivity(), getString(R.string.app_not_found), Toast.LENGTH_LONG).show();
+						}
+						dialog.dismiss();
+					}
+				})
+				.show();
+			} else {
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse("http://" + item.getUrl() + 
+						"&login=" + GlobalApplication.getPreferences().getString("user_login", "qdevos") + 
+						"&password=" + GlobalApplication.getPreferences().getString("user_password", "elegie24")));
+					startActivity(i);
+			}
 		}
 	}
 }
