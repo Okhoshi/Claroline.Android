@@ -38,7 +38,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.SharedPreferences.Editor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -70,7 +73,7 @@ public class ClaroClient implements Runnable {
 		this.resID = resID;
 		this.handler = handler;
 	}
-	
+
 	public ClaroClient(){
 		this(null, null, null, -1);
 	}
@@ -79,7 +82,7 @@ public class ClaroClient implements Runnable {
 		DefaultHttpClient client = new DefaultHttpClient();
 		BasicHttpContext httpContext = new BasicHttpContext();
 		httpContext.setAttribute(ClientContext.COOKIE_STORE, cookies);
-		
+
 		HttpPost postMessage;
 		if(forAuth){
 			postMessage = new HttpPost(GlobalApplication.getPreferences().getString("platform_host", "") + "/claroline/auth/login.php");
@@ -108,46 +111,56 @@ public class ClaroClient implements Runnable {
 		String message = null;
 		int ressource = -1;
 
-		switch(op){
-		case authenticate:
-			args = new CallbackArgs(GlobalApplication.getPreferences().getString("user_login", "qdevos"),
-					GlobalApplication.getPreferences().getString("user_password", "elegie24"),
-					AllowedOperations.authenticate);
-			getSessionCookie(args);
-			break;
-		case getSingleAnnounce:
-			if(resID < 0 || reqCours == null)
-				break;
-			args = new CallbackArgs(reqCours, resID, op);
-			Execute(args);
-			break;
-		case getCourseToolList:
-		case getDocList:
-		case getAnnounceList:
-		case updateCompleteCourse:
-			if(reqCours == null)
-				break;
-			args = new CallbackArgs(reqCours, op);
-			Execute(args);
-			break;
-		case getCourseList:
-		case getUserData:
-		case getUpdates:
-			args = new CallbackArgs(op);
-			Execute(args);
-			break;
-		case downloadFile:
-			if(resID < 0)
-				break;
-			Documents doc = DocumentsRepository.GetById(resID);
-			if(doc != null){
-				message = DownloadFile(doc)?GlobalApplication.getInstance().getResources().getString(R.string.download_finished_OK,
-						Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-						GlobalApplication.getInstance().getResources().getString(R.string.app_name)):
-							GlobalApplication.getInstance().getResources().getString(R.string.download_finished_KO);
-				ressource = doc.getId(); 
+		ConnectivityManager connMgr = (ConnectivityManager) GlobalApplication.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		if (networkInfo == null || !networkInfo.isConnected()) {
+			// Dismiss the ProgressDialog at the end of the treating thread
+			if(handler != null){
+				handler.sendEmptyMessage(5);
 			}
-			break;
+			return;
+		} else {
+			switch(op){
+			case authenticate:
+				args = new CallbackArgs(GlobalApplication.getPreferences().getString("user_login", "qdevos"),
+						GlobalApplication.getPreferences().getString("user_password", "elegie24"),
+						AllowedOperations.authenticate);
+				getSessionCookie(args);
+				break;
+			case getSingleAnnounce:
+				if(resID < 0 || reqCours == null)
+					break;
+				args = new CallbackArgs(reqCours, resID, op);
+				Execute(args);
+				break;
+			case getCourseToolList:
+			case getDocList:
+			case getAnnounceList:
+			case updateCompleteCourse:
+				if(reqCours == null)
+					break;
+				args = new CallbackArgs(reqCours, op);
+				Execute(args);
+				break;
+			case getCourseList:
+			case getUserData:
+			case getUpdates:
+				args = new CallbackArgs(op);
+				Execute(args);
+				break;
+			case downloadFile:
+				if(resID < 0)
+					break;
+				Documents doc = DocumentsRepository.GetById(resID);
+				if(doc != null){
+					message = DownloadFile(doc)?GlobalApplication.getInstance().getResources().getString(R.string.download_finished_OK,
+							Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+							GlobalApplication.getInstance().getResources().getString(R.string.app_name)):
+								GlobalApplication.getInstance().getResources().getString(R.string.download_finished_KO);
+					ressource = doc.getId(); 
+				}
+				break;
+			}
 		}
 
 		// Dismiss the ProgressDialog at the end of the treating thread
@@ -191,7 +204,7 @@ public class ClaroClient implements Runnable {
 		} else {
 			try {
 				String _res = getResponse(false, args);
-				
+
 				JSONArray JSONresponse;
 
 				switch(args.operation){

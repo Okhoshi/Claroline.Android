@@ -106,7 +106,6 @@ public class documentsListFragment extends ListFragment {
 			String mime = map.getMimeTypeFromExtension(item.getExtension());
 
 			if(mime != null){
-				final String mimeType = mime.toLowerCase();
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 				builder.setMessage(R.string.save_or_open_dialog)
 				.setCancelable(true)

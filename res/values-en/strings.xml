@@ -77,10 +77,10 @@
     <string name="save_or_open_dialog">Do you want to open or save this file ?</string>
     <string name="open_dialog">Open</string>
     <string name="save_dialog">Save</string>
-    <string name="alert_yes">Yes</string>
-    <string name="alert_no">No</string>
     <string name="open_saved_doc_dialog">Do you want to open the downloaded file now ?</string>
     <string name="dialog_choose_app">Choose an app</string>
+    <string name="no_network_title">Missing Internet access</string>
+    <string name="no_network">Please connect to the network, then retry</string>
     
     <!-- a trier -->
 

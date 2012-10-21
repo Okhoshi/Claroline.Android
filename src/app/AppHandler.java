@@ -55,12 +55,12 @@ public class AppHandler extends Handler {
 				builder.setTitle(R.string.open_saved_doc_dialog)
 				.setMessage((String) mess.obj)
 				.setCancelable(true)
-				.setNegativeButton(R.string.alert_no, new DialogInterface.OnClickListener() {
+				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.dismiss();
 					}
 				})
-				.setPositiveButton(R.string.alert_yes, new DialogInterface.OnClickListener() {
+				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						final Documents item = DocumentsRepository.GetById(resID);
 						
@@ -92,15 +92,27 @@ public class AppHandler extends Handler {
 			builder.setTitle(R.string.alert_auth_failed)
 			.setMessage((Integer) mess.obj)
 			.setCancelable(true)
-			.setNegativeButton(R.string.alert_no, new DialogInterface.OnClickListener() {
+			.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.dismiss();
 				}
 			})
-			.setPositiveButton(R.string.alert_yes, new DialogInterface.OnClickListener() {
+			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					Intent settings_intent = new Intent(context, Settings.class);
 					context.startActivity(Intent.createChooser(settings_intent,context.getString(R.string.dialog_choose_app)));
+				}
+			})
+			.show();
+		case 5:
+			GlobalApplication.setProgressIndicator(false);
+			AlertDialog.Builder alert = new AlertDialog.Builder(context);
+			alert.setTitle(R.string.no_network_title)
+			.setMessage(R.string.no_network)
+			.setCancelable(true)
+			.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
 				}
 			})
 			.show();
