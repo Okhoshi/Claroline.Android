@@ -88,6 +88,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		        case android.R.id.home:
 		        	// Comportement du bouton qui permet de retourner a l'activite precedente
 		        	Intent monIntent = new Intent(this,home.class);
+					monIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+							Intent.FLAG_ACTIVITY_NEW_TASK);
 		        	startActivity(monIntent);
 		        	return true;
 		        default:
