@@ -100,7 +100,7 @@ public class AppHandler extends Handler {
 			.setPositiveButton(R.string.alert_yes, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					Intent settings_intent = new Intent(context, Settings.class);
-					context.startActivity(settings_intent);
+					context.startActivity(Intent.createChooser(settings_intent,context.getString(R.string.dialog_choose_app)));
 				}
 			})
 			.show();

@@ -80,6 +80,7 @@
     <string name="alert_yes">Yes</string>
     <string name="alert_no">No</string>
     <string name="open_saved_doc_dialog">Do you want to open the downloaded file now ?</string>
+    <string name="dialog_choose_app">Choose an app</string>
     
     <!-- a trier -->
 

@@ -120,10 +120,9 @@ public class documentsListFragment extends ListFragment {
 				.setNegativeButton(R.string.open_dialog, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						Intent i = new Intent(Intent.ACTION_VIEW);
-						i.setDataAndType(Uri.parse("http://" + item.getUrl() + 
+						i.setData(Uri.parse("http://" + item.getUrl() + 
 								"&login=" + GlobalApplication.getPreferences().getString("user_login", "qdevos") + 
-								"&password=" + GlobalApplication.getPreferences().getString("user_password", "elegie24")),
-								mimeType);
+								"&password=" + GlobalApplication.getPreferences().getString("user_password", "elegie24")));
 						try {
 							startActivity(i);
 						} catch (ActivityNotFoundException e) {
