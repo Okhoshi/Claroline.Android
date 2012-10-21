@@ -2,8 +2,6 @@ package fragments;
 
 import java.util.List;
 
-import connectivity.AllowedOperations;
-
 import mobile.claroline.R;
 import model.Cours;
 import adapter.CoursAdapter;
@@ -21,9 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
-import app.AppActivity;
-import app.AppHandler;
-import app.GlobalApplication;
 import dataStorage.CoursRepository;
 import dataStorage.Repository;
 
