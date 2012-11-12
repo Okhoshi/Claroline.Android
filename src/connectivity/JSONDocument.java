@@ -25,9 +25,9 @@ public class JSONDocument extends Documents {
 											object.optString("description"), 
 											object.optString("extension"), 
 											object.optString("name"), 
-											object.optString("path").replace(object.optBoolean("isFolder")?
-																			object.optString("name") :
-																			object.optString("name") + "." + object.optString("extension")
+											object.optString("title").replace(object.optBoolean("isFolder")?
+																			object.optString("title") :
+																			object.optString("title") + "." + object.optString("extension")
 																			, ""), 
 											object.optString("url"));
 		
