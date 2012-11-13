@@ -1,71 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scroll"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="5dp" >
-
-    <LinearLayout
-        android:id="@+id/texts"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/texts2"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
+        
+            <ImageView 
+            android:id="@+id/user_image"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:src="@drawable/logo_claroline" 
+        	android:contentDescription="User logo"
+        	android:layout_gravity="center_vertical"/>"
+            
+             <LinearLayout
+        	android:id="@+id/texts3"
+       		android:layout_width="match_parent"
+       		android:layout_height="wrap_content"
+       	 	android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/platformName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:gravity="center"/>
+       			
+       	 	
+       			 <TextView
+         		 android:id="@+id/firstLastName"
+         		 android:layout_width="match_parent"
+        		 android:layout_height="wrap_content"
+       			 android:layout_marginTop="15dp"
+       			 android:gravity="center" />
         
-        <TextView
-            android:id="@+id/institutionName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:gravity="center"/>
+      			 <TextView
+        		 android:id="@+id/NOMA"
+         		 android:layout_width="match_parent"
+         		 android:layout_height="wrap_content"
+          		 android:layout_marginTop="15dp"
+          		 android:gravity="center" />
+      			 
+      			 <TextView
+         	  	 android:id="@+id/institutionName"
+         	  	 android:layout_width="match_parent"
+         	 	 android:layout_height="wrap_content"
+         	  	 android:layout_marginTop="20dp"
+         	  	 android:gravity="center"/>
+      			 
+      			  <TextView
+       		     android:id="@+id/platformName"
+       		     android:layout_width="match_parent"
+       		     android:layout_height="wrap_content"
+         		 android:layout_marginTop="15dp"
+        		 android:gravity="center"/>
         
-        <View
-            android:id="@+id/Separator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#2B497B"
-             />
+      			  
+       			 
+      			 
+      		 </LinearLayout>
         
-        <TextView
-            android:id="@+id/firstLastName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center" />
-        
-        <TextView
-            android:id="@+id/NOMA"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center" />
-
-     <!--    
-     
-     <TextView
-            android:id="@+id/anonymous_platform_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-     
-      <View
-            android:id="@+id/Separator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#2B497B" />
-
-        <TextView
-            android:id="@+id/auth_platform_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </TextView>
-        
-        -->
-    </LinearLayout>
-
-</ScrollView>
+             <View
+           		 android:id="@+id/Separator"
+          		 android:layout_width="match_parent"
+           		 android:layout_height="1dp"
+          		 android:background="#2B497B"          		 
+            	 />
+             	
+        </LinearLayout>

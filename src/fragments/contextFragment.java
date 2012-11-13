@@ -1,6 +1,7 @@
 package fragments;
 
 import mobile.claroline.R;
+import mobile.claroline.R.drawable;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import app.GlobalApplication;
 
@@ -21,12 +23,13 @@ public class contextFragment extends Fragment implements OnSharedPreferenceChang
 	private static final String FIRST_NAME = "firstName";
 	private static final String LAST_NAME = "lastName";
 	private static final String NOMA = "officialCode";
+	private static final String USER_IMAGE = "userImage";
 
 	private TextView platformView;
 	private TextView institutionView;
 	private TextView firstLastView;
 	private TextView nomaView;
-	
+	private ImageView userPicture;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -36,11 +39,14 @@ public class contextFragment extends Fragment implements OnSharedPreferenceChang
 		institutionView = (TextView) view.findViewById(R.id.institutionName);
 		firstLastView = (TextView) view.findViewById(R.id.firstLastName);
 		nomaView = (TextView) view.findViewById(R.id.NOMA);
+		userPicture = (ImageView) view.findViewById(R.id.user_image);
 		
 		platformView.setText(GlobalApplication.getPreferences().getString(PLATFORM_NAME,""));
 		institutionView.setText(GlobalApplication.getPreferences().getString(INSTITUTION_NAME,""));
 		firstLastView.setText(GlobalApplication.getPreferences().getString(FIRST_NAME,"")+" "+GlobalApplication.getPreferences().getString(LAST_NAME,""));	
 		nomaView.setText(GlobalApplication.getPreferences().getString(NOMA,""));
+		//userPicture.setImageResource(GlobalApplication.getPreferences().getUserImage(USER_IMAGE,""));
+		userPicture.setImageResource(R.drawable.logo_claroline);
 		
 		return view;
 	}
