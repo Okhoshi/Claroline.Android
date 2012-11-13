@@ -12,11 +12,48 @@
         android:orientation="vertical" >
 
         <TextView
+            android:id="@+id/platformName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"/>
+        
+        <TextView
+            android:id="@+id/institutionName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"/>
+        
+        <View
+            android:id="@+id/Separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2B497B"
+             />
+        
+        <TextView
+            android:id="@+id/firstLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center" />
+        
+        <TextView
+            android:id="@+id/NOMA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center" />
+
+     <!--    
+     
+     <TextView
             android:id="@+id/anonymous_platform_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <View
+     
+      <View
             android:id="@+id/Separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -27,6 +64,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
         </TextView>
+        
+        -->
     </LinearLayout>
 
 </ScrollView>
