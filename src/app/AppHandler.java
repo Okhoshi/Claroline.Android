@@ -5,7 +5,7 @@ import java.io.File;
 import mobile.claroline.R;
 import model.Documents;
 import dataStorage.DocumentsRepository;
-import activity.Settings;
+import fragments.LoginDialog;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -99,12 +99,13 @@ public class AppHandler extends Handler {
 			})
 			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					Intent settings_intent = new Intent(context, Settings.class);
-					context.startActivity(settings_intent);
+					dialog.dismiss();
+					LoginDialog login = new LoginDialog(context);
+					login.show();
 				}
 			})
 			.show();
-		case 5:
+		case 5: //Missing network
 			GlobalApplication.setProgressIndicator(false);
 			AlertDialog.Builder alert = new AlertDialog.Builder(context);
 			alert.setTitle(R.string.no_network_title)

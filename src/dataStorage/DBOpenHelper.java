@@ -26,7 +26,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	private static final int DATABASE_VERSION = 1;
 	
 	// Nom de la base
-	private static final String BASE_NAME= "dataBase.db";
+	protected static final String BASE_NAME= "dataBase.db";
 	
 	// Nom des tables
 	public static final String ANNONCE_TABLE      = "Annonce";

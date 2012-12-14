@@ -2,10 +2,12 @@ package app;
 
 import java.lang.reflect.Field;
 
+import connectivity.ClaroClient;
+
 import mobile.claroline.R;
 import activity.Settings;
 import activity.about_us;
-import activity.home;
+import activity.HomeActivity;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
@@ -106,9 +108,13 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			Intent settings_intent = new Intent(this, Settings.class);
 			startActivity(settings_intent);
 			return true;
+		case R.id.menu_logout:
+			ClaroClient.invalidateClient();
+			Repository.Reset(this);
+			return true;
 		case android.R.id.home:
 			// Comportement du bouton qui permet de retourner a l'activite d'accueil
-			monIntent = new Intent(this,home.class);
+			monIntent = new Intent(this,HomeActivity.class);
 			monIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
 								Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(monIntent);

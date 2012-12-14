@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import mobile.claroline.R;
 import model.Annonce;
@@ -67,6 +68,8 @@ public class ClaroClient implements Runnable {
 	private Cours reqCours = null;
 	private int resID = -1;
 	private Handler handler = null;
+	
+	public static boolean isValidAccount = false;
 
 	public ClaroClient(Handler handler, AllowedOperations op, Cours reqCours, int resID){
 		this.op = op;
@@ -137,8 +140,8 @@ public class ClaroClient implements Runnable {
 		} else {
 			switch(op){
 			case authenticate:
-				args = new CallbackArgs(GlobalApplication.getPreferences().getString("user_login", "qdevos"),
-						GlobalApplication.getPreferences().getString("user_password", "elegie24"),
+				args = new CallbackArgs(GlobalApplication.getPreferences().getString("user_login", ""),
+						GlobalApplication.getPreferences().getString("user_password", ""),
 						AllowedOperations.authenticate);
 				getSessionCookie(args);
 				break;
@@ -296,7 +299,7 @@ public class ClaroClient implements Runnable {
 												if((upAnn = AnnonceRepository.GetByRessourceId(resID, upCours.getId())) == null){
 													Execute(new CallbackArgs(upCours, AllowedOperations.getAnnounceList));
 												} else {
-													upAnn.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonAnn.optString(String.valueOf(resID))));
+													upAnn.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US).parse(jsonAnn.optString(String.valueOf(resID))));
 													upAnn.setNotified(true);
 													AnnonceRepository.Update(upAnn);
 													Execute(new CallbackArgs(upCours, resID, AllowedOperations.getSingleAnnounce));
@@ -320,7 +323,7 @@ public class ClaroClient implements Runnable {
 												if((upDoc = DocumentsRepository.GetAllByPath(path, upCours.getId()).get(0)) == null){
 													Execute(new CallbackArgs(upCours, AllowedOperations.getDocList));
 												} else {
-													upDoc.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonDoc.optString(path)));
+													upDoc.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).parse(jsonDoc.optString(path)));
 													upDoc.setNotified(true);
 													DocumentsRepository.Update(upDoc);
 												}
@@ -372,6 +375,11 @@ public class ClaroClient implements Runnable {
 	public static void invalidateClient(){
 		cookieCreation = new Date(0);
 		cookies.clear();
+		isValidAccount = false;
+		Editor edit = GlobalApplication.getPreferences().edit();
+		edit.putString("user_login", "")
+		.putString("user_password", "")
+		.apply();
 	}
 
 	public static boolean isExpired(){
@@ -387,6 +395,7 @@ public class ClaroClient implements Runnable {
 			if(empty){
 				cookieCreation = new Date();
 			}
+			isValidAccount = empty;
 			return empty;
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -397,6 +406,7 @@ public class ClaroClient implements Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		isValidAccount = false;
 		return false;
 	}
 

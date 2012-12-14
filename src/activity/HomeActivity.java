@@ -3,7 +3,7 @@ package activity;
 
 import mobile.claroline.R;
 import android.app.ActionBar;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -11,10 +11,11 @@ import app.AppActivity;
 import app.GlobalApplication;
 import connectivity.AllowedOperations;
 import dataStorage.CoursRepository;
+import fragments.LoginDialog;
 import fragments.coursListFragment;
 
 
-public class home extends AppActivity
+public class HomeActivity extends AppActivity
 {
 
 	/**
@@ -37,9 +38,28 @@ public class home extends AppActivity
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(false);
 
+		refresh();
+	}
+
+	/*
+	 * 
+	 *   Menus,tabs,actionBar
+	 * 
+	 * 
+	 */
+
+	private void refresh() {
+		
 		if(GlobalApplication.getPreferences().getString("user_login", "").isEmpty()){
-			Intent settings_intent = new Intent(this, Settings.class);
-			startActivity(settings_intent);
+			LoginDialog login = new LoginDialog(this);
+			login.setOnDismissListener(new DialogInterface.OnDismissListener() {
+				
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					HomeActivity.this.refresh();
+				}
+			});
+			login.show();
 		} else {
 			if(GlobalApplication.getPreferences().getString("firstName", "").isEmpty()){
 				(new Thread(GlobalApplication.getClient(null, AllowedOperations.getUserData))).start();
@@ -52,13 +72,6 @@ public class home extends AppActivity
 			}
 		}
 	}
-
-	/*
-	 * 
-	 *   Menus,tabs,actionBar
-	 * 
-	 * 
-	 */
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

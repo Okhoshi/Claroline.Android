@@ -55,6 +55,12 @@ public abstract class Repository<T> implements IRepository<T>
 		maBDD.close();
 	}
 	
+	public static void Reset(Context context)
+	{
+		context.deleteDatabase(DBOpenHelper.BASE_NAME);
+		sqLiteOpenHelper = new DBOpenHelper(context, null);
+	}
+	
 	public static boolean isOpen(){
 		return maBDD.isOpen();
 	}

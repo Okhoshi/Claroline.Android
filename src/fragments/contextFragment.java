@@ -46,7 +46,7 @@ public class contextFragment extends Fragment implements OnSharedPreferenceChang
 		firstLastView.setText(GlobalApplication.getPreferences().getString(FIRST_NAME,"")+" "+GlobalApplication.getPreferences().getString(LAST_NAME,""));	
 		nomaView.setText(GlobalApplication.getPreferences().getString(NOMA,""));
 		//userPicture.setImageResource(GlobalApplication.getPreferences().getUserImage(USER_IMAGE,""));
-		userPicture.setImageResource(R.drawable.logo_claroline);
+		userPicture.setImageResource(R.drawable.nopicture);
 		
 		return view;
 	}

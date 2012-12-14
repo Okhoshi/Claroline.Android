@@ -10,9 +10,9 @@
             android:id="@+id/user_image"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:src="@drawable/logo_claroline" 
+        	android:src="@drawable/nopicture" 
         	android:contentDescription="User logo"
-        	android:layout_gravity="center_vertical"/>"
+        	android:layout_gravity="center_vertical"/>
             
              <LinearLayout
         	android:id="@+id/texts3"

@@ -26,7 +26,7 @@ import app.GlobalApplication;
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
 	private ArrayList<String> onScreenSettings = new ArrayList<String>(Arrays.asList(new String[]
-								{"platform_host", "platform_module", "user_login"}));
+								{"platform_host", "platform_module"}));
 	
 	/**
 	 * 
@@ -66,7 +66,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	}
 	
 	 public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		 	if (!key.equals("user_password")){
+		 	if (!key.contains("password")){
 	            Preference Pref = findPreference(key);
 	            // Set summary to be the user-description for the selected value
 	            Pref.setSummary(sharedPreferences.getString(key, ""));
@@ -87,7 +87,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		        switch (item.getItemId()) {
 		        case android.R.id.home:
 		        	// Comportement du bouton qui permet de retourner a l'activite precedente
-		        	Intent monIntent = new Intent(this,home.class);
+		        	Intent monIntent = new Intent(this,HomeActivity.class);
 					monIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
 							Intent.FLAG_ACTIVITY_NEW_TASK);
 		        	startActivity(monIntent);
