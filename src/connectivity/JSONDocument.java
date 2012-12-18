@@ -3,6 +3,7 @@ package connectivity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.json.JSONObject;
 
@@ -21,11 +22,11 @@ public class JSONDocument extends Documents {
 		String sysCode = object.optJSONObject("cours").optString("sysCode");
 		
 		JSONDocument doc = new JSONDocument(CoursRepository.GetBySysCode(sysCode),
-											(new SimpleDateFormat("yyyy-MM-dd")).parse(object.optString("date")), 
+											(new SimpleDateFormat("yyyy-MM-dd", Locale.US)).parse(object.optString("date")), 
 											object.optString("description"), 
 											object.optString("extension"), 
-											object.optString("name"), 
-											object.optString("title").replace(object.optBoolean("isFolder")?
+											object.optString("title"), 
+											object.optString("path").replace(object.optBoolean("isFolder")?
 																			object.optString("title") :
 																			object.optString("title") + "." + object.optString("extension")
 																			, ""), 
