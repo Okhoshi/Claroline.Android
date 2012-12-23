@@ -12,6 +12,7 @@ import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -21,6 +22,7 @@ import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
 import dataStorage.DBOpenHelper;
 import dataStorage.DocumentsRepository;
+import dataStorage.Repository;
 
 public class searchableActivity extends AppActivity implements OnChildClickListener {
 
@@ -64,6 +66,12 @@ public class searchableActivity extends AppActivity implements OnChildClickListe
 	 */
 	public void doMySearch(String query) {
 
+		Log.d("DB", "DB Test Open in Search");
+		if(!Repository.isOpen()){
+			Log.d("DB", "DB Open in Search");
+			Repository.Open();
+		}
+
 		List<Cours> courses = CoursRepository.QueryOnDB(DBOpenHelper.COURS_COLUMN_TITLE + LIKE_SEL +"OR " + 
 				DBOpenHelper.COURS_COLUMN_SYSCODE + LIKE_SEL,
 				new String[] {"%" + query + "%",
@@ -99,6 +107,12 @@ public class searchableActivity extends AppActivity implements OnChildClickListe
 		SearchListAdapter adapter = new SearchListAdapter(this, results, query);
 		mListView.setAdapter(adapter);
 		mListView.setOnChildClickListener(this);
+		
+		Log.d("DB", "DB Test Close in Search");
+		if(Repository.isOpen()){
+			Log.d("DB", "DB Close in Search");
+			Repository.Close();
+		}
 	}
 
 	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
