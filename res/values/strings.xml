@@ -92,5 +92,7 @@
         
     <!-- a trier -->
     <string name="menu_logout">Se déconnecter</string>
+    <string name="menu_login">Se connecter</string>
+    <string name="user_picture_desc">Image de profil</string>
 
 </resources>

@@ -11,12 +11,14 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 // Nous avons encore affaire à une classe générique et abstraite cette fois
 // Repository sert à faire la jonction avec notre base de données.
 
 public abstract class Repository<T> implements IRepository<T> 
 {
+	public static final String ALL = "All";
 	protected static ArrayList<RepositoryRefreshListener> repositoryRefreshListener = new ArrayList<RepositoryRefreshListener>();
 	// Base de données
 	protected static SQLiteDatabase maBDD;
@@ -59,6 +61,8 @@ public abstract class Repository<T> implements IRepository<T>
 	{
 		context.deleteDatabase(DBOpenHelper.BASE_NAME);
 		sqLiteOpenHelper = new DBOpenHelper(context, null);
+		Open();
+		RefreshRepository(ALL);
 	}
 	
 	public static boolean isOpen(){
@@ -75,6 +79,7 @@ public abstract class Repository<T> implements IRepository<T>
 	
 	protected static void RefreshRepository(String type){
 		if(repositoryRefreshListener.size() > 0){
+			Log.d("DBListener", "Sending " + type + " event");
 			for (RepositoryRefreshListener listener : repositoryRefreshListener) {
 				listener.onRepositoryRefresh(type);
 			}

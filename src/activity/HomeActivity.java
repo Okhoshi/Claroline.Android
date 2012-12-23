@@ -4,13 +4,16 @@ package activity;
 import mobile.claroline.R;
 import android.app.ActionBar;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 import app.AppActivity;
 import app.GlobalApplication;
 import connectivity.AllowedOperations;
+import connectivity.ClaroClient;
 import dataStorage.CoursRepository;
+import dataStorage.Repository;
 import fragments.LoginDialog;
 import fragments.coursListFragment;
 
@@ -23,7 +26,6 @@ public class HomeActivity extends AppActivity
 	 */
 	public static String currentTag;
 	static TextView view;
-
 
 	/** 
 	 * Called when the activity is first created. 
@@ -49,21 +51,24 @@ public class HomeActivity extends AppActivity
 	 */
 
 	private void refresh() {
-		
-		if(GlobalApplication.getPreferences().getString("user_login", "").isEmpty()){
+		if(GlobalApplication.getPreferences().getString(Settings.PLATFORM_HOST, "").equals("")){
+			Intent i = new Intent(this, Settings.class);
+			startActivity(i);
+		}
+		if(!ClaroClient.isValidAccount){
 			LoginDialog login = new LoginDialog(this);
 			login.setOnDismissListener(new DialogInterface.OnDismissListener() {
-				
+
 				@Override
 				public void onDismiss(DialogInterface dialog) {
-					HomeActivity.this.refresh();
+					if(ClaroClient.isValidAccount){
+						HomeActivity.this.refresh();
+					}
 				}
 			});
 			login.show();
 		} else {
-			if(GlobalApplication.getPreferences().getString("firstName", "").isEmpty()){
-				(new Thread(GlobalApplication.getClient(null, AllowedOperations.getUserData))).start();
-			}
+			(new Thread(GlobalApplication.getClient(null, AllowedOperations.getUserData))).start();
 			GlobalApplication.setProgressIndicator(this, true);
 			if(CoursRepository.GetAll().size() == 0){
 				(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getCourseList))).start();
@@ -78,12 +83,10 @@ public class HomeActivity extends AppActivity
 		switch (item.getItemId()) {
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
-			GlobalApplication.setProgressIndicator(this, true);
-			if(CoursRepository.GetAll().size() == 0){
-				(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getCourseList))).start();
-			} else {
-				(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getUpdates))).start();
-			}
+			refresh();
+			return true;
+		case R.id.menu_login:
+			refresh();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -91,7 +94,7 @@ public class HomeActivity extends AppActivity
 	}
 
 	public void onRepositoryRefresh(String type) {
-		if(type == CoursRepository.REPO_TYPE){
+		if(type.equals(CoursRepository.REPO_TYPE) || type.equals(Repository.ALL)){
 			coursListFragment list = (coursListFragment) getFragmentManager().findFragmentById(R.id.list_frag);
 			if(list != null)
 				list.refreshList.sendEmptyMessage(0);

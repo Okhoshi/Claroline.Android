@@ -18,7 +18,7 @@
         android:icon="@drawable/ic_action_help"
         android:showAsAction="never"
         android:title="@string/menu_help"/>
-    <item android:id="@+id/menu_logout" android:title="@string/menu_logout" android:icon="@drawable/ic_action_logout" android:showAsAction="never" android:enabled="true"/><item
+    <item android:id="@+id/menu_login" android:title="@string/menu_login" android:icon="@drawable/ic_action_login" android:enabled="true" android:showAsAction="always"></item><item android:id="@+id/menu_logout" android:title="@string/menu_logout" android:icon="@drawable/ic_action_logout" android:showAsAction="never" android:enabled="true"/><item
         android:id="@+id/menu_about"
         android:icon="@drawable/ic_action_about"
         android:showAsAction="never"
@@ -29,6 +29,7 @@
         android:title="@string/menu_settings"
         android:showAsAction="never"
         android:icon="@drawable/ic_action_settings"/>
+    
     
     
         

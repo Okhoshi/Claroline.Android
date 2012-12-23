@@ -13,6 +13,8 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,11 +25,11 @@ import android.widget.SearchView;
 import dataStorage.IRepository.RepositoryRefreshListener;
 import dataStorage.Repository;
 
-public abstract class AppActivity extends Activity implements RepositoryRefreshListener { 
+public abstract class AppActivity extends Activity implements RepositoryRefreshListener, OnSharedPreferenceChangeListener { 
 	
 	private boolean dbOpenHere = false;
-
 	public Handler handler = new AppHandler(this);
+	private Menu menu;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -50,12 +52,14 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			dbOpenHere = true;
 		}
 		Repository.addOnRepositoryRefreshListener(this);
+		GlobalApplication.getPreferences().registerOnSharedPreferenceChangeListener(this);
 		super.onResume();
 	}
 
 	@Override
 	public void onPause(){
 		super.onPause();
+		GlobalApplication.getPreferences().unregisterOnSharedPreferenceChangeListener(this);
 		Repository.remOnRepositoryRefreshListener(this);
 		Log.d("DB", "DB Test Close in onPause");
 		if(Repository.isOpen() && dbOpenHere){
@@ -79,6 +83,13 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.actionbar, menu);
+		
+		if(ClaroClient.isValidAccount){
+			menu.findItem(R.id.menu_login).setVisible(false).setEnabled(false);
+		} else {
+			menu.findItem(R.id.menu_logout).setVisible(false).setEnabled(false);
+			menu.findItem(R.id.menu_refresh).setVisible(false).setEnabled(false);
+		}
 
 		// Get the SearchView and set the searchable configuration
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -86,6 +97,8 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 		searchView.setIconifiedByDefault(false);     
 		searchView.setSubmitButtonEnabled(true);
+		
+		this.menu = menu;
 		
 		return true;
 	}
@@ -120,8 +133,9 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			startActivity(monIntent);
 			return true;
 		case R.id.menu_refresh:
-			// Comportement du bouton "Rafraichir"
-			// Doit être implémenter dans chaque activité
+		case R.id.menu_login:
+			// Comportement du bouton "Rafraichir" et du bouton "Se connecter"
+			// Doit être implémenter dans chaque activité si besoin
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -148,5 +162,21 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			// Ignore
 		}
 
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		if(key.equals("firstName")){	
+			if(ClaroClient.isValidAccount){
+				menu.findItem(R.id.menu_login).setVisible(false).setEnabled(false);
+				menu.findItem(R.id.menu_logout).setVisible(true).setEnabled(true);
+				menu.findItem(R.id.menu_refresh).setVisible(true).setEnabled(true);
+			} else {
+				menu.findItem(R.id.menu_login).setVisible(true).setEnabled(true);
+				menu.findItem(R.id.menu_logout).setVisible(false).setEnabled(false);
+				menu.findItem(R.id.menu_refresh).setVisible(false).setEnabled(false);
+			}
+		}
 	}
 }

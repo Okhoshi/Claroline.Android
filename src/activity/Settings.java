@@ -25,8 +25,11 @@ import app.GlobalApplication;
  */
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
+	public static final String PLATFORM_HOST = "platform_host";
+	public static final String PLATFORM_MODULE = "platform_module";
+	
 	private ArrayList<String> onScreenSettings = new ArrayList<String>(Arrays.asList(new String[]
-								{"platform_host", "platform_module"}));
+								{PLATFORM_HOST, PLATFORM_MODULE}));
 	
 	/**
 	 * 

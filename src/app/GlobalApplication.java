@@ -100,5 +100,8 @@ public class GlobalApplication extends Application {
 		singleton = this;
 		//client = new ClaroClient();
 		Repository.SetOpenHelper(getApplicationContext());
+		if(!getPreferences().getString("user_login", "").equals("")){
+			(new Thread(GlobalApplication.getClient(null, AllowedOperations.authenticate))).start();
+		}
 	}
 }

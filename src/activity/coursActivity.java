@@ -16,6 +16,7 @@ import connectivity.AllowedOperations;
 import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
 import dataStorage.DocumentsRepository;
+import dataStorage.Repository;
 import fragments.annonceListFragment;
 import fragments.documentsListFragment;
 
@@ -119,11 +120,12 @@ public class coursActivity extends AppActivity
     }
 
 	public void onRepositoryRefresh(String type) {
-		if(type.equals(AnnonceRepository.REPO_TYPE)){
+		if(type.equals(AnnonceRepository.REPO_TYPE) || type.equals(Repository.ALL)){
 			annonceListFragment list = (annonceListFragment) getFragmentManager().findFragmentByTag("announce");
 			if(list != null)
 				list.refreshList.sendEmptyMessage(0);
-		} else if(type.equals(DocumentsRepository.REPO_TYPE)){
+		}
+		if(type.equals(DocumentsRepository.REPO_TYPE) || type.equals(Repository.ALL)){
 			documentsListFragment list = (documentsListFragment) getFragmentManager().findFragmentByTag("documents");
 			if(list != null)
 				list.refreshList.sendEmptyMessage(0);
