@@ -3,6 +3,7 @@
  */
 package connectivity;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,11 +43,14 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 import app.GlobalApplication;
 import dataStorage.AnnonceRepository;
@@ -337,16 +341,40 @@ public class ClaroClient implements Runnable {
 					break;
 				case getUserData:
 					JSONObject jsonUser = new JSONObject(_res);
+					
+					String old_pic = GlobalApplication.getPreferences().getString("picture", "");
+
 					Editor edit = GlobalApplication.getPreferences().edit();
 					edit.putString("firstName", jsonUser.optString("firstName"))
 					.putString("lastName", jsonUser.optString("lastName"))
 					.putBoolean("isPlatformAdmin", jsonUser.optBoolean("isPlatformAdmin"))
-					.putString("NOMA", jsonUser.optString("officialCode"))
+					.putString("officialCode", String.valueOf(jsonUser.optInt("officialCode")))
 					.putString("platformName", jsonUser.optString("platformName"))
 					.putString("institutionName", jsonUser.optString("institutionName"))
-					.putString("platformTextAnonym", jsonUser.optString("platformTextAnonym"))
-					.putString("platformTextAuth", jsonUser.optString("platformTextAuth"))
+					.putString("picture", jsonUser.optString("picture"))
 					.apply();
+
+					
+					
+					String imgUrl = "";
+					if(!(imgUrl = jsonUser.optString("picture")).equals("") && !imgUrl.equals(old_pic)){
+						Documents profilePicture = new Documents(null, null, null, imgUrl.substring(imgUrl.lastIndexOf('.')), "ProfilePicture", "", imgUrl);
+						if(DownloadFile(profilePicture)){
+							File pic = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" +
+									GlobalApplication.getInstance().getResources().getString(R.string.app_name) + "/" + profilePicture.getName() + "." + profilePicture.getExtension());
+							BitmapFactory.Options options = new BitmapFactory.Options();
+							options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+							Bitmap bm = BitmapFactory.decodeFile(pic.getAbsolutePath());
+							ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+							bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+
+							Editor edit2 = GlobalApplication.getPreferences().edit();
+							edit2.putString("userImage", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+							edit2.apply();
+							pic.delete();
+						}
+					}
+					
 					break;
 				default:
 					break;
@@ -379,6 +407,14 @@ public class ClaroClient implements Runnable {
 		Editor edit = GlobalApplication.getPreferences().edit();
 		edit.putString("user_login", "")
 		.putString("user_password", "")
+		.putString("firstName", "")
+		.putString("lastName","")
+		.putBoolean("isPlatformAdmin", false)
+		.putString("officialCode", "")
+		.putString("platformName", "")
+		.putString("institutionName", "")
+		.putString("userImage", "")
+		.putString("picture", "")
 		.apply();
 	}
 
@@ -420,7 +456,7 @@ public class ClaroClient implements Runnable {
 
 			File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);               
 
-			File dir = new File (root.getAbsolutePath() + "/" + GlobalApplication.getInstance().getResources().getString(R.string.app_name));
+			File dir = new File(root.getAbsolutePath() + "/" + GlobalApplication.getInstance().getResources().getString(R.string.app_name));
 			if(dir.exists()==false) {
 				if(dir.mkdirs() == false)
 					//Exits if the directory asked cannot be created!
@@ -495,8 +531,9 @@ public class ClaroClient implements Runnable {
 			fileOutput.close();
 
 			doc.setLoaded(new Date());
-			DocumentsRepository.Update(doc);
-
+			if(doc.getCours() != null){
+				DocumentsRepository.Update(doc);
+			}
 			return true;
 
 		} catch (IOException e) {
