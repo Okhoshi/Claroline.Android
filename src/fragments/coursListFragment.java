@@ -24,17 +24,27 @@ import dataStorage.Repository;
 
 public class coursListFragment extends ListFragment 
 {
-	
+
 	private static final int MAIL_ID = 0;
-	
-	public Handler refreshList = new Handler(){
-		public void handleMessage(Message mess){
+
+	public Handler refreshList = new Handler(new Handler.Callback() {
+		
+		public boolean handleMessage(Message mess){
 			List<Cours> liste = CoursRepository.GetAllCours();
 			CoursAdapter adapter = new CoursAdapter(getActivity(), liste);
 			setListAdapter(adapter);
+			return true;
 		}
-	};
-	
+	});
+
+	private boolean mHasTwoPanes;
+	private Handler mUpdatePanes;
+
+	public void setEnv(boolean hasTwoPanes, Handler updatePanes){
+		mHasTwoPanes = hasTwoPanes;
+		mUpdatePanes = updatePanes;
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -44,31 +54,38 @@ public class coursListFragment extends ListFragment
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		if(!Repository.isOpen()){
 			Repository.Open();
 		}
-		
+
 		List<Cours> liste = CoursRepository.GetAllCours();
 		CoursAdapter adapter = new CoursAdapter(getActivity(), liste);
 		setListAdapter(adapter);
 		registerForContextMenu(getListView());
 	}
-	
+
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id){
-		
+
 		Cours item = (Cours) getListAdapter().getItem(position);
-		
-		Intent intent = new Intent(getActivity(), activity.coursActivity.class);
-		intent.putExtra("coursID", item.getId());
-		startActivity(intent);
+
+		if(mHasTwoPanes){
+			Message mess = new Message();
+			mess.what = 0;
+			mess.arg1 = item.getId();
+			mUpdatePanes.sendMessage(mess);
+		} else {
+			Intent intent = new Intent(getActivity(), activity.coursActivity.class);
+			intent.putExtra("coursID", item.getId());
+			startActivity(intent);
+		}
 	}
-	
+
 	/*
 	 *   All about the contextual menu 
 	 */
-	
+
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.setHeaderTitle(getString(R.string.contextual_header));

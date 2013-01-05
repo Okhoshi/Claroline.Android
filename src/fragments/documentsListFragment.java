@@ -33,25 +33,36 @@ import dataStorage.Repository;
 
 public class documentsListFragment extends ListFragment {
 
+	public static final int GOUP = 100;
+	public static final int REFRESH = 0;
+	public static final int UPDATECOURS = 1;
+	
 	private Cours currentCours;
 	private Documents currentRoot;
 
 	private TextView currentPath;
 
-	public Handler refreshList = new Handler(){
-		public void handleMessage(Message mess){
+	public Handler refreshList = new Handler( new Handler.Callback(){
+		public boolean handleMessage(Message mess){
 			switch(mess.what){
-			case 1:
+			case GOUP:
 				currentRoot = currentRoot.getRoot();
 				currentPath.setText(currentRoot.getFullPath());
-			case 0:
+			case REFRESH:
 				List<Documents> liste = currentRoot.getContent();
 				DocumentsAdapter adapter = new DocumentsAdapter(getActivity(), liste);
 				setListAdapter(adapter);
 				break;
+			case UPDATECOURS:
+				currentCours = CoursRepository.GetById(mess.arg1);
+				currentRoot = Documents.getEmptyRoot(currentCours);
+				mess.what = REFRESH;
+				handleMessage(mess);
+				break;
 			}
+			return true;
 		}
-	};
+	});
 
 	public boolean isOnRoot(){
 		return currentRoot.equals(Documents.getEmptyRoot(currentCours));

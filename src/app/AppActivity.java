@@ -164,7 +164,6 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 
 	}
 
-	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		if(key.equals("firstName")){	

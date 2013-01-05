@@ -4,9 +4,9 @@
     android:id="@+id/content"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <FrameLayout
+    android:orientation="vertical">
+
+	<FrameLayout
         android:id="@+id/tab_content"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
