@@ -67,7 +67,8 @@ public class coursListFragment extends ListFragment
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id){
-
+		
+		((CoursAdapter) getListAdapter()).setSelection(position);
 		Cours item = (Cours) getListAdapter().getItem(position);
 
 		if(mHasTwoPanes){

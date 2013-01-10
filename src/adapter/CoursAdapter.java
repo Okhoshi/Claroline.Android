@@ -12,7 +12,9 @@ import java.util.List;
 
 import mobile.claroline.R;
 import model.Cours;
+import android.R.color;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +26,12 @@ public class CoursAdapter extends BaseAdapter {
 
 	private List<Cours> listeCours;
 	private Context context;
+	private int selectedItem;
 	
 	public CoursAdapter(Context context, List<Cours> listeCours) {
 		this.context=context;
 		this.listeCours=listeCours;
+		selectedItem = -1;
 	}
 	
 	public void setCours(List<Cours> listeCours)
@@ -55,6 +59,11 @@ public class CoursAdapter extends BaseAdapter {
 		return this.context;
 	}
 	
+	public void setSelection(int position){
+		selectedItem = position;
+		notifyDataSetChanged();
+	}
+	
 	public View getView(final int position, View view, ViewGroup parent) 
 	{
 		Cours cours = getItem(position);
@@ -80,6 +89,13 @@ public class CoursAdapter extends BaseAdapter {
 			if(detail_2 != null){
 				detail_2.setText(cours.getOfficialCode());
 			}
+			
+			if(selectedItem != -1 && selectedItem == position){
+				v.setBackgroundColor(context.getResources().getColor(color.holo_blue_dark));
+			} else {
+				v.setBackgroundColor(Color.TRANSPARENT);
+			}
+			
 		}
 		
 		return v;
