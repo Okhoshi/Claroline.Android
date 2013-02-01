@@ -5,8 +5,7 @@
         				android:key="pref_cat_platform">
         				
         <EditTextPreference android:key="platform_host" 
-            				android:title="@string/pref_platform_host"
-            				android:defaultValue="http://mesconsult.be/clarodev"/>
+            				android:title="@string/pref_platform_host"/>
         <EditTextPreference android:key="platform_module"
             				android:title="@string/pref_platform_module"
             				android:defaultValue="/module/MOBILE/" android:summary="/module/MOBILE/"/>

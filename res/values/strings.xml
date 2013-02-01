@@ -3,7 +3,7 @@
 
     <!-- Nom de l'application --> 
    <string name="app_name">ClaroMobile</string>
-    <string name="version">0.9 - BETA</string>
+    <string name="version">1.0 - BETA</string>
  
     
     <!-- TextView's de l'activite about_us --> 
