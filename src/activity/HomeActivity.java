@@ -40,7 +40,11 @@ public class HomeActivity extends AppActivity
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(false);
 
-		refresh();
+		if(GlobalApplication.getPreferences().getString(Settings.USER_LOGIN, "").equals("")){
+			showLoginDialog();
+		} else {
+			refresh(false, false, true);
+		}
 	}
 
 	/*
@@ -50,32 +54,42 @@ public class HomeActivity extends AppActivity
 	 * 
 	 */
 
-	private void refresh() {
+	private void refresh(boolean force, boolean forceUser, boolean noDialog) {
 		if(GlobalApplication.getPreferences().getString(Settings.PLATFORM_HOST, "").equals("")){
 			Intent i = new Intent(this, Settings.class);
 			startActivity(i);
 		}
-		if(!ClaroClient.isValidAccount){
-			LoginDialog login = new LoginDialog(this);
-			login.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					if(ClaroClient.isValidAccount){
-						HomeActivity.this.refresh();
-					}
-				}
-			});
-			login.show();
+		if(!noDialog && !ClaroClient.isValidAccount()){
+			showLoginDialog();
 		} else {
-			(new Thread(GlobalApplication.getClient(null, AllowedOperations.getUserData))).start();
-			GlobalApplication.setProgressIndicator(this, true);
-			if(CoursRepository.GetAll().size() == 0){
-				(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getCourseList))).start();
-			} else {
-				(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getUpdates))).start();
+			if(forceUser || mustUpdate(6)){
+				(new Thread(GlobalApplication.getClient(null, AllowedOperations.getUserData))).start();
+			}
+
+			if(force || mustUpdate(1)){
+				GlobalApplication.setProgressIndicator(this, true);
+				if(CoursRepository.GetAll().size() == 0){
+					(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getCourseList))).start();
+				} else {
+					(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getUpdates))).start();
+				}
+				updatesNow();
 			}
 		}
+	}
+
+	private void showLoginDialog() {
+		LoginDialog login = new LoginDialog(this);
+		login.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				if(ClaroClient.isValidAccount()){
+					HomeActivity.this.refresh(true, true, false);
+				}	
+			}
+		});
+		login.show();
 	}
 
 	@Override
@@ -83,10 +97,10 @@ public class HomeActivity extends AppActivity
 		switch (item.getItemId()) {
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
-			refresh();
+			refresh(true, false, false);
 			return true;
 		case R.id.menu_login:
-			refresh();
+			refresh(true, true, false);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

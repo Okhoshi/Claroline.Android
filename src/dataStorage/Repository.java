@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 // Nous avons encore affaire à une classe générique et abstraite cette fois
 // Repository sert à faire la jonction avec notre base de données.
@@ -69,17 +68,16 @@ public abstract class Repository<T> implements IRepository<T>
 		return maBDD.isOpen();
 	}
 	
-	public static void addOnRepositoryRefreshListener(RepositoryRefreshListener listener){
+	public static void registerOnRepositoryRefreshListener(RepositoryRefreshListener listener){
 		repositoryRefreshListener.add(listener);
 	}
 	
-	public static void remOnRepositoryRefreshListener(RepositoryRefreshListener listener){
+	public static void unregisterOnRepositoryRefreshListener(RepositoryRefreshListener listener){
 		repositoryRefreshListener.remove(listener);
 	}
 	
 	protected static void RefreshRepository(String type){
 		if(repositoryRefreshListener.size() > 0){
-			Log.d("DBListener", "Sending " + type + " event");
 			for (RepositoryRefreshListener listener : repositoryRefreshListener) {
 				listener.onRepositoryRefresh(type);
 			}

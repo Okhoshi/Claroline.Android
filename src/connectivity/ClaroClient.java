@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -52,6 +53,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
+import app.AppHandler;
 import app.GlobalApplication;
 import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
@@ -73,7 +75,14 @@ public class ClaroClient implements Runnable {
 	private int resID = -1;
 	private Handler handler = null;
 	
-	public static boolean isValidAccount = false;
+	private static boolean _validAccount = false;
+	public static boolean isValidAccount(){
+		return _validAccount;
+	}
+	protected static void setValidAccount(boolean isValid){
+		_validAccount = isValid;
+		accountStateChange(isValid);
+	}
 
 	public ClaroClient(Handler handler, AllowedOperations op, Cours reqCours, int resID){
 		this.op = op;
@@ -138,7 +147,7 @@ public class ClaroClient implements Runnable {
 		if (networkInfo == null || !networkInfo.isConnected()) {
 			// Dismiss the ProgressDialog at the end of the treating thread
 			if(handler != null){
-				handler.sendEmptyMessage(5);
+				handler.sendEmptyMessage(AppHandler.MISSING_NETWORK);
 			}
 			return;
 		} else {
@@ -188,7 +197,7 @@ public class ClaroClient implements Runnable {
 		// Dismiss the ProgressDialog at the end of the treating thread
 		if(handler != null){
 			Message msg = new Message();
-			msg.what = 0;
+			msg.what = AppHandler.ASK_OPEN_SAVED;
 			if(message != null){
 				msg.arg1 = 1;
 				msg.obj = message;
@@ -209,7 +218,7 @@ public class ClaroClient implements Runnable {
 				//Reports the failure to the user
 				if(handler != null){
 					Message msg = new Message();
-					msg.what = 3;
+					msg.what = AppHandler.AUTH_FAILED;
 					msg.obj = R.string.failure_message;
 					handler.sendMessage(msg);
 				}
@@ -403,7 +412,7 @@ public class ClaroClient implements Runnable {
 	public static void invalidateClient(){
 		cookieCreation = new Date(0);
 		cookies.clear();
-		isValidAccount = false;
+		setValidAccount(false);
 		Editor edit = GlobalApplication.getPreferences().edit();
 		edit.putString("user_login", "")
 		.putString("user_password", "")
@@ -431,7 +440,7 @@ public class ClaroClient implements Runnable {
 			if(empty){
 				cookieCreation = new Date();
 			}
-			isValidAccount = empty;
+			setValidAccount(empty);
 			return empty;
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -442,7 +451,7 @@ public class ClaroClient implements Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		isValidAccount = false;
+		setValidAccount(false);
 		return false;
 	}
 
@@ -500,7 +509,7 @@ public class ClaroClient implements Runnable {
 
 			if(handler != null){
 				Message msg = new Message();
-				msg.what = 1;
+				msg.what = AppHandler.SET_PROGRESS_DWL;
 				msg.obj = "Downloading " + file.getName() + "...";
 				msg.arg1 = totalSize;
 				msg.arg2 = iterationSize;
@@ -521,7 +530,7 @@ public class ClaroClient implements Runnable {
 				//Reports the progress to the UI
 				if(handler != null){
 					Message msg = new Message();
-					msg.what = 2;
+					msg.what = AppHandler.INCREMENT_STATUS;
 					msg.arg1 = downloadedSize;
 					msg.arg2 = iterationSize;
 					handler.sendMessage(msg);
@@ -542,6 +551,28 @@ public class ClaroClient implements Runnable {
 		return false; // Something were wrong if it passes here
 	}
 
+	public interface onAccountStateChangedListener {
+		public abstract void onAccountStateChange(boolean newValidity);
+	}
+	
+	protected static List<onAccountStateChangedListener> listeners = new ArrayList<onAccountStateChangedListener>();
+	
+	public static void registerOnAccountStateChangedListener(onAccountStateChangedListener listener){
+		listeners.add(listener);
+	}
+	
+	public static void unregisterOnAccountStateChangedListener(onAccountStateChangedListener listener){
+		listeners.remove(listener);
+	}
+	
+	protected static void accountStateChange(boolean newValidity){
+		if(listeners.size() > 0){
+			for (onAccountStateChangedListener listener : listeners) {
+				listener.onAccountStateChange(newValidity);
+			}
+		}
+	}
+	
 	class NotOKResponseCode extends IOException{
 
 		public NotOKResponseCode(String string) {
