@@ -39,8 +39,10 @@ public class HomeActivity extends AppActivity
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(false);
-
-		if(GlobalApplication.getPreferences().getString(Settings.USER_LOGIN, "").equals("")){
+		if(GlobalApplication.getPreferences().getString(Settings.PLATFORM_HOST, "").equals("")){
+			Intent i = new Intent(this, Settings.class);
+			startActivity(i);
+		} else if(GlobalApplication.getPreferences().getString(Settings.USER_LOGIN, "").equals("")){
 			showLoginDialog();
 		} else {
 			refresh(false, false, true);

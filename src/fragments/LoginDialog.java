@@ -1,6 +1,7 @@
 package fragments;
 
 import mobile.claroline.R;
+import activity.Settings;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -91,7 +92,7 @@ public class LoginDialog extends Dialog implements onAccountStateChangedListener
 
 	@Override
 	public void show() {
-		if(ClaroClient.isValidAccount()){
+		if(ClaroClient.isValidAccount() || GlobalApplication.getPreferences().getString(Settings.PLATFORM_HOST, "").equals("")){
 			dismiss();
 		} else {
 			super.show();
