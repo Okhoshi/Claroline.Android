@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import model.Annonce;
 import model.Cours;
 import model.Documents;

@@ -33,14 +33,27 @@ public class CallbackArgs {
 			break;
 		case getSingleAnnounce:
 			args.add(new BasicNameValuePair("resId",resId + ""));
+			args.add(new BasicNameValuePair("cidReq",cidReq.getSysCode()));
+			args.add(new BasicNameValuePair("method", "getSingleResource"));
+			args.add(new BasicNameValuePair("module", "CLANN"));
+			break;
 		case getAnnounceList:
-		case getCourseToolList:
+			args.add(new BasicNameValuePair("cidReq",cidReq.getSysCode()));
+			args.add(new BasicNameValuePair("method", "getResourcesList"));
+			args.add(new BasicNameValuePair("module", "CLANN"));
+			break;
 		case getDocList:
+			args.add(new BasicNameValuePair("cidReq",cidReq.getSysCode()));
+			args.add(new BasicNameValuePair("method", "getResourcesList"));
+			args.add(new BasicNameValuePair("module", "CLDOC"));
+			break;
+		case getCourseToolList:
 			args.add(new BasicNameValuePair("cidReq",cidReq.getSysCode()));
 		case getCourseList:
 		case getUpdates:
 		case getUserData:
-			args.add(new BasicNameValuePair("Method",operation.name()));
+			args.add(new BasicNameValuePair("method",operation.name()));
+			args.add(new BasicNameValuePair("module", "USER"));
 			break;
 		default:
 			break;

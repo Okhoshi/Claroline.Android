@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import android.os.Environment;
 import android.util.Log;
 import app.GlobalApplication;

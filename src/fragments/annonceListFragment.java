@@ -2,7 +2,7 @@ package fragments;
 
 import java.util.List;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import model.Annonce;
 import model.Cours;
 import adapter.AnnonceAdapter;

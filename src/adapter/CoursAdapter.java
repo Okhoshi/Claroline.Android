@@ -10,7 +10,7 @@ package adapter;
 
 import java.util.List;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import model.Cours;
 import android.R.color;
 import android.content.Context;

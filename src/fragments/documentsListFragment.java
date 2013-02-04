@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import model.Cours;
 import model.Documents;
 import adapter.DocumentsAdapter;

@@ -1,6 +1,6 @@
 package fragments;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import activity.Settings;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
