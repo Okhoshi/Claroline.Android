@@ -1,11 +1,10 @@
 package app;
 
 import java.io.File;
+import java.util.Locale;
 
 import mobile.claroline.R;
 import model.Documents;
-import dataStorage.DocumentsRepository;
-import fragments.LoginDialog;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -18,9 +17,17 @@ import android.os.Looper;
 import android.os.Message;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
+import dataStorage.DocumentsRepository;
+import fragments.LoginDialog;
 
 public class AppHandler extends Handler {
 
+	public static final int MISSING_NETWORK = 5;
+	public static final int INCREMENT_STATUS = 2;
+	public static final int SET_PROGRESS_DWL = 1;
+	public static final int ASK_OPEN_SAVED = 0;
+	public static final int AUTH_FAILED = 3;
+	public static final int FAILURE = 4;
 	private Context context;
 	private int resID;
 
@@ -48,7 +55,7 @@ public class AppHandler extends Handler {
 	public void handleMessage(final Message mess){
 		resID = mess.arg2;
 		switch (mess.what){
-		case 0:
+		case ASK_OPEN_SAVED:
 			GlobalApplication.setProgressIndicator(false);
 			if(mess.arg1 == 1){
 				AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -65,7 +72,7 @@ public class AppHandler extends Handler {
 						final Documents item = DocumentsRepository.GetById(resID);
 						
 						MimeTypeMap map = MimeTypeMap.getSingleton();
-						final String mimeType = map.getMimeTypeFromExtension(item.getExtension().toLowerCase());
+						final String mimeType = map.getMimeTypeFromExtension(item.getExtension().toLowerCase(Locale.US));
 						
 						Intent i = new Intent(Intent.ACTION_VIEW);
 						i.setDataAndType(Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" +
@@ -81,13 +88,13 @@ public class AppHandler extends Handler {
 				.show();
 			}
 			break;
-		case 1: //Set the progress with downloading informations
+		case SET_PROGRESS_DWL: //Set the progress with downloading informations
 			GlobalApplication.setProgressIndicator(null, true, (String) mess.obj, false, mess.arg1/mess.arg2, "%1d/%2d Ko");
 			break;
-		case 2: //Renew the progress status
+		case INCREMENT_STATUS: //Renew the progress status
 			GlobalApplication.incrementProgression(mess.arg1/mess.arg2);
 			break;
-		case 3:
+		case AUTH_FAILED:
 			AlertDialog.Builder builder = new AlertDialog.Builder(context);
 			builder.setTitle(R.string.alert_auth_failed)
 			.setMessage((Integer) mess.obj)
@@ -105,7 +112,19 @@ public class AppHandler extends Handler {
 				}
 			})
 			.show();
-		case 5: //Missing network
+			break;
+		case FAILURE:
+			GlobalApplication.setProgressIndicator(false);
+			AlertDialog.Builder f_alert = new AlertDialog.Builder(context);
+			f_alert.setMessage((String) mess.obj)
+			.setCancelable(true)
+			.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			})
+			.show();
+		case MISSING_NETWORK: //Missing network
 			GlobalApplication.setProgressIndicator(false);
 			AlertDialog.Builder alert = new AlertDialog.Builder(context);
 			alert.setTitle(R.string.no_network_title)
@@ -117,6 +136,7 @@ public class AppHandler extends Handler {
 				}
 			})
 			.show();
+			break;
 		default:
 			break;
 		}

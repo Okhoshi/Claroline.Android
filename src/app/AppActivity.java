@@ -1,32 +1,32 @@
 package app;
 
 import java.lang.reflect.Field;
-
-import connectivity.ClaroClient;
+import java.util.GregorianCalendar;
 
 import mobile.claroline.R;
+import activity.HomeActivity;
 import activity.Settings;
 import activity.about_us;
-import activity.HomeActivity;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.widget.SearchView;
+import connectivity.ClaroClient;
+import connectivity.ClaroClient.onAccountStateChangedListener;
 import dataStorage.IRepository.RepositoryRefreshListener;
 import dataStorage.Repository;
 
-public abstract class AppActivity extends Activity implements RepositoryRefreshListener, OnSharedPreferenceChangeListener { 
-	
+public abstract class AppActivity extends Activity implements RepositoryRefreshListener, onAccountStateChangedListener { 
+
 	private boolean dbOpenHere = false;
 	public Handler handler = new AppHandler(this);
 	private Menu menu;
@@ -38,6 +38,12 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 		Repository.Open();
 		dbOpenHere = true;
 
+		lastUpdate = new GregorianCalendar();
+		if(savedInstanceState != null && savedInstanceState.containsKey("lastUpdate")){
+			lastUpdate.setTimeInMillis(savedInstanceState.getLong("lastUpdate"));
+		} else {
+			lastUpdate.setTimeInMillis(0);
+		}
 		super.onCreate(savedInstanceState);
 		setActionBar();
 		setOverflowMenu();
@@ -51,16 +57,16 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			Repository.Open();
 			dbOpenHere = true;
 		}
-		Repository.addOnRepositoryRefreshListener(this);
-		GlobalApplication.getPreferences().registerOnSharedPreferenceChangeListener(this);
+		Repository.registerOnRepositoryRefreshListener(this);
+		ClaroClient.registerOnAccountStateChangedListener(this);
 		super.onResume();
 	}
 
 	@Override
 	public void onPause(){
 		super.onPause();
-		GlobalApplication.getPreferences().unregisterOnSharedPreferenceChangeListener(this);
-		Repository.remOnRepositoryRefreshListener(this);
+		ClaroClient.unregisterOnAccountStateChangedListener(this);
+		Repository.unregisterOnRepositoryRefreshListener(this);
 		Log.d("DB", "DB Test Close in onPause");
 		if(Repository.isOpen() && dbOpenHere){
 			Log.d("DB", "DB Close in onPause");
@@ -81,10 +87,16 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 	}
 
 	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putLong("lastUpdate", lastUpdate.getTimeInMillis());
+		super.onSaveInstanceState(outState);
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.actionbar, menu);
-		
-		if(ClaroClient.isValidAccount){
+
+		if(ClaroClient.isValidAccount()){
 			menu.findItem(R.id.menu_login).setVisible(false).setEnabled(false);
 		} else {
 			menu.findItem(R.id.menu_logout).setVisible(false).setEnabled(false);
@@ -97,9 +109,9 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 		searchView.setIconifiedByDefault(false);     
 		searchView.setSubmitButtonEnabled(true);
-		
+
 		this.menu = menu;
-		
+
 		return true;
 	}
 
@@ -111,9 +123,9 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			Intent monIntent = new Intent(this,about_us.class);
 			startActivity(monIntent);
 			return true;
-		case R.id.menu_help:
+		/* case R.id.menu_help:
 			// Comportement du bouton "Aide"
-			return true;
+			return true; */
 		case R.id.menu_search:
 			onSearchRequested();
 			return true;
@@ -129,7 +141,7 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			// Comportement du bouton qui permet de retourner a l'activite d'accueil
 			monIntent = new Intent(this,HomeActivity.class);
 			monIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-								Intent.FLAG_ACTIVITY_NEW_TASK);
+					Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(monIntent);
 			return true;
 		case R.id.menu_refresh:
@@ -147,6 +159,8 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 	{
 		final ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true); 
+
+		onAccountStateChange(ClaroClient.isValidAccount());
 	}
 
 	public void setOverflowMenu()
@@ -164,18 +178,40 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 
 	}
 
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		if(key.equals("firstName")){	
-			if(ClaroClient.isValidAccount){
-				menu.findItem(R.id.menu_login).setVisible(false).setEnabled(false);
-				menu.findItem(R.id.menu_logout).setVisible(true).setEnabled(true);
-				menu.findItem(R.id.menu_refresh).setVisible(true).setEnabled(true);
-			} else {
-				menu.findItem(R.id.menu_login).setVisible(true).setEnabled(true);
-				menu.findItem(R.id.menu_logout).setVisible(false).setEnabled(false);
-				menu.findItem(R.id.menu_refresh).setVisible(false).setEnabled(false);
-			}
-		}
+	@Override
+	public void onAccountStateChange(boolean validity) {
+		menuHandler.sendEmptyMessage(validity?1:0);
 	}
+	
+	private Handler menuHandler = new Handler(new Handler.Callback() {
+		
+		@Override
+		public boolean handleMessage(Message msg) {
+			if(menu != null){
+				if(msg.what == 1){
+					menu.findItem(R.id.menu_login).setVisible(false).setEnabled(false);
+					menu.findItem(R.id.menu_logout).setVisible(true).setEnabled(true);
+					menu.findItem(R.id.menu_refresh).setVisible(true).setEnabled(true);
+				} else {
+					menu.findItem(R.id.menu_login).setVisible(true).setEnabled(true);
+					menu.findItem(R.id.menu_logout).setVisible(false).setEnabled(false);
+					menu.findItem(R.id.menu_refresh).setVisible(false).setEnabled(false);
+				}
+			}
+			return true;
+		}
+	});
+
+	private GregorianCalendar lastUpdate;
+
+	public boolean mustUpdate(int delay){
+		GregorianCalendar temp = new GregorianCalendar();
+		temp.add(GregorianCalendar.HOUR_OF_DAY, -delay);
+		return lastUpdate.before(temp);
+	}
+
+	public void updatesNow(){
+		lastUpdate = new GregorianCalendar();
+	}
+
 }

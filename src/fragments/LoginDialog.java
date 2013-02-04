@@ -1,6 +1,7 @@
 package fragments;
 
 import mobile.claroline.R;
+import activity.Settings;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -19,12 +20,13 @@ import android.widget.TextView;
 import app.GlobalApplication;
 import connectivity.AllowedOperations;
 import connectivity.ClaroClient;
+import connectivity.ClaroClient.onAccountStateChangedListener;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class LoginDialog extends Dialog {
+public class LoginDialog extends Dialog implements onAccountStateChangedListener {
 
 	
 
@@ -55,12 +57,9 @@ public class LoginDialog extends Dialog {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if(ClaroClient.isValidAccount){
-			dismiss();
-		}
 		setTitle(R.string.title_activity_login);
 		setContentView(R.layout.dialog_login);
-
+		
 		// Set up the login form.
 		mLoginView = (EditText) findViewById(R.id.login_text);
 
@@ -88,6 +87,15 @@ public class LoginDialog extends Dialog {
 						attemptLogin();
 					}
 				});
+	}
+
+	@Override
+	public void show() {
+		if(ClaroClient.isValidAccount() || GlobalApplication.getPreferences().getString(Settings.PLATFORM_HOST, "").equals("")){
+			dismiss();
+		} else {
+			super.show();
+		}
 	}
 
 	/**
@@ -219,6 +227,13 @@ public class LoginDialog extends Dialog {
 						.setError(mContext.getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
 			}
+		}
+	}
+
+	@Override
+	public void onAccountStateChange(boolean newValidity) {
+		if(newValidity){
+			dismiss();
 		}
 	}
 }

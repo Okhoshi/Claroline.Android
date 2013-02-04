@@ -3,7 +3,6 @@
     
     <!-- Nom de l'application --> 
    <string name="app_name">ClaroMobile</string>
-    <string name="version">0.9 - BETA</string>
     
     <!-- TextView's de l'activite about_us --> 
     <string name="about_us_authors">Authors : \n Devos Quentin \n Uytterhoeven Dimitri</string>

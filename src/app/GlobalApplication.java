@@ -19,9 +19,7 @@ public class GlobalApplication extends Application {
 	public static GlobalApplication getInstance(){
 		return singleton;
 	}
-	
-	//private static ClaroClient client;
-	
+		
 	public static ClaroClient getClient(Handler handler, AllowedOperations op, Cours reqCours, int resId){
 		return new ClaroClient(handler, op, reqCours, resId);
 	}
@@ -98,10 +96,6 @@ public class GlobalApplication extends Application {
 	public void onCreate(){
 		super.onCreate();
 		singleton = this;
-		//client = new ClaroClient();
 		Repository.SetOpenHelper(getApplicationContext());
-		if(!getPreferences().getString("user_login", "").equals("")){
-			(new Thread(GlobalApplication.getClient(null, AllowedOperations.authenticate))).start();
-		}
 	}
 }

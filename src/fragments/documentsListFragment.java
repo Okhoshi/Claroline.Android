@@ -2,15 +2,13 @@ package fragments;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 import mobile.claroline.R;
 import model.Cours;
 import model.Documents;
 import adapter.DocumentsAdapter;
-import android.app.AlertDialog;
 import android.app.ListFragment;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,7 +21,6 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import app.AppActivity;
 import app.GlobalApplication;
 import connectivity.AllowedOperations;
@@ -118,6 +115,7 @@ public class documentsListFragment extends ListFragment {
 			setListAdapter(adapter);
 		} else {
 			if(mime != null){
+				/* Actually unusable because of a bugfix-bug into the Claroline Kernel
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 				builder.setMessage(R.string.save_or_open_dialog)
 				.setCancelable(true)
@@ -150,6 +148,16 @@ public class documentsListFragment extends ListFragment {
 					}
 				})
 				.show();
+				*/
+				if(item.isOnMemory()){
+					Intent i = new Intent(Intent.ACTION_VIEW);
+					i.setDataAndType(Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" +
+							getString(R.string.app_name) + "/" + item.getName() + "." + item.getExtension())), mime.toLowerCase(Locale.US));
+					startActivity(Intent.createChooser(i,getString(R.string.dialog_choose_app)));
+				} else {
+					GlobalApplication.setProgressIndicator(getActivity(), true);
+					(new Thread(GlobalApplication.getClient(((AppActivity)getActivity()).handler, AllowedOperations.downloadFile, item.getCours(), item.getId()))).start();
+				}
 			} else {
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setData(Uri.parse("http://" + item.getUrl() + 

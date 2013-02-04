@@ -27,6 +27,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
 	public static final String PLATFORM_HOST = "platform_host";
 	public static final String PLATFORM_MODULE = "platform_module";
+	public static final String USER_LOGIN = "user_login";
 	
 	private ArrayList<String> onScreenSettings = new ArrayList<String>(Arrays.asList(new String[]
 								{PLATFORM_HOST, PLATFORM_MODULE}));
