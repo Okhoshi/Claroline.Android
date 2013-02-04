@@ -1,6 +1,6 @@
 package activity;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import model.Cours;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;

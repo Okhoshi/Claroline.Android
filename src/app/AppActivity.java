@@ -3,7 +3,7 @@ package app;
 import java.lang.reflect.Field;
 import java.util.GregorianCalendar;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import activity.HomeActivity;
 import activity.Settings;
 import activity.about_us;

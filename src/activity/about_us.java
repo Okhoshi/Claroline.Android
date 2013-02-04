@@ -1,6 +1,6 @@
 package activity;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.widget.TextView;

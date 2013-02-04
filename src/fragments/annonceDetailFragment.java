@@ -2,7 +2,7 @@ package fragments;
 
 import java.text.SimpleDateFormat;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import model.Annonce;
 import dataStorage.AnnonceRepository;
 import dataStorage.Repository;

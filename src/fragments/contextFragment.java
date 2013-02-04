@@ -1,6 +1,6 @@
 package fragments;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;

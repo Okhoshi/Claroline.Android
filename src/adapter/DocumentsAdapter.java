@@ -11,7 +11,7 @@ package adapter;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import model.Documents;
 import android.content.Context;
 import android.view.LayoutInflater;

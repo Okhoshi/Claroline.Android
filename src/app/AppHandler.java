@@ -3,7 +3,7 @@ package app;
 import java.io.File;
 import java.util.Locale;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import model.Documents;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;

@@ -1,6 +1,6 @@
 package activity;
 
-import mobile.claroline.R;
+import net.claroline.mobile.android.R;
 import model.Annonce;
 import android.app.Fragment;
 import android.os.Bundle;
