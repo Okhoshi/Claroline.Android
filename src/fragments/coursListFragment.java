@@ -63,6 +63,10 @@ public class coursListFragment extends ListFragment
 		CoursAdapter adapter = new CoursAdapter(getActivity(), liste);
 		setListAdapter(adapter);
 		registerForContextMenu(getListView());
+		
+		if(savedInstanceState != null && savedInstanceState.containsKey("selPos")){
+			((CoursAdapter) getListAdapter()).setSelection(savedInstanceState.getInt("selPos"));
+		}
 	}
 
 	@Override
@@ -91,6 +95,12 @@ public class coursListFragment extends ListFragment
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.setHeaderTitle(getString(R.string.contextual_header));
 		menu.add(Menu.NONE, MAIL_ID, Menu.NONE, getString(R.string.contextual_mail));
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putInt("selPos", ((CoursAdapter) getListAdapter()).getSelection());
+		super.onSaveInstanceState(outState);
 	}
 
 	public boolean onContextItemSelected(MenuItem item) {

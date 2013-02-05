@@ -64,6 +64,10 @@ public class CoursAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 	
+	public int getSelection(){
+		return selectedItem;
+	}
+	
 	public View getView(final int position, View view, ViewGroup parent) 
 	{
 		Cours cours = getItem(position);

@@ -37,6 +37,7 @@ public class annonceListFragment extends ListFragment {
 				break;
 			case UPDATECOURS:
 				currentCours = CoursRepository.GetById(mess.arg1);
+				getArguments().putInt("coursID", mess.arg1);
 				mess.what = REFRESH;
 				handleMessage(mess);
 				break;

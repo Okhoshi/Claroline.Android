@@ -82,7 +82,9 @@ public class HomeActivity extends AppActivity
 				getActionBar().setSelectedNavigationItem(item);
 			}
 
-			if (savedInstanceState != null) {
+			if (savedInstanceState != null && savedInstanceState.containsKey("coursID")){
+				currentCours=CoursRepository.GetById(savedInstanceState.getInt("coursID"));
+				setTabs(id);
 				getActionBar().setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
 			}
 
@@ -145,7 +147,7 @@ public class HomeActivity extends AppActivity
 			Intent i = new Intent(this, Settings.class);
 			startActivity(i);
 		}
-        
+
 		if(!noDialog && !ClaroClient.isValidAccount()){
 			showLoginDialog();
 		} else {
@@ -157,8 +159,8 @@ public class HomeActivity extends AppActivity
 				GlobalApplication.setProgressIndicator(this, true);
 				if(CoursRepository.GetAll().size() == 0){
 					(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getCourseList))).start();
-                } else if(xLargeEnabled && currentCours != null && currentCours.isExpired()){
-                    (new Thread(GlobalApplication.getClient(handler, AllowedOperations.updateCompleteCourse, currentCours))).start();
+				} else if(xLargeEnabled && currentCours != null && currentCours.isExpired()){
+					(new Thread(GlobalApplication.getClient(handler, AllowedOperations.updateCompleteCourse, currentCours))).start();
 				} else {
 					(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getUpdates))).start();
 				}
@@ -212,7 +214,7 @@ public class HomeActivity extends AppActivity
 	 */
 	public void setTabs(int id){    	
 		tabsSetted = true;
-		
+
 		final ActionBar bar = getActionBar();
 		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		if (getResources().getConfiguration().orientation != 
@@ -241,6 +243,9 @@ public class HomeActivity extends AppActivity
 		super.onSaveInstanceState(outState);
 		if(xLargeEnabled){
 			outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
+			if(currentCours != null) {
+				outState.putInt("coursID", currentCours.getId());
+			}
 		}
 	}
 

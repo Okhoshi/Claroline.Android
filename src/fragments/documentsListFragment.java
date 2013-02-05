@@ -52,6 +52,7 @@ public class documentsListFragment extends ListFragment {
 				break;
 			case UPDATECOURS:
 				currentCours = CoursRepository.GetById(mess.arg1);
+				getArguments().putInt("coursID", mess.arg1);
 				currentRoot = Documents.getEmptyRoot(currentCours);
 				mess.what = REFRESH;
 				handleMessage(mess);
@@ -91,7 +92,8 @@ public class documentsListFragment extends ListFragment {
 		}
 		if(id != -1){
 			currentRoot = DocumentsRepository.GetById(id).getRoot();
-		} else if(currentRoot == null){
+		}
+		if(currentRoot == null){
 			currentRoot = Documents.getEmptyRoot(currentCours);
 		}
 		currentPath.setText(currentRoot.getFullPath());
