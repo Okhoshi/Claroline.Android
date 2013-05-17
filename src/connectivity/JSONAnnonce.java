@@ -3,15 +3,13 @@
  */
 package connectivity;
 
+import dataStorage.CoursRepository;
+import model.Annonce;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.json.JSONObject;
-
-import dataStorage.CoursRepository;
-
-import model.Annonce;
 
 /**
  * @author Quentin
@@ -40,7 +38,7 @@ public class JSONAnnonce extends Annonce {
 				object.optString("content")
 				);
 		
-		annonce.setRessourceId(object.optInt("ressourceId"));
+		annonce.setResourceId(object.optInt("resourceId"));
 		annonce.setNotified(object.optBoolean("notified"));
 		annonce.setVisible(object.optBoolean("visibility"));
 		annonce.setUpdated(true);

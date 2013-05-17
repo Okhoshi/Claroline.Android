@@ -309,7 +309,7 @@ public class ClaroClient implements Runnable {
 											while(iterOnAnn.hasNext()){
 												int resID = Integer.parseInt((String) iterOnAnn.next());
 												Annonce upAnn;
-												if((upAnn = AnnonceRepository.GetByRessourceId(resID, upCours.getId())) == null){
+												if((upAnn = AnnonceRepository.GetByResourceId(resID, upCours.getId())) == null){
 													Execute(new CallbackArgs(upCours, AllowedOperations.getAnnounceList));
 												} else {
 													upAnn.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US).parse(jsonAnn.optString(String.valueOf(resID))));
