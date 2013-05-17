@@ -4,24 +4,23 @@
  */
 package model;
 
+import android.os.Environment;
+import android.util.Log;
+import app.GlobalApplication;
+import dataStorage.DocumentsRepository;
+import net.claroline.mobile.android.R;
+
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import net.claroline.mobile.android.R;
-import android.os.Environment;
-import android.util.Log;
-import app.GlobalApplication;
-
-import dataStorage.DocumentsRepository;
-
 //import java.util.Date;
 
 public class Documents 
 {
-	// Variables globales : propriétés
+	// Variables globales : propriï¿½tï¿½s
 	
 	private Cours Cours;
 	private Date date; 
@@ -97,7 +96,7 @@ public class Documents
 		}
 		
 		
-		// Méthodes booleennes
+		// Mï¿½thodes booleennes
 		
 		/**
 		 * @return the loaded
@@ -124,7 +123,7 @@ public class Documents
 		}
 		
 		
-		// Méthodes set
+		// Mï¿½thodes set
 		
 		public void setCours(Cours Cours)
 		{

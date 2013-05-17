@@ -1,10 +1,5 @@
 package app;
 
-import java.io.File;
-import java.util.Locale;
-
-import net.claroline.mobile.android.R;
-import model.Documents;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -19,6 +14,11 @@ import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 import dataStorage.DocumentsRepository;
 import fragments.LoginDialog;
+import model.Documents;
+import net.claroline.mobile.android.R;
+
+import java.io.File;
+import java.util.Locale;
 
 public class AppHandler extends Handler {
 

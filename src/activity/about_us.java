@@ -1,10 +1,10 @@
 package activity;
 
-import net.claroline.mobile.android.R;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.widget.TextView;
 import app.AppActivity;
+import net.claroline.mobile.android.R;
 
 public class about_us extends AppActivity {
 
@@ -16,7 +16,7 @@ public class about_us extends AppActivity {
         TextView version = (TextView) findViewById(R.id.about_us_tv2);
         version.setText(getString(R.string.about_us_version,new Object[]{getString(R.string.version)}));
         
-        // permet de retourner sur la vue précédente
+        // permet de retourner sur la vue prï¿½cï¿½dente
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 	}

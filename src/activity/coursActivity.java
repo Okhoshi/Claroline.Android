@@ -1,7 +1,5 @@
 package activity;
 
-import net.claroline.mobile.android.R;
-import model.Cours;
 import android.app.ActionBar;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -16,6 +14,8 @@ import dataStorage.DocumentsRepository;
 import dataStorage.Repository;
 import fragments.annonceListFragment;
 import fragments.documentsListFragment;
+import model.Cours;
+import net.claroline.mobile.android.R;
 
 
 public class coursActivity extends AppActivity

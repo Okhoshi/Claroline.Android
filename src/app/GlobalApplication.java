@@ -1,7 +1,5 @@
 package app;
 
-import net.claroline.mobile.android.R;
-import model.Cours;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,6 +9,8 @@ import android.preference.PreferenceManager;
 import connectivity.AllowedOperations;
 import connectivity.ClaroClient;
 import dataStorage.Repository;
+import model.Cours;
+import net.claroline.mobile.android.R;
 
 public class GlobalApplication extends Application {
 

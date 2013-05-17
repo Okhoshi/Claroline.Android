@@ -6,17 +6,17 @@
  */
 package dataStorage;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import model.Cours;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import model.Cours;
 //import model.Notification;
-
-import android.content.ContentValues;
-import android.database.Cursor;
 
 public class CoursRepository extends Repository<Cours> {
 
@@ -55,7 +55,7 @@ public class CoursRepository extends Repository<Cours> {
 	 */
 
 	public static List<Cours> GetAll() {
-		// Récupération de la liste des cours
+		// Rï¿½cupï¿½ration de la liste des cours
 		Cursor cursor = maBDD.query(DBOpenHelper.COURS_TABLE,
 				new String[] {  DBOpenHelper.COURS_COLUMN_ID ,
 				DBOpenHelper.COURS_COLUMN_ANNNOTIF ,
@@ -128,7 +128,7 @@ public class CoursRepository extends Repository<Cours> {
 	}
 
 	public static List<Cours> GetAllCours() {
-		// Récupération de la liste des cours
+		// Rï¿½cupï¿½ration de la liste des cours
 		Cursor cursor = maBDD.query(DBOpenHelper.COURS_TABLE,
 				new String[] {  DBOpenHelper.COURS_COLUMN_ID ,
 				DBOpenHelper.COURS_COLUMN_ANNNOTIF ,

@@ -22,7 +22,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	 *
 	 */
 	
-	// Version de la base de données
+	// Version de la base de donnï¿½es
 	private static final int DATABASE_VERSION = 1;
 	
 	// Nom de la base
@@ -39,7 +39,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	// Description des colonnes de la table Annonce
 	public static final String ANNONCE_COLUMN_ID             = "ID";
 	public static final int ANNONCE_NUM_COLUMN_ID            = 0;
-	public static final String ANNONCE_COLUMN_RESSOURCEID    = "RESSOURCEID";
+	public static final String ANNONCE_COLUMN_RESOURCEID = "RESSOURCEID";
 	public static final int ANNONCE_NUM_COLUMN_RESSOURCEID   = 1;
 	public static final String ANNONCE_COLUMN_COURSID        = "COURSID";
 	public static final int ANNONCE_NUM_COLUMN_COURSID       = 2;
@@ -149,12 +149,12 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	
 	
 	
-	// Requêtes SQL pour la création de la base
+	// Requï¿½tes SQL pour la crï¿½ation de la base
 	
 	private static final String CREATE_TABLE_ANNONCE =
 			" CREATE TABLE " + ANNONCE_TABLE +
-			" (" + ANNONCE_COLUMN_ID 			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + 
-				   ANNONCE_COLUMN_RESSOURCEID 	+ " INTEGER NOT NULL, " +
+			" (" + ANNONCE_COLUMN_ID 			+ " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    ANNONCE_COLUMN_RESOURCEID + " INTEGER NOT NULL, " +
 				   ANNONCE_COLUMN_COURSID  		+ " INTEGER NOT NULL, " +
 				   ANNONCE_COLUMN_TITLE  		+ " TEXT NOT NULL, " +
 				   ANNONCE_COLUMN_CONTENT  		+ " TEXT NOT NULL, " +
@@ -230,8 +230,8 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	
 	
 	/**
-	 * Création des tables
-	 * Appelée si la base n'existe pas encore
+	 * Crï¿½ation des tables
+	 * Appelï¿½e si la base n'existe pas encore
 	 */
 	@Override	
 	public void onCreate(SQLiteDatabase db) 
@@ -246,14 +246,14 @@ public class DBOpenHelper extends SQLiteOpenHelper
 	
 	
 	/**
-	 * Mise à jour de la base
-	 * Appelée quand la base existe déjà
+	 * Mise ï¿½ jour de la base
+	 * Appelï¿½e quand la base existe dï¿½jï¿½
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
-	    // Lorsque l'on change le numéro de version de la base on supprime la
-	    // table puis on la recrée
+	    // Lorsque l'on change le numï¿½ro de version de la base on supprime la
+	    // table puis on la recrï¿½e
 	    if (newVersion > DATABASE_VERSION) 
 	    {
 	    	db.execSQL("DROP TABLE " + ANNONCE_TABLE + ";");

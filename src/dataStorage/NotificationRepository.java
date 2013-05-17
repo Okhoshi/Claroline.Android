@@ -6,17 +6,16 @@
  */
 package dataStorage;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import model.Notification;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import model.Notification;
-
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
 
 public class NotificationRepository extends Repository<Notification> {
 
@@ -59,7 +58,7 @@ public class NotificationRepository extends Repository<Notification> {
 	 */
 
 	public static List<Notification> GetAll() {
-		// Récupération de la liste des notifications
+		// Rï¿½cupï¿½ration de la liste des notifications
 		Cursor cursor = maBDD.query(DBOpenHelper.NOTIFICATION_TABLE,
 				new String[] {  DBOpenHelper.NOTIFICATION_COLUMN_ID ,
 				DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCEID ,
@@ -185,7 +184,7 @@ public class NotificationRepository extends Repository<Notification> {
 	}
 
 	public static List<Notification> GetAllNotificationsByCoursId(int coursId) {
-		// Récupération de la liste des notifications
+		// Rï¿½cupï¿½ration de la liste des notifications
 		Cursor cursor = maBDD.query(DBOpenHelper.NOTIFICATION_TABLE,
 				new String[] {  DBOpenHelper.NOTIFICATION_COLUMN_ID ,
 				DBOpenHelper.NOTIFICATION_COLUMN_RESSOURCEID ,

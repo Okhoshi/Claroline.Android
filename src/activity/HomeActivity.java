@@ -1,7 +1,6 @@
 package activity;
 
 
-import net.claroline.mobile.android.R;
 import model.Cours;
 import android.app.ActionBar;
 import android.content.DialogInterface;
@@ -26,6 +25,7 @@ import fragments.LoginDialog;
 import fragments.annonceListFragment;
 import fragments.coursListFragment;
 import fragments.documentsListFragment;
+import net.claroline.mobile.android.R;
 
 
 public class HomeActivity extends AppActivity

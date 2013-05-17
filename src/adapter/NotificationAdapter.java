@@ -8,14 +8,13 @@
  */
 package adapter;
 
-import java.util.List;
-
-import model.Notification;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import model.Notification;
+
+import java.util.List;
 
 public class NotificationAdapter extends BaseAdapter {
 

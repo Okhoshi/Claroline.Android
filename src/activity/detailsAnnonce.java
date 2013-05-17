@@ -1,7 +1,5 @@
 package activity;
 
-import net.claroline.mobile.android.R;
-import model.Annonce;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,6 +8,8 @@ import app.GlobalApplication;
 import connectivity.AllowedOperations;
 import dataStorage.AnnonceRepository;
 import fragments.annonceDetailFragment;
+import model.Annonce;
+import net.claroline.mobile.android.R;
 
 public class detailsAnnonce extends AppActivity
 {
@@ -39,7 +39,7 @@ public class detailsAnnonce extends AppActivity
 			// Comportement du bouton "Rafraichir"
 			GlobalApplication.setProgressIndicator(this, true);
 			if(currentAnnonce.isExpired()){
-				(new Thread(GlobalApplication.getClient(handler,AllowedOperations.getSingleAnnounce, currentAnnonce.getCours(), currentAnnonce.getRessourceId()))).start();
+				(new Thread(GlobalApplication.getClient(handler,AllowedOperations.getSingleAnnounce, currentAnnonce.getCours(), currentAnnonce.getResourceId()))).start();
 			} else {
 				(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getUpdates))).start();
 			}

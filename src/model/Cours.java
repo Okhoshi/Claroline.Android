@@ -4,16 +4,17 @@
  */
 package model;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-//import java.util.Date;
-import java.util.List;
-
 import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
 import dataStorage.DocumentsRepository;
 import dataStorage.NotificationRepository;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+//import java.util.Date;
 
 
 public class Cours 
@@ -22,7 +23,7 @@ public class Cours
 	
 	
 	
-	// Variables globales : propriétés
+	// Variables globales : propriï¿½tï¿½s
 	
 	private Date isLoaded;
 	
@@ -59,7 +60,7 @@ public class Cours
 		this.titular=titular;
 	}
 	
-	// Méthodes get
+	// Mï¿½thodes get
 	
 	public Date getIsLoaded()
 	{
@@ -106,7 +107,7 @@ public class Cours
 	
 	
 	
-	// Méthodes booleennes
+	// Mï¿½thodes booleennes
 	
 	public boolean isAnnNotif()
 	{
@@ -134,7 +135,7 @@ public class Cours
 	}
 	
 	
-	// Méthodes set
+	// Mï¿½thodes set
 	
 	public void setIsLoaded(Date isLoaded)
 	{

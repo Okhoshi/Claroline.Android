@@ -7,19 +7,17 @@
 
 package dataStorage;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import model.Annonce;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import model.Annonce;
-import dataStorage.CoursRepository;
-
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
 
 public class AnnonceRepository extends Repository<Annonce> {
 
@@ -62,10 +60,10 @@ public class AnnonceRepository extends Repository<Annonce> {
 	 */
 
 	public static List<Annonce> GetAll() {
-		// Récupération de la liste des annonces
+		// Rï¿½cupï¿½ration de la liste des annonces
 		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
 				new String[] {  DBOpenHelper.ANNONCE_COLUMN_ID ,
-				DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID ,
+				DBOpenHelper.ANNONCE_COLUMN_RESOURCEID,
 				DBOpenHelper.ANNONCE_COLUMN_COURSID ,
 				DBOpenHelper.ANNONCE_COLUMN_TITLE ,
 				DBOpenHelper.ANNONCE_COLUMN_CONTENT ,
@@ -80,7 +78,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 	public static Annonce GetById(int id) {
 		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
 				new String[] { DBOpenHelper.ANNONCE_COLUMN_ID,
-				DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,
+				DBOpenHelper.ANNONCE_COLUMN_RESOURCEID,
 				DBOpenHelper.ANNONCE_COLUMN_COURSID,
 				DBOpenHelper.ANNONCE_COLUMN_TITLE,
 				DBOpenHelper.ANNONCE_COLUMN_CONTENT,
@@ -100,10 +98,10 @@ public class AnnonceRepository extends Repository<Annonce> {
 		return annonce;
 	}
 
-	public static Annonce GetByRessourceId(int id, int coursid) {
+	public static Annonce GetByResourceId(int id, int coursid) {
 		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
 				new String[] { DBOpenHelper.ANNONCE_COLUMN_ID,
-				DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,
+				DBOpenHelper.ANNONCE_COLUMN_RESOURCEID,
 				DBOpenHelper.ANNONCE_COLUMN_COURSID,
 				DBOpenHelper.ANNONCE_COLUMN_TITLE,
 				DBOpenHelper.ANNONCE_COLUMN_CONTENT,
@@ -112,7 +110,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 				DBOpenHelper.ANNONCE_COLUMN_VISIBILITY,
 				DBOpenHelper.ANNONCE_COLUMN_DATE ,
 				DBOpenHelper.ANNONCE_COLUMN_LOADED},
-				DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID + "=? AND " + 
+				DBOpenHelper.ANNONCE_COLUMN_RESOURCEID + "=? AND " +
 				DBOpenHelper.ANNONCE_COLUMN_COURSID + "=?",
 						new String[] { String.valueOf(id), String.valueOf(coursid) }, null, null, null);
 		Annonce annonce;
@@ -126,7 +124,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 	
 	public static int Save(Annonce entite) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,entite.getRessourceId());
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_RESOURCEID,entite.getResourceId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours().getId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_TITLE,entite.getTitle());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_CONTENT, entite.getContent());
@@ -143,7 +141,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 
 	public static void Update(Annonce entite) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID,entite.getRessourceId());
+		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_RESOURCEID,entite.getResourceId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_COURSID, entite.getCours().getId());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_TITLE,entite.getTitle());
 		contentValues.put(DBOpenHelper.ANNONCE_COLUMN_CONTENT, entite.getContent());
@@ -216,7 +214,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 					);
 
 			annonce.setId(c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_ID));
-			annonce.setRessourceId(c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_RESSOURCEID));
+			annonce.setResourceId(c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_RESSOURCEID));
 			annonce.setNotified((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_NOTIFIED) != 0));
 			annonce.setUpdated((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_UPDATED) != 0));
 			annonce.setVisible((c.getInt(DBOpenHelper.ANNONCE_NUM_COLUMN_VISIBILITY) != 0));
@@ -229,10 +227,10 @@ public class AnnonceRepository extends Repository<Annonce> {
 	}
 
 	public static List<Annonce> GetAllAnnoncesByCoursId(int coursId) {
-		// Récupération de la liste des annonces
+		// Rï¿½cupï¿½ration de la liste des annonces
 		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
 				new String[] {  DBOpenHelper.ANNONCE_COLUMN_ID ,
-				DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID ,
+				DBOpenHelper.ANNONCE_COLUMN_RESOURCEID,
 				DBOpenHelper.ANNONCE_COLUMN_COURSID ,
 				DBOpenHelper.ANNONCE_COLUMN_TITLE ,
 				DBOpenHelper.ANNONCE_COLUMN_CONTENT ,
@@ -249,7 +247,7 @@ public class AnnonceRepository extends Repository<Annonce> {
 	public static List<Annonce> QueryOnDB(String selection, String[] selectionArgs, String orderBy){
 		Cursor cursor = maBDD.query(DBOpenHelper.ANNONCE_TABLE,
 				new String[] {  DBOpenHelper.ANNONCE_COLUMN_ID ,
-				DBOpenHelper.ANNONCE_COLUMN_RESSOURCEID ,
+				DBOpenHelper.ANNONCE_COLUMN_RESOURCEID,
 				DBOpenHelper.ANNONCE_COLUMN_COURSID ,
 				DBOpenHelper.ANNONCE_COLUMN_TITLE ,
 				DBOpenHelper.ANNONCE_COLUMN_CONTENT ,

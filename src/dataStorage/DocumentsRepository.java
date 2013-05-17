@@ -6,17 +6,17 @@
  */
 package dataStorage;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import model.Documents;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import model.Documents;
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
 //import model.Notification;
 
 public class DocumentsRepository extends Repository<Documents> {
@@ -60,7 +60,7 @@ public class DocumentsRepository extends Repository<Documents> {
 	 */
 
 	public static List<Documents> GetAll() {
-		// Récupération de la liste des documents
+		// Rï¿½cupï¿½ration de la liste des documents
 		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
 				new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
 				DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,
@@ -191,7 +191,7 @@ public class DocumentsRepository extends Repository<Documents> {
 	}
 
 	public static List<Documents> GetDocListByCoursId(int coursId) {
-		// Récupération de la liste des documents
+		// Rï¿½cupï¿½ration de la liste des documents
 		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
 				new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
 				DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,
@@ -213,7 +213,7 @@ public class DocumentsRepository extends Repository<Documents> {
 	}
 
 	public static List<Documents> QueryOnDB(String selection, String[] selectionArgs, String orderBy) {
-		// Récupération de la liste des documents
+		// Rï¿½cupï¿½ration de la liste des documents
 		Cursor cursor = maBDD.query(DBOpenHelper.DOCUMENTS_TABLE,
 				new String[] {  DBOpenHelper.DOCUMENTS_COLUMN_ID ,
 				DBOpenHelper.DOCUMENTS_COLUMN_COURSID ,

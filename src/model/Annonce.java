@@ -4,24 +4,24 @@
  */
 package model;
 
+import dataStorage.AnnonceRepository;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import dataStorage.AnnonceRepository;
 
 //import java.util.Date;
 
 public class Annonce 
 {
-	// Variables globales : propriétés
+	// Variables globales : propriï¿½tï¿½s
 	
 	private Cours Cours;
 	private Date date;
 	private Date loaded;
 	
 	private int Id;
-	private int ressourceId;
+	private int resourceId;
 	
 	private boolean notified;
 	private boolean Updated;
@@ -57,9 +57,9 @@ public class Annonce
 	{
 		return this.Id;
 	}
-	public int getRessourceId()
+	public int getResourceId()
 	{
-		return this.ressourceId;
+		return this.resourceId;
 	}
 	public String getTitle()
 	{
@@ -93,7 +93,7 @@ public class Annonce
 	}
 	
 	
-	// Méthodes set
+	// Mï¿½thodes set
 	
 	public void setCours(Cours Cours)
 	{
@@ -107,9 +107,9 @@ public class Annonce
 	{
 		this.Id=Id;
 	}
-	public void setRessourceId(int ressourceId)
+	public void setResourceId(int resourceId)
 	{
-		this.ressourceId=ressourceId;
+		this.resourceId = resourceId;
 	}
 	public void setTitle(String title)
 	{
@@ -142,13 +142,13 @@ public class Annonce
 	@Override
 	public boolean equals(Object o){
 		if(o instanceof Annonce){
-			return ((Annonce) o).getCours().equals(Cours) && ((Annonce) o).getRessourceId() == ressourceId;
+			return ((Annonce) o).getCours().equals(Cours) && ((Annonce) o).getResourceId() == resourceId;
 		}
 		return false;
 	}
 
 	public int saveInDB(){
-		if(this.equals(AnnonceRepository.GetByRessourceId(this.getRessourceId(), this.getCours().getId()))){
+		if(this.equals(AnnonceRepository.GetByResourceId(this.getResourceId(), this.getCours().getId()))){
 			AnnonceRepository.Update(this);
 		} else {
 			this.setId(AnnonceRepository.Save(this));

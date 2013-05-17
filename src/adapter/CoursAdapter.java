@@ -21,6 +21,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import model.Cours;
+import net.claroline.mobile.android.R;
+
+import java.util.List;
 
 public class CoursAdapter extends BaseAdapter {
 

@@ -1,10 +1,5 @@
 package fragments;
 
-import java.util.List;
-
-import net.claroline.mobile.android.R;
-import model.Annonce;
-import model.Cours;
 import adapter.AnnonceAdapter;
 import android.app.ListFragment;
 import android.content.Intent;
@@ -18,6 +13,11 @@ import android.widget.ListView;
 import dataStorage.AnnonceRepository;
 import dataStorage.CoursRepository;
 import dataStorage.Repository;
+import model.Annonce;
+import model.Cours;
+import net.claroline.mobile.android.R;
+
+import java.util.List;
 
 public class annonceListFragment extends ListFragment {
 
