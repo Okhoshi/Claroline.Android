@@ -1,12 +1,5 @@
 package activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.claroline.mobile.android.R;
-import model.Annonce;
-import model.Cours;
-import model.Documents;
 import adapter.SearchListAdapter;
 import android.app.ActionBar;
 import android.app.SearchManager;
@@ -18,11 +11,14 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import app.AppActivity;
-import dataStorage.AnnonceRepository;
-import dataStorage.CoursRepository;
-import dataStorage.DBOpenHelper;
-import dataStorage.DocumentsRepository;
-import dataStorage.Repository;
+import dataStorage.*;
+import model.Annonce;
+import model.Cours;
+import model.Documents;
+import net.claroline.mobile.android.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class searchableActivity extends AppActivity implements OnChildClickListener {
 
@@ -37,7 +33,7 @@ public class searchableActivity extends AppActivity implements OnChildClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.result);
 
-		// permet de retourner sur la vue précédente
+		// permet de retourner sur la vue prï¿½cï¿½dente
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 

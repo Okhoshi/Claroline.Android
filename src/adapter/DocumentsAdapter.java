@@ -8,11 +8,6 @@
  */
 package adapter;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-
-import net.claroline.mobile.android.R;
-import model.Documents;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +16,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import model.Documents;
+import net.claroline.mobile.android.R;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class DocumentsAdapter extends BaseAdapter {
 

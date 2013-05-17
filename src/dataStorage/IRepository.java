@@ -6,11 +6,12 @@
  */
 package dataStorage;
 
-import java.util.List;
 import android.database.Cursor;
 
+import java.util.List;
 
-// Classe générique : le T n'est pas défini , nous pouvons le définir par la suite
+
+// Classe gï¿½nï¿½rique : le T n'est pas dï¿½fini , nous pouvons le dï¿½finir par la suite
 public interface IRepository<T>
 {	
 	public List<T> getAll();

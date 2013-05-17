@@ -1,6 +1,5 @@
 package fragments;
 
-import net.claroline.mobile.android.R;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -13,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import app.GlobalApplication;
+import net.claroline.mobile.android.R;
 
 public class contextFragment extends Fragment implements OnSharedPreferenceChangeListener {
 

@@ -1,9 +1,5 @@
 package app;
 
-import java.lang.reflect.Field;
-import java.util.GregorianCalendar;
-
-import net.claroline.mobile.android.R;
 import activity.HomeActivity;
 import activity.Settings;
 import activity.about_us;
@@ -24,6 +20,10 @@ import connectivity.ClaroClient;
 import connectivity.ClaroClient.onAccountStateChangedListener;
 import dataStorage.IRepository.RepositoryRefreshListener;
 import dataStorage.Repository;
+import net.claroline.mobile.android.R;
+
+import java.lang.reflect.Field;
+import java.util.GregorianCalendar;
 
 public abstract class AppActivity extends Activity implements RepositoryRefreshListener, onAccountStateChangedListener { 
 
@@ -147,14 +147,14 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 		case R.id.menu_refresh:
 		case R.id.menu_login:
 			// Comportement du bouton "Rafraichir" et du bouton "Se connecter"
-			// Doit être implémenter dans chaque activité si besoin
+			// Doit ï¿½tre implï¿½menter dans chaque activitï¿½ si besoin
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	// Met les propriétés de l'action bar
+	// Met les propriï¿½tï¿½s de l'action bar
 	public void setActionBar()
 	{
 		final ActionBar actionBar = getActionBar();

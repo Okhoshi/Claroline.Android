@@ -7,3 +7,5 @@ bin
 lint.xml
 .idea/
 *.iml
+out/
+*.apk

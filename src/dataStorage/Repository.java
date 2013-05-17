@@ -6,26 +6,26 @@
  */
 package dataStorage;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-// Nous avons encore affaire à une classe générique et abstraite cette fois
-// Repository sert à faire la jonction avec notre base de données.
+import java.util.ArrayList;
+
+// Nous avons encore affaire ï¿½ une classe gï¿½nï¿½rique et abstraite cette fois
+// Repository sert ï¿½ faire la jonction avec notre base de donnï¿½es.
 
 public abstract class Repository<T> implements IRepository<T> 
 {
 	public static final String ALL = "All";
 	protected static ArrayList<RepositoryRefreshListener> repositoryRefreshListener = new ArrayList<RepositoryRefreshListener>();
-	// Base de données
+	// Base de donnï¿½es
 	protected static SQLiteDatabase maBDD;
 
 	protected static SQLiteOpenHelper sqLiteOpenHelper;
 
 	/**
-	 * Constructeur par défaut
+	 * Constructeur par dï¿½faut
 	 */
 	public Repository() 
 	{

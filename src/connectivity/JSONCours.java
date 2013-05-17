@@ -3,9 +3,10 @@
  */
 package connectivity;
 
-import java.util.Date;
 import model.Cours;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 /**
  * @author Quentin

@@ -1,12 +1,5 @@
 package fragments;
 
-import java.io.File;
-import java.util.List;
-import java.util.Locale;
-
-import net.claroline.mobile.android.R;
-import model.Cours;
-import model.Documents;
 import adapter.DocumentsAdapter;
 import android.app.ListFragment;
 import android.content.Intent;
@@ -27,6 +20,13 @@ import connectivity.AllowedOperations;
 import dataStorage.CoursRepository;
 import dataStorage.DocumentsRepository;
 import dataStorage.Repository;
+import model.Cours;
+import model.Documents;
+import net.claroline.mobile.android.R;
+
+import java.io.File;
+import java.util.List;
+import java.util.Locale;
 
 public class documentsListFragment extends ListFragment {
 

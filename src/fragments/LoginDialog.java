@@ -1,6 +1,5 @@
 package fragments;
 
-import net.claroline.mobile.android.R;
 import activity.Settings;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -21,6 +20,7 @@ import app.GlobalApplication;
 import connectivity.AllowedOperations;
 import connectivity.ClaroClient;
 import connectivity.ClaroClient.onAccountStateChangedListener;
+import net.claroline.mobile.android.R;
 
 /**
  * Activity which displays a login screen to the user, offering registration as

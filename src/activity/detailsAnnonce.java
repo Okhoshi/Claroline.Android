@@ -1,7 +1,5 @@
 package activity;
 
-import net.claroline.mobile.android.R;
-import model.Annonce;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,6 +8,8 @@ import app.GlobalApplication;
 import connectivity.AllowedOperations;
 import dataStorage.AnnonceRepository;
 import fragments.annonceDetailFragment;
+import model.Annonce;
+import net.claroline.mobile.android.R;
 
 public class detailsAnnonce extends AppActivity
 {

@@ -8,10 +8,6 @@
  */
 package adapter;
 
-import java.util.List;
-
-import net.claroline.mobile.android.R;
-import model.Cours;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +15,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import model.Cours;
+import net.claroline.mobile.android.R;
+
+import java.util.List;
 
 public class CoursAdapter extends BaseAdapter {
 

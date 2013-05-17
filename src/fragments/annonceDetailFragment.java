@@ -1,11 +1,5 @@
 package fragments;
 
-import java.text.SimpleDateFormat;
-
-import net.claroline.mobile.android.R;
-import model.Annonce;
-import dataStorage.AnnonceRepository;
-import dataStorage.Repository;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import dataStorage.AnnonceRepository;
+import dataStorage.Repository;
+import model.Annonce;
+import net.claroline.mobile.android.R;
+
+import java.text.SimpleDateFormat;
 
 public class annonceDetailFragment extends Fragment {
 

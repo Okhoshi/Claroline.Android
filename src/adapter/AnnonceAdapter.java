@@ -8,13 +8,6 @@
  */
 package adapter;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-
-import net.claroline.mobile.android.R;
-import model.Annonce;
-
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +15,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import model.Annonce;
+import net.claroline.mobile.android.R;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 
 public class AnnonceAdapter extends BaseAdapter {

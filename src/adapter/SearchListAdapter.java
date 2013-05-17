@@ -1,11 +1,5 @@
 package adapter;
 
-import java.util.List;
-
-import net.claroline.mobile.android.R;
-import model.Annonce;
-import model.Cours;
-import model.Documents;
 import android.content.Context;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -15,6 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import model.Annonce;
+import model.Cours;
+import model.Documents;
+import net.claroline.mobile.android.R;
+
+import java.util.List;
 
 public class SearchListAdapter extends BaseExpandableListAdapter{
 

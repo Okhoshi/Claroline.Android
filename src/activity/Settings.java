@@ -3,11 +3,6 @@
  */
 package activity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-
-import net.claroline.mobile.android.R;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +13,11 @@ import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import app.GlobalApplication;
+import net.claroline.mobile.android.R;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * @author Quentin
@@ -79,7 +79,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	 
 	 
 	 
-	// Met les propriétés de l'action bar
+	// Met les propriï¿½tï¿½s de l'action bar
 		public void setActionBar()
 		{
 			ActionBar actionBar = getActionBar();

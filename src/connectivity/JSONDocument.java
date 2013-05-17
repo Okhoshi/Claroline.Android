@@ -1,15 +1,13 @@
 package connectivity;
 
+import dataStorage.CoursRepository;
+import model.Documents;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import org.json.JSONObject;
-
-import dataStorage.CoursRepository;
-
-import model.Documents;
 
 public class JSONDocument extends Documents {
 

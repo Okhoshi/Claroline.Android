@@ -4,9 +4,9 @@
  */
 package model;
 
-import java.util.Date;
-
 import dataStorage.NotificationRepository;
+
+import java.util.Date;
 
 //import java.util.Date;
 
@@ -19,7 +19,7 @@ public class Notification
 	//	DOCUMENTS,ANNONCES;
 	//}
 	
-	// Variables globales : propriétés
+	// Variables globales : propriï¿½tï¿½s
 	
 	private Cours Cours;
 	private Date date;
@@ -44,7 +44,7 @@ public class Notification
 		this.Updated=true;
 	}
 
-	// Méthodes get
+	// Mï¿½thodes get
 	
 	public Cours getCours()
 	{
@@ -72,7 +72,7 @@ public class Notification
 		return this.ressourceId;
 	}
 	
-	// Méthodes booleennes
+	// Mï¿½thodes booleennes
 	
 	public boolean isOldRessource()
 	{
@@ -87,7 +87,7 @@ public class Notification
 		return this.Updated;
 	}
 	
-	// Méthodes set
+	// Mï¿½thodes set
 	
 	public void setCours(Cours Cours)
 	{
