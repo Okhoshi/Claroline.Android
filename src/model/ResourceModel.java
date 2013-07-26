@@ -14,19 +14,16 @@ package model;
 import org.joda.time.DateTime;
 
 import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
 
 /**
  * Claroline Mobile - Android
  * 
- * TODO Description here.
- * 
+ * Generic resource model class.
  * 
  * @author Devos Quentin
  * @version 1.0
  */
-@Table(name = "Annonce")
-public class Annonce extends ModelBase {
+public class ResourceModel extends ModelBase {
 	/**
 	 * Title column.
 	 */
@@ -64,48 +61,10 @@ public class Annonce extends ModelBase {
 	private ResourceList mList;
 
 	/**
-	 * Content column.
-	 */
-	@Column(name = "Content")
-	private String mContent;
-
-	/**
-	 * Rank column.
-	 */
-	@Column(name = "Rank")
-	private int mRank;
-
-	/**
-	 * Date column.
-	 */
-	@Column(name = "Date")
-	private DateTime mDate;
-
-	/**
 	 * SeenDate column.
 	 */
 	@Column(name = "SeenDate")
 	private DateTime mSeenDate;
-
-	/**
-	 * NotifiedDate column.
-	 */
-	@Column(name = "NotifiedDate")
-	private DateTime mNotifiedDate;
-
-	/**
-	 * @return the Content
-	 */
-	public String getContent() {
-		return mContent;
-	}
-
-	/**
-	 * @return the Date
-	 */
-	public DateTime getDate() {
-		return mDate;
-	}
 
 	/**
 	 * @return the IsVisible
@@ -121,20 +80,6 @@ public class Annonce extends ModelBase {
 	@Override
 	public ResourceList getList() {
 		return mList;
-	}
-
-	/**
-	 * @return the NotifiedDate
-	 */
-	public DateTime getNotifiedDate() {
-		return mNotifiedDate;
-	}
-
-	/**
-	 * @return the Rank
-	 */
-	public int getRank() {
-		return mRank;
 	}
 
 	/**
@@ -182,23 +127,7 @@ public class Annonce extends ModelBase {
 	 */
 	@Override
 	public boolean isNotified() {
-		return mNotifiedDate.isAfter(mSeenDate);
-	}
-
-	/**
-	 * @param pContent
-	 *            the Content to set
-	 */
-	public void setContent(final String pContent) {
-		mContent = pContent;
-	}
-
-	/**
-	 * @param pDate
-	 *            the Date to set
-	 */
-	public void setDate(final DateTime pDate) {
-		mDate = pDate;
+		return false;
 	}
 
 	/**
@@ -217,22 +146,6 @@ public class Annonce extends ModelBase {
 	@Override
 	public void setList(final ResourceList pList) {
 		mList = pList;
-	}
-
-	/**
-	 * @param pNotifiedDate
-	 *            the NotifiedDate to set
-	 */
-	public void setNotifiedDate(final DateTime pNotifiedDate) {
-		mNotifiedDate = pNotifiedDate;
-	}
-
-	/**
-	 * @param pRank
-	 *            the Rank to set
-	 */
-	public void setRank(final int pRank) {
-		mRank = pRank;
 	}
 
 	/**
@@ -279,4 +192,5 @@ public class Annonce extends ModelBase {
 	public void setURL(final String pURL) {
 		mURL = pURL;
 	}
+
 }
