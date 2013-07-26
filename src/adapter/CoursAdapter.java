@@ -8,6 +8,10 @@
  */
 package adapter;
 
+import java.util.List;
+
+import model.Cours;
+import net.claroline.mobile.android.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,75 +19,70 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import model.Cours;
-import net.claroline.mobile.android.R;
-
-import java.util.List;
 
 public class CoursAdapter extends BaseAdapter {
 
-	private List<Cours> listeCours;
-	private Context context;
-	
-	public CoursAdapter(Context context, List<Cours> listeCours) {
-		this.context=context;
-		this.listeCours=listeCours;
-	}
-	
-	public void setCours(List<Cours> listeCours)
-	{
-		this.listeCours=listeCours;
-	}
-	
-	public int getCount()
-	{
-		return listeCours.size();
-	}
-	
-	public Cours getItem(int position)
-	{
-		return listeCours.get(position);
+	private List<Cours> mCoursList;
+	private Context mContext;
+
+	public CoursAdapter(final Context context, final List<Cours> listeCours) {
+		this.mContext = context;
+		this.mCoursList = listeCours;
 	}
 
-	public long getItemId(int position)
-	{
-		return listeCours.get(position).getId();
+	public Context getContext() {
+		return mContext;
 	}
-	
-	public Context getContext()
-	{
-		return this.context;
+
+	@Override
+	public int getCount() {
+		return mCoursList.size();
 	}
-	
-	public View getView(final int position, View view, ViewGroup parent) 
-	{
+
+	@Override
+	public Cours getItem(final int position) {
+		return mCoursList.get(position);
+	}
+
+	@Override
+	public long getItemId(final int position) {
+		return mCoursList.get(position).getId();
+	}
+
+	@Override
+	public View getView(final int position, final View view,
+			final ViewGroup parent) {
 		Cours cours = getItem(position);
 		LinearLayout v = (LinearLayout) view;
-		
-		if(v==null)
-		{
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = (LinearLayout) inflater.inflate(R.layout.two_lines_item, parent, false);
+
+		if (v == null) {
+			LayoutInflater inflater = (LayoutInflater) mContext
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			v = (LinearLayout) inflater.inflate(R.layout.two_lines_item,
+					parent, false);
 		}
-		
-		if(cours != null){
+
+		if (cours != null) {
 			TextView name = (TextView) v.findViewById(R.id.name_item);
-			TextView detail_1 = (TextView) v.findViewById(R.id.detail_1);
-			TextView detail_2 = (TextView) v.findViewById(R.id.detail_2);
-			
-			if(name != null){
-				name.setText(cours.getTitle());
+			TextView detail1 = (TextView) v.findViewById(R.id.detail_1);
+			TextView detail2 = (TextView) v.findViewById(R.id.detail_2);
+
+			if (name != null) {
+				name.setText(cours.getName());
 			}
-			if(detail_1 != null){
-				detail_1.setText(cours.getTitular());
+			if (detail1 != null) {
+				detail1.setText(cours.getTitular());
 			}
-			if(detail_2 != null){
-				detail_2.setText(cours.getOfficialCode());
+			if (detail2 != null) {
+				detail2.setText(cours.getOfficialCode());
 			}
 		}
-		
+
 		return v;
 	}
-	 
+
+	public void setCours(final List<Cours> listeCours) {
+		this.mCoursList = listeCours;
+	}
 
 }
