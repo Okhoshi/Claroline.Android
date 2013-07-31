@@ -358,16 +358,18 @@ public class ClaroClient implements Runnable {
 						if(DownloadFile(profilePicture)){
 							File pic = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" +
 									GlobalApplication.getInstance().getResources().getString(R.string.app_name) + "/" + profilePicture.getName() + "." + profilePicture.getExtension());
-							BitmapFactory.Options options = new BitmapFactory.Options();
-							options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-							Bitmap bm = BitmapFactory.decodeFile(pic.getAbsolutePath());
-							ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-							bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
-
-							Editor edit2 = GlobalApplication.getPreferences().edit();
-							edit2.putString("userImage", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
-							edit2.apply();
-							pic.delete();
+							if(pic.exists() && pic.canRead()){
+								BitmapFactory.Options options = new BitmapFactory.Options();
+								options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+								Bitmap bm = BitmapFactory.decodeFile(pic.getAbsolutePath());
+								ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+								bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+	
+								Editor edit2 = GlobalApplication.getPreferences().edit();
+								edit2.putString("userImage", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+								edit2.apply();
+								pic.delete();
+							}
 						}
 					}
 					
