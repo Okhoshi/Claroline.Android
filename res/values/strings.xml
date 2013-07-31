@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Nom de l'application --> 
-   <string name="app_name">ClaroMobile</string>
-    <string name="version">1.0 - BETA</string>
- 
     
     <!-- TextView's de l'activite about_us --> 
-    <string name="about_us_authors">Auteurs : \n Devos Quentin \n Uytterhoeven Dimitri</string>
-    <string name="about_us_version">Version %1$s</string>
-    <string name="about_us_contact_us">Nous contacter :\n support.develop@live.be</string>
-    <string name="about_us_remerciements">Remerciements : \n G.-H. Leclercq (BetaTester) \n S. Sluysmans \n L. Delvaux \n Pr K. Mens (UCL) \n Claroline Dev Team</string>
-    <string name="about_us_mail_quentin">q.devos@student.uclouvain.be</string>
-    <string name="about_us_mail_dimitri">dimitri.uytterhoeven@student.uclouvain.be</string>
+    <string name="about_us_contact_us">Nous contacter</string>
+    <string name="about_us_remerciements">Remerciements</string>
     
     
     <!-- Boutons de l'action bar --> 
@@ -94,5 +86,9 @@
     <string name="menu_logout">Se déconnecter</string>
     <string name="menu_login">Se connecter</string>
     <string name="user_picture_desc">Image de profil</string>
+    
+    
+    <string name="used_library">"Librairies utilisées"</string>
+    <string name="authors">"Auteurs"</string>
 
 </resources>

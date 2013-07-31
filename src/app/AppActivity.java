@@ -1,6 +1,7 @@
 package app;
 
 import activity.HomeActivity;
+import net.claroline.mobile.android.R;
 import activity.Settings;
 import activity.about_us;
 import android.app.ActionBar;
@@ -116,59 +117,58 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_about:
-			// Comportement du bouton "A Propos"
-			Intent monIntent = new Intent(this,about_us.class);
-			startActivity(monIntent);
-			return true;
-		/* case R.id.menu_help:
-			// Comportement du bouton "Aide"
-			return true; */
+			AboutDialog about = new AboutDialog();
+			about.show(getSupportFragmentManager(), "about");
+			break;
 		case R.id.menu_search:
 			onSearchRequested();
-			return true;
+			break;
 		case R.id.menu_settings:
-			Intent settings_intent = new Intent(this, Settings.class);
-			startActivity(settings_intent);
-			return true;
+			Intent si = new Intent(this, Settings.class);
+			startActivity(si);
+			break;
 		case R.id.menu_logout:
 			ClaroClient.invalidateClient();
 			Repository.Reset(this);
-			return true;
+			break;
 		case android.R.id.home:
-			// Comportement du bouton qui permet de retourner a l'activite d'accueil
-			monIntent = new Intent(this,HomeActivity.class);
-			monIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-					Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(monIntent);
-			return true;
+			NavUtils.navigateUpFromSameTask(this);
+			break;
 		case R.id.menu_refresh:
 		case R.id.menu_login:
 			// Comportement du bouton "Rafraichir" et du bouton "Se connecter"
 			// Doit �tre impl�menter dans chaque activit� si besoin
-			return true;
+			break;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+		return true;
+	}
 	}
 
-	// Met les propri�t�s de l'action bar
-	public void setActionBar()
-	{
+	/**
+	 * Sets up the {@link ActionBar}.
+	 *
+	 * @param displayHomeAsUp
+	 *            displays the Up action
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void setActionBar(final boolean displayHomeAsUp) {
 		final ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true); 
+		actionBar.setDisplayHomeAsUpEnabled(displayHomeAsUp);
 
 		onAccountStateChange(ClaroClient.isValidAccount());
 	}
 
-	public void setOverflowMenu()
-	{
+	public void setOverflowMenu() {
 		try {
 			ViewConfiguration config = ViewConfiguration.get(this);
-			Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
-			if(menuKeyField != null) {
+			Field menuKeyField = ViewConfiguration.class
+					.getDeclaredField("sHasPermanentMenuKey");
+			if (menuKeyField != null) {
 				menuKeyField.setAccessible(true);
 				menuKeyField.setBoolean(config, false);
 			}

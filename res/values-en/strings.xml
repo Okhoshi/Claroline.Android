@@ -5,12 +5,8 @@
    <string name="app_name">ClaroMobile</string>
     
     <!-- TextView's de l'activite about_us --> 
-    <string name="about_us_authors">Authors : \n Devos Quentin \n Uytterhoeven Dimitri</string>
-    <string name="about_us_version">Version %1$s</string>
-    <string name="about_us_contact_us">Contact us :\n support.develop@live.be</string>
-    <string name="about_us_remerciements">Special Thanks : \n G.-H. Leclercq (BetaTester) \n S. Sluysmans \n L. Delvaux \n Pr K. Mens (UCL) \n Claroline Dev Team</string>
-    <string name="about_us_mail_quentin">q.devos@student.uclouvain.be</string>
-    <string name="about_us_mail_dimitri">dimitri.uytterhoeven@student.uclouvain.be</string>
+    <string name="about_us_contact_us">Contact us</string>
+    <string name="about_us_remerciements">Special Thanks</string>
     
     
     <!-- Boutons de l'action bar --> 
@@ -81,6 +77,9 @@
     <string name="no_network_title">Missing Internet access</string>
     <string name="no_network">Please connect to the network, then retry</string>
     
+    <string name="used_library">"Used libraries"</string>
+    <string name="authors">"Authors"</string>
+    <string name="about_menu">About us</string>
     <!-- a trier -->
 
 </resources>
