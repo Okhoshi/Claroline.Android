@@ -1,6 +1,6 @@
 package fragments;
 
-import activity.Settings;
+import net.claroline.mobile.android.R;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -16,87 +16,76 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import app.GlobalApplication;
-import connectivity.AllowedOperations;
-import connectivity.ClaroClient;
-import connectivity.ClaroClient.onAccountStateChangedListener;
-import net.claroline.mobile.android.R;
+import app.App;
+import connectivity.ClarolineClient;
+import connectivity.ClarolineClient.OnAccountStateChangedListener;
+import connectivity.ClarolineService;
+import connectivity.SupportedMethods;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class LoginDialog extends Dialog implements onAccountStateChangedListener {
+public class LoginDialog extends Dialog implements
+		OnAccountStateChangedListener {
 
-	
+	/**
+	 * Represents an asynchronous login/registration task used to authenticate
+	 * the user.
+	 */
+	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+		@Override
+		protected Boolean doInBackground(final Void... params) {
+
+			Editor edit = App.getPrefs().edit();
+			edit.putString(App.SETTINGS_USER_LOGIN, mLogin)
+					.putString(App.SETTINGS_USER_PASSWORD, mPassword).apply();
+
+			App.getClient(null, SupportedMethods.authenticate).run();
+
+			return !ClarolineService.isExpired();
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			mAuthTask = null;
+			showProgress(false);
+
+			if (success) {
+				dismiss();
+			} else {
+				Editor edit = App.getPrefs().edit();
+				edit.putString("user_login", "")
+						.putString(App.SETTINGS_USER_PASSWORD, "").apply();
+
+				mPasswordView.setError(mContext
+						.getString(R.string.error_incorrect_password));
+				mPasswordView.requestFocus();
+			}
+		}
+	}
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
 	private UserLoginTask mAuthTask = null;
-
 	// Values for email and password at the time of the login attempt.
 	private String mLogin;
-	private String mPassword;
 
+	private String mPassword;
 	// UI references.
 	private EditText mLoginView;
 	private EditText mPasswordView;
 	private View mLoginFormView;
 	private View mLoginStatusView;
+
 	private TextView mLoginStatusMessageView;
-	
+
 	private Context mContext;
-	
-	public LoginDialog(Context context) {
+
+	public LoginDialog(final Context context) {
 		super(context);
-		this.mContext = context;
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		setTitle(R.string.title_activity_login);
-		setContentView(R.layout.dialog_login);
-		
-		// Set up the login form.
-		mLoginView = (EditText) findViewById(R.id.login_text);
-
-		mPasswordView = (EditText) findViewById(R.id.password);
-		mPasswordView
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(TextView textView, int id,
-							KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
-							attemptLogin();
-							return true;
-						}
-						return false;
-					}
-				});
-
-		mLoginFormView = findViewById(R.id.login_form);
-		mLoginStatusView = findViewById(R.id.login_status);
-		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
-
-		findViewById(R.id.sign_in_button).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						attemptLogin();
-					}
-				});
-	}
-
-	@Override
-	public void show() {
-		if(ClaroClient.isValidAccount() || GlobalApplication.getPreferences().getString(Settings.PLATFORM_HOST, "").equals("")){
-			dismiss();
-		} else {
-			super.show();
-		}
+		mContext = context;
 	}
 
 	/**
@@ -122,18 +111,21 @@ public class LoginDialog extends Dialog implements onAccountStateChangedListener
 
 		// Check for a valid password.
 		if (TextUtils.isEmpty(mPassword)) {
-			mPasswordView.setError(mContext.getString(R.string.error_field_required));
+			mPasswordView.setError(mContext
+					.getString(R.string.error_field_required));
 			focusView = mPasswordView;
 			cancel = true;
 		} else if (mPassword.length() < 2) {
-			mPasswordView.setError(mContext.getString(R.string.error_invalid_password));
+			mPasswordView.setError(mContext
+					.getString(R.string.error_invalid_password));
 			focusView = mPasswordView;
 			cancel = true;
 		}
 
 		// Check for a valid email address.
 		if (TextUtils.isEmpty(mLogin)) {
-			mLoginView.setError(mContext.getString(R.string.error_field_required));
+			mLoginView.setError(mContext
+					.getString(R.string.error_field_required));
 			focusView = mLoginView;
 			cancel = true;
 		}
@@ -149,6 +141,61 @@ public class LoginDialog extends Dialog implements onAccountStateChangedListener
 			showProgress(true);
 			mAuthTask = new UserLoginTask();
 			mAuthTask.execute((Void) null);
+		}
+	}
+
+	@Override
+	public void onAccountStateChange(final boolean newValidity) {
+		if (newValidity) {
+			dismiss();
+		}
+	}
+
+	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setTitle(R.string.title_activity_login);
+		setContentView(R.layout.dialog_login);
+
+		// Set up the login form.
+		mLoginView = (EditText) findViewById(R.id.login_text);
+
+		mPasswordView = (EditText) findViewById(R.id.password);
+		mPasswordView
+				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+					@Override
+					public boolean onEditorAction(final TextView textView,
+							final int id, final KeyEvent keyEvent) {
+						if (id == R.id.login || id == EditorInfo.IME_NULL) {
+							attemptLogin();
+							return true;
+						}
+						return false;
+					}
+				});
+
+		mLoginFormView = findViewById(R.id.login_form);
+		mLoginStatusView = findViewById(R.id.login_status);
+		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+
+		findViewById(R.id.sign_in_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(final View view) {
+						attemptLogin();
+					}
+				});
+	}
+
+	@Override
+	public void show() {
+		if (ClarolineClient.isValidAccount()
+				|| App.getPrefs().getString(App.SETTINGS_PLATFORM_HOST, "")
+						.equals("")) {
+			dismiss();
+		} else {
+			super.show();
 		}
 	}
 
@@ -169,7 +216,7 @@ public class LoginDialog extends Dialog implements onAccountStateChangedListener
 					.alpha(show ? 1 : 0)
 					.setListener(new AnimatorListenerAdapter() {
 						@Override
-						public void onAnimationEnd(Animator animation) {
+						public void onAnimationEnd(final Animator animation) {
 							mLoginStatusView.setVisibility(show ? View.VISIBLE
 									: View.GONE);
 						}
@@ -180,7 +227,7 @@ public class LoginDialog extends Dialog implements onAccountStateChangedListener
 					.alpha(show ? 0 : 1)
 					.setListener(new AnimatorListenerAdapter() {
 						@Override
-						public void onAnimationEnd(Animator animation) {
+						public void onAnimationEnd(final Animator animation) {
 							mLoginFormView.setVisibility(show ? View.GONE
 									: View.VISIBLE);
 						}
@@ -190,51 +237,6 @@ public class LoginDialog extends Dialog implements onAccountStateChangedListener
 			// and hide the relevant UI components.
 			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-		}
-	}
-
-	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
-	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			
-			Editor edit = GlobalApplication.getPreferences().edit();
-			edit.putString("user_login", mLogin)
-			.putString("user_password", mPassword)
-			.apply();
-			
-			GlobalApplication.getClient(null, AllowedOperations.authenticate).run();
-
-			return !ClaroClient.isExpired();
-		}
-
-		@Override
-		protected void onPostExecute(final Boolean success) {
-			mAuthTask = null;
-			showProgress(false);
-
-			if (success) {
-				dismiss();
-			} else {
-				Editor edit = GlobalApplication.getPreferences().edit();
-				edit.putString("user_login", "")
-				.putString("user_password", "")
-				.apply();
-				
-				mPasswordView
-						.setError(mContext.getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
-			}
-		}
-	}
-
-	@Override
-	public void onAccountStateChange(boolean newValidity) {
-		if(newValidity){
-			dismiss();
 		}
 	}
 }

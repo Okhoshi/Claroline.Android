@@ -1,58 +1,31 @@
 package activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import model.Annonce;
+import model.Cours;
+import model.Document;
+import net.claroline.mobile.android.R;
 import adapter.SearchListAdapter;
-import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import app.AppActivity;
-import dataStorage.*;
-import model.Annonce;
-import model.Cours;
-import model.Documents;
-import net.claroline.mobile.android.R;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.activeandroid.query.Select;
 
-public class searchableActivity extends AppActivity implements OnChildClickListener {
+public class searchableActivity extends AppActivity implements
+		OnChildClickListener {
 
-	private static final String LIKE_SEL = " LIKE ? ";
 	private static final int COURS = 0;
 	private static final int ANNONCE = 1;
 	private static final int DOCUMENTS = 2;
 	private ExpandableListView mListView;
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.result);
-
-		// permet de retourner sur la vue pr�c�dente
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-
-		mListView = (ExpandableListView) findViewById(android.R.id.list);
-
-		handleIntent(getIntent());
-	}
-
-	@Override
-	public void onNewIntent(Intent intent){
-		handleIntent(intent);
-	}
-
-	private void handleIntent(Intent intent) {
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
-			doMySearch(query);
-		}
-	}
 
 	/**
 	 * Searches the cours_table and displays results for the given query.
@@ -60,40 +33,32 @@ public class searchableActivity extends AppActivity implements OnChildClickListe
 	 * @param query
 	 *            The search query
 	 */
-	public void doMySearch(String query) {
+	public void doMySearch(final String query) {
 
-		Log.d("DB", "DB Test Open in Search");
-		if(!Repository.isOpen()){
-			Log.d("DB", "DB Open in Search");
-			Repository.Open();
-		}
-
-		List<Cours> courses = CoursRepository.QueryOnDB(DBOpenHelper.COURS_COLUMN_TITLE + LIKE_SEL +"OR " + 
-				DBOpenHelper.COURS_COLUMN_SYSCODE + LIKE_SEL,
-				new String[] {"%" + query + "%",
-				"%" + query + "%"});
+		List<Cours> courses = new Select()
+				.from(Cours.class)
+				.where("Name LIKE ? OR SysCode LIKE ?", '%' + query + '%',
+						'%' + query + '%').execute();
 
 		SparseArray<List<?>> resultC = new SparseArray<List<?>>();
-		resultC.put(COURS,courses);
+		resultC.put(COURS, courses);
 
-		List<Annonce> annonces = AnnonceRepository.QueryOnDB(DBOpenHelper.ANNONCE_COLUMN_CONTENT + LIKE_SEL + "OR "+
-				DBOpenHelper.ANNONCE_COLUMN_TITLE + LIKE_SEL,
-				new String[] {"%" + query + "%",
-				"%" + query + "%"},
-				DBOpenHelper.ANNONCE_COLUMN_COURSID);
+		List<Annonce> annonces = new Select()
+				.from(Annonce.class)
+				.where("Title LIKE ? OR Content LIKE ?", '%' + query + '%',
+						'%' + query + '%').execute();
 
 		SparseArray<List<?>> resultA = new SparseArray<List<?>>();
-		resultA.put(ANNONCE,annonces);
+		resultA.put(ANNONCE, annonces);
 
-		List<Documents> documents = DocumentsRepository.QueryOnDB(DBOpenHelper.DOCUMENTS_COLUMN_DESCRIPTION + LIKE_SEL + "OR "+
-				DBOpenHelper.DOCUMENTS_COLUMN_NAME + LIKE_SEL + "OR " +
-				DBOpenHelper.DOCUMENTS_COLUMN_EXTENSION + LIKE_SEL, new String[] {"%" + query + "%",
-				"%" + query + "%",
-				"%" + query + "%"},
-				DBOpenHelper.DOCUMENTS_COLUMN_COURSID);
+		List<Document> documents = new Select()
+				.from(Document.class)
+				.where("Title LIKE ? OR Description LIKE ? OR Extension LIKE ?",
+						'%' + query + '%', '%' + query + '%', '%' + query + '%')
+				.execute();
 
 		SparseArray<List<?>> resultD = new SparseArray<List<?>>();
-		resultD.put(DOCUMENTS,documents);
+		resultD.put(DOCUMENTS, documents);
 
 		List<SparseArray<List<?>>> results = new ArrayList<SparseArray<List<?>>>();
 		results.add(resultC);
@@ -103,33 +68,38 @@ public class searchableActivity extends AppActivity implements OnChildClickListe
 		SearchListAdapter adapter = new SearchListAdapter(this, results, query);
 		mListView.setAdapter(adapter);
 		mListView.setOnChildClickListener(this);
-		
-		Log.d("DB", "DB Test Close in Search");
-		if(Repository.isOpen()){
-			Log.d("DB", "DB Close in Search");
-			Repository.Close();
+	}
+
+	private void handleIntent(final Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			doMySearch(query);
 		}
 	}
 
-	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+	@Override
+	public boolean onChildClick(final ExpandableListView parent, final View v,
+			final int groupPosition, final int childPosition, final long id) {
 		Intent i;
 		switch (groupPosition) {
 		case COURS:
 			i = new Intent(this, coursActivity.class);
-			i.putExtra("coursID", ((Cours) parent.getExpandableListAdapter().getChild(groupPosition, childPosition)).getId());
+			i.putExtra("coursID", ((Cours) parent.getExpandableListAdapter()
+					.getChild(groupPosition, childPosition)).getId());
 			startActivity(i);
 			break;
 		case ANNONCE:
 			i = new Intent(this, detailsAnnonce.class);
-			i.putExtra("annID", ((Annonce) parent.getExpandableListAdapter().getChild(groupPosition, childPosition)).getId());
+			i.putExtra("annID", ((Annonce) parent.getExpandableListAdapter()
+					.getChild(groupPosition, childPosition)).getId());
 			i.putExtra("tab", 0);
 			startActivity(i);
 			break;
 		case DOCUMENTS:
 			i = new Intent(this, coursActivity.class);
-			i.putExtra("coursID", ((Documents) parent.getExpandableListAdapter().getChild(groupPosition, childPosition)).getCours().getId());
 			i.putExtra("tab", 1);
-			i.putExtra("id", ((Documents) parent.getExpandableListAdapter().getChild(groupPosition, childPosition)).getId());
+			i.putExtra("docID", ((Document) parent.getExpandableListAdapter()
+					.getChild(groupPosition, childPosition)).getId());
 			startActivity(i);
 			break;
 		default:
@@ -138,8 +108,18 @@ public class searchableActivity extends AppActivity implements OnChildClickListe
 		return true;
 	}
 
-	public void onRepositoryRefresh(String type) {
-		// ignore
+	@Override
+	public void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.result);
+
+		mListView = (ExpandableListView) findViewById(android.R.id.list);
+
+		handleIntent(getIntent());
 	}
 
+	@Override
+	public void onNewIntent(final Intent intent) {
+		handleIntent(intent);
+	}
 }

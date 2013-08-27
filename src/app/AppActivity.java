@@ -1,117 +1,135 @@
 package app;
 
-import activity.HomeActivity;
+import java.lang.reflect.Field;
+
 import net.claroline.mobile.android.R;
+
+import org.joda.time.DateTime;
+
 import activity.Settings;
-import activity.about_us;
+import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.app.Activity;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.widget.SearchView;
-import connectivity.ClaroClient;
-import connectivity.ClaroClient.onAccountStateChangedListener;
-import dataStorage.IRepository.RepositoryRefreshListener;
-import dataStorage.Repository;
-import net.claroline.mobile.android.R;
+import connectivity.ClarolineClient;
+import connectivity.ClarolineClient.OnAccountStateChangedListener;
+import connectivity.ClarolineService;
+import fragments.AboutDialog;
 
-import java.lang.reflect.Field;
-import java.util.GregorianCalendar;
+public abstract class AppActivity extends FragmentActivity implements
+		OnAccountStateChangedListener {
 
-public abstract class AppActivity extends Activity implements RepositoryRefreshListener, onAccountStateChangedListener { 
+	/**
+	 * 
+	 */
+	private static final String SIS_LAST_UPDATE = "lastUpdate";
+	// public Handler mAppHandler = new AppHandler(this);
+	private Menu mMenu;
+	/*
+	 * private Handler mMenuHandler = new Handler(new Handler.Callback() {
+	 * 
+	 * @Override public boolean handleMessage(final Message msg) { if (menu !=
+	 * null) { if (msg.what == 1) {
+	 * menu.findItem(R.id.menu_login).setVisible(false) .setEnabled(false);
+	 * menu.findItem(R.id.menu_logout).setVisible(true) .setEnabled(true);
+	 * menu.findItem(R.id.menu_refresh).setVisible(true) .setEnabled(true); }
+	 * else { menu.findItem(R.id.menu_login).setVisible(true) .setEnabled(true);
+	 * menu.findItem(R.id.menu_logout).setVisible(false) .setEnabled(false);
+	 * menu.findItem(R.id.menu_refresh).setVisible(false) .setEnabled(false); }
+	 * } return true; } });
+	 */
+	/**
+	 * The time of last update of the data.
+	 */
+	private DateTime mLastUpdate;
 
-	private boolean dbOpenHere = false;
-	public Handler handler = new AppHandler(this);
-	private Menu menu;
+	protected ClarolineService mService;
+
+	/**
+	 * The progress dialog always present on these activity.
+	 */
+	private ProgressDialog mProgress;
+
+	public void incrementProgression(final int value) {
+		if (mProgress != null && mProgress.isShowing()
+				&& !mProgress.isIndeterminate()) {
+			mProgress.incrementProgressBy(value - mProgress.getProgress());
+		}
+	}
+
+	/**
+	 * @param delay
+	 *            the validity of data in hours
+	 * @return if the data have to be refreshed
+	 */
+	public boolean mustUpdate(final int delay) {
+		return mLastUpdate.plusHours(delay).isBeforeNow();
+	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) 
-	{
-		Log.d("DB", "DB Open in onCreate");
-		Repository.Open();
-		dbOpenHere = true;
+	public void onAccountStateChange(final boolean validity) {
+		mMenu.findItem(R.id.menu_login).setVisible(!validity)
+				.setEnabled(!validity);
+		mMenu.findItem(R.id.menu_logout).setVisible(validity)
+				.setEnabled(validity);
+		mMenu.findItem(R.id.menu_refresh).setVisible(validity)
+				.setEnabled(validity);
+	}
 
-		lastUpdate = new GregorianCalendar();
-		if(savedInstanceState != null && savedInstanceState.containsKey("lastUpdate")){
-			lastUpdate.setTimeInMillis(savedInstanceState.getLong("lastUpdate"));
+	@Override
+	public void onCreate(final Bundle savedInstanceState) {
+
+		mService = new ClarolineService();
+
+		if (savedInstanceState != null
+				&& savedInstanceState.containsKey(SIS_LAST_UPDATE)) {
+			mLastUpdate = new DateTime(
+					savedInstanceState.getLong(SIS_LAST_UPDATE));
 		} else {
-			lastUpdate.setTimeInMillis(0);
+			mLastUpdate = new DateTime(0);
 		}
 		super.onCreate(savedInstanceState);
-		setActionBar();
+
+		if (App.isNewerAPI(Build.VERSION_CODES.HONEYCOMB)) {
+			setActionBar(true);
+		}
 		setOverflowMenu();
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
-	public void onResume(){
-		Log.d("DB", "DB Test Open in onResume");
-		if(!Repository.isOpen() && !dbOpenHere){
-			Log.d("DB", "DB Open in onResume");
-			Repository.Open();
-			dbOpenHere = true;
-		}
-		Repository.registerOnRepositoryRefreshListener(this);
-		ClaroClient.registerOnAccountStateChangedListener(this);
-		super.onResume();
-	}
-
-	@Override
-	public void onPause(){
-		super.onPause();
-		ClaroClient.unregisterOnAccountStateChangedListener(this);
-		Repository.unregisterOnRepositoryRefreshListener(this);
-		Log.d("DB", "DB Test Close in onPause");
-		if(Repository.isOpen() && dbOpenHere){
-			Log.d("DB", "DB Close in onPause");
-			Repository.Close();
-			dbOpenHere = false;
-		}
-	}
-
-	@Override
-	public void onDestroy(){
-		Log.d("DB", "DB Test Close in onDestroy");
-		if(Repository.isOpen() && dbOpenHere){
-			Log.d("DB", "DB Close in onDestroy");
-			Repository.Close();
-			dbOpenHere = false;
-		}
-		super.onDestroy();
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		outState.putLong("lastUpdate", lastUpdate.getTimeInMillis());
-		super.onSaveInstanceState(outState);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(final Menu menu) {
 		getMenuInflater().inflate(R.menu.actionbar, menu);
 
-		if(ClaroClient.isValidAccount()){
+		if (ClarolineClient.isValidAccount()) {
 			menu.findItem(R.id.menu_login).setVisible(false).setEnabled(false);
 		} else {
 			menu.findItem(R.id.menu_logout).setVisible(false).setEnabled(false);
-			menu.findItem(R.id.menu_refresh).setVisible(false).setEnabled(false);
+			menu.findItem(R.id.menu_refresh).setVisible(false)
+					.setEnabled(false);
 		}
 
-		// Get the SearchView and set the searchable configuration
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-		searchView.setIconifiedByDefault(false);     
-		searchView.setSubmitButtonEnabled(true);
-
-		this.menu = menu;
+		if (App.isNewerAPI(Build.VERSION_CODES.HONEYCOMB)) {
+			// Get the SearchView and set the searchable configuration
+			SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+			SearchView searchView = (SearchView) menu
+					.findItem(R.id.menu_search).getActionView();
+			searchView.setSearchableInfo(searchManager
+					.getSearchableInfo(getComponentName()));
+			searchView.setIconifiedByDefault(false);
+			searchView.setSubmitButtonEnabled(true);
+		}
+		mMenu = menu;
 
 		return true;
 	}
@@ -131,8 +149,8 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 			startActivity(si);
 			break;
 		case R.id.menu_logout:
-			ClaroClient.invalidateClient();
-			Repository.Reset(this);
+			ClarolineClient.getInstance().invalidateClient();
+			// TODO Reset DB.
 			break;
 		case android.R.id.home:
 			NavUtils.navigateUpFromSameTask(this);
@@ -147,11 +165,28 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 		}
 		return true;
 	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		ClarolineClient.unregisterOnAccountStateChangedListener(this);
+	}
+
+	@Override
+	public void onResume() {
+		ClarolineClient.registerOnAccountStateChangedListener(this);
+		super.onResume();
+	}
+
+	@Override
+	protected void onSaveInstanceState(final Bundle outState) {
+		outState.putLong(SIS_LAST_UPDATE, mLastUpdate.getMillis());
+		super.onSaveInstanceState(outState);
 	}
 
 	/**
 	 * Sets up the {@link ActionBar}.
-	 *
+	 * 
 	 * @param displayHomeAsUp
 	 *            displays the Up action
 	 */
@@ -160,7 +195,7 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 		final ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(displayHomeAsUp);
 
-		onAccountStateChange(ClaroClient.isValidAccount());
+		onAccountStateChange(ClarolineClient.isValidAccount());
 	}
 
 	public void setOverflowMenu() {
@@ -178,40 +213,60 @@ public abstract class AppActivity extends Activity implements RepositoryRefreshL
 
 	}
 
-	@Override
-	public void onAccountStateChange(boolean validity) {
-		menuHandler.sendEmptyMessage(validity?1:0);
+	public void setProgressIndicator(final boolean visible) {
+		setProgressIndicator(visible,
+				getResources().getString(R.string.loading_default), true, 0);
 	}
-	
-	private Handler menuHandler = new Handler(new Handler.Callback() {
-		
-		@Override
-		public boolean handleMessage(Message msg) {
-			if(menu != null){
-				if(msg.what == 1){
-					menu.findItem(R.id.menu_login).setVisible(false).setEnabled(false);
-					menu.findItem(R.id.menu_logout).setVisible(true).setEnabled(true);
-					menu.findItem(R.id.menu_refresh).setVisible(true).setEnabled(true);
-				} else {
-					menu.findItem(R.id.menu_login).setVisible(true).setEnabled(true);
-					menu.findItem(R.id.menu_logout).setVisible(false).setEnabled(false);
-					menu.findItem(R.id.menu_refresh).setVisible(false).setEnabled(false);
-				}
+
+	public void setProgressIndicator(final boolean visible,
+			final boolean isIndeterminate, final int max) {
+		setProgressIndicator(visible,
+				getResources().getString(R.string.loading_default),
+				isIndeterminate, max);
+	}
+
+	public void setProgressIndicator(final boolean visible,
+			final String message, final boolean isIndeterminate, final int max) {
+		if (visible) {
+			if (mProgress == null) {
+				mProgress = new ProgressDialog(this);
+				mProgress.setCancelable(false);
+				mProgress.setIndeterminate(isIndeterminate);
+			} else if (mProgress.isIndeterminate() != isIndeterminate) {
+				mProgress.dismiss();
+				mProgress = new ProgressDialog(mProgress.getContext());
+				mProgress.setCancelable(false);
+				mProgress.setIndeterminate(isIndeterminate);
 			}
-			return true;
+			if (!isIndeterminate) {
+				mProgress.setMax(max);
+				mProgress.setProgress(0);
+				mProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			}
+			mProgress.setMessage(message);
+			if (!mProgress.isShowing()) {
+				mProgress.show();
+			}
+		} else if (mProgress != null) {
+			mProgress.dismiss();
+			mProgress = null;
 		}
-	});
-
-	private GregorianCalendar lastUpdate;
-
-	public boolean mustUpdate(int delay){
-		GregorianCalendar temp = new GregorianCalendar();
-		temp.add(GregorianCalendar.HOUR_OF_DAY, -delay);
-		return lastUpdate.before(temp);
 	}
 
-	public void updatesNow(){
-		lastUpdate = new GregorianCalendar();
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void setProgressIndicator(final boolean visible,
+			final String message, final boolean isIndeterminate, final int max,
+			final String format) {
+		setProgressIndicator(visible, message, isIndeterminate, max);
+		if (App.isNewerAPI(Build.VERSION_CODES.HONEYCOMB)) {
+			mProgress.setProgressNumberFormat(format);
+		}
 	}
 
+	/**
+	 * Refresh the LastUpdate counter.
+	 */
+	public void updatesNow() {
+		mLastUpdate = DateTime.now();
+	}
 }

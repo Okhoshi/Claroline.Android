@@ -18,6 +18,7 @@ import org.joda.time.DateTime;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Column.ConflictAction;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.SerializedName;
 
@@ -31,12 +32,14 @@ import com.google.gson.annotations.SerializedName;
  */
 @Table(name = "Cours")
 public class Cours extends Model {
+
 	/**
 	 * SysCode column.
 	 */
 	@SerializedName("sysCode")
-	@Column(name = "SysCode")
+	@Column(name = "SysCode", unique = true, onUniqueConflict = ConflictAction.REPLACE)
 	private String mSysCode;
+
 	/**
 	 * CoursId column.
 	 */
@@ -57,6 +60,7 @@ public class Cours extends Model {
 	@SerializedName("title")
 	@Column(name = "Name")
 	private String mName;
+
 	/**
 	 * Titular column.
 	 */

@@ -1,101 +1,52 @@
 package activity;
 
-
-import android.app.ActionBar;
+import model.Cours;
+import net.claroline.mobile.android.R;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.TextView;
+import app.App;
 import app.AppActivity;
-import app.GlobalApplication;
-import connectivity.AllowedOperations;
-import connectivity.ClaroClient;
-import dataStorage.CoursRepository;
-import dataStorage.Repository;
+
+import com.activeandroid.query.Select;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import connectivity.ClarolineClient;
 import fragments.LoginDialog;
 import fragments.coursListFragment;
-import net.claroline.mobile.android.R;
 
-
-public class HomeActivity extends AppActivity
-{
+public class HomeActivity extends AppActivity {
 
 	/**
-	 * Used to know which Tab is selected
+	 * Called when the activity is first created.
+	 * 
+	 * @param savedInstanceState
+	 *            the precedent saved state
 	 */
-	public static String currentTag;
-	static TextView view;
-
-	/** 
-	 * Called when the activity is first created. 
-	 */
-
 	@Override
-	public void onCreate(Bundle savedInstanceState) 
-	{
+	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
 
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(false);
-		if(GlobalApplication.getPreferences().getString(Settings.PLATFORM_HOST, "").equals("")){
+		if (App.isNewerAPI(Build.VERSION_CODES.HONEYCOMB)) {
+			setActionBar(false);
+		}
+
+		if (App.getPrefs().getString(App.SETTINGS_PLATFORM_HOST, "").equals("")) {
 			Intent i = new Intent(this, Settings.class);
 			startActivity(i);
-		} else if(GlobalApplication.getPreferences().getString(Settings.USER_LOGIN, "").equals("")){
+		} else if (App.getPrefs().getString(App.SETTINGS_USER_LOGIN, "")
+				.equals("")) {
 			showLoginDialog();
 		} else {
 			refresh(false, false, true);
 		}
 	}
 
-	/*
-	 * 
-	 *   Menus,tabs,actionBar
-	 * 
-	 * 
-	 */
-
-	private void refresh(boolean force, boolean forceUser, boolean noDialog) {
-		if(GlobalApplication.getPreferences().getString(Settings.PLATFORM_HOST, "").equals("")){
-			Intent i = new Intent(this, Settings.class);
-			startActivity(i);
-		}
-		if(!noDialog && !ClaroClient.isValidAccount()){
-			showLoginDialog();
-		} else {
-			if(forceUser || mustUpdate(6)){
-				(new Thread(GlobalApplication.getClient(null, AllowedOperations.getUserData))).start();
-			}
-
-			if(force || mustUpdate(1)){
-				GlobalApplication.setProgressIndicator(this, true);
-				if(CoursRepository.GetAll().size() == 0){
-					(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getCourseList))).start();
-				} else {
-					(new Thread(GlobalApplication.getClient(handler, AllowedOperations.getUpdates))).start();
-				}
-				updatesNow();
-			}
-		}
-	}
-
-	private void showLoginDialog() {
-		LoginDialog login = new LoginDialog(this);
-		login.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				if(ClaroClient.isValidAccount()){
-					HomeActivity.this.refresh(true, true, false);
-				}	
-			}
-		});
-		login.show();
-	}
-
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
@@ -109,12 +60,60 @@ public class HomeActivity extends AppActivity
 		}
 	}
 
-	public void onRepositoryRefresh(String type) {
-		if(type.equals(CoursRepository.REPO_TYPE) || type.equals(Repository.ALL)){
-			coursListFragment list = (coursListFragment) getFragmentManager().findFragmentById(R.id.list_frag);
-			if(list != null)
-				list.refreshList.sendEmptyMessage(0);
+	/*
+	 * 
+	 * Menus,tabs,actionBar
+	 */
+
+	public void onRepositoryRefresh(final String type) {
+		coursListFragment list = (coursListFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.list_frag);
+		if (list != null) {
+			list.refreshList.sendEmptyMessage(0);
 		}
 	}
-}
 
+	private void refresh(final boolean force, final boolean forceUser,
+			final boolean noDialog) {
+		if (App.getPrefs().getString(App.SETTINGS_PLATFORM_HOST, "").equals("")) {
+			Intent i = new Intent(this, Settings.class);
+			startActivity(i);
+		}
+
+		if (!noDialog && !ClarolineClient.isValidAccount()) {
+			showLoginDialog();
+		} else {
+			if (forceUser || mustUpdate(6)) {
+				mService.getUserData(new AsyncHttpResponseHandler());
+			}
+
+			if (force || mustUpdate(1)) {
+				setProgressIndicator(true);
+				if (new Select("Id").from(Cours.class).execute().size() == 0) {
+					mService.getCourseList(new AsyncHttpResponseHandler(
+					// TODO ResponseHandler
+					));
+				} else {
+					mService.getUpdates(new AsyncHttpResponseHandler(
+					// TODO ResponseHandler
+					));
+				}
+				updatesNow();
+			}
+		}
+	}
+
+	private void showLoginDialog() {
+		LoginDialog login = new LoginDialog(this);
+		login.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+			@Override
+			public void onDismiss(final DialogInterface dialog) {
+				if (ClarolineClient.isValidAccount()) {
+					HomeActivity.this.refresh(true, true, false);
+				}
+			}
+		});
+		login.show();
+	}
+}
