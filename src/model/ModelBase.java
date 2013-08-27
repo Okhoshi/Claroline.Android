@@ -46,6 +46,11 @@ public abstract class ModelBase extends Model {
 	public abstract ResourceList getList();
 
 	/**
+	 * @return the last loading date
+	 */
+	public abstract DateTime getLoadedDate();
+
+	/**
 	 * @return the ResourceString
 	 */
 	public abstract String getResourceString();
@@ -93,6 +98,12 @@ public abstract class ModelBase extends Model {
 	 *            the List to set
 	 */
 	public abstract void setList(final ResourceList pList);
+
+	/**
+	 * @param date
+	 *            the last loading date to set
+	 */
+	public abstract void setLoadedDate(DateTime date);
 
 	/**
 	 * @param pResourceString

@@ -78,9 +78,9 @@
     <string name="action_sign_in_register"><b>Se connecter</b></string>
     <string name="action_sign_in_short">Se connecter</string>
     <string name="login_progress_signing_in">Authentification&#8230;</string>
-    <string name="error_invalid_password">Le mot de passe est trop court</string>
     <string name="error_incorrect_password">Le mot de passe est incorrect</string>
     <string name="error_field_required">Ce champ est requis</string>
+    <string name="error_occured_retry">Une erreur s\'est produite, veuillez rééssayer</string>
         
     <!-- a trier -->
     <string name="menu_logout">Se déconnecter</string>

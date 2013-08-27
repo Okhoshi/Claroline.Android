@@ -4,9 +4,9 @@ import model.Annonce;
 import net.claroline.mobile.android.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.MenuItem;
 import app.AppActivity;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.activeandroid.query.Select;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -40,10 +40,18 @@ public class detailsAnnonce extends AppActivity {
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
 			setProgressIndicator(true);
-			if (true) { // TODO MustUpdate method in ModelBase ?
-				// TODO Write getSingleResource in Service
+			if (currentAnnonce.getLoadedDate().plusWeeks(1).isBeforeNow()) {
+				getService().getSingleResource(
+						currentAnnonce.getList().getCours(),
+						currentAnnonce.getList(),
+						currentAnnonce.getResourceString(),
+						new AsyncHttpResponseHandler() {
+
+						});
 			} else {
-				mService.getUpdates(new AsyncHttpResponseHandler());
+				getService().getUpdates(new AsyncHttpResponseHandler() {
+
+				});
 			}
 			return true;
 		default:

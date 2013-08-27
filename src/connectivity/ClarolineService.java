@@ -146,6 +146,7 @@ public class ClarolineService {
 						ModelBase mb = new Gson().fromJson(item.toString(),
 								list.getResourceType());
 						mb.setList(list);
+						mb.setLoadedDate(DateTime.now());
 						mb.setUpdated(true);
 						mb.save();
 					} catch (JSONException e) {
@@ -154,6 +155,27 @@ public class ClarolineService {
 				}
 
 				handler.onSuccess(array.toString());
+			}
+		});
+	}
+
+	public void getSingleResource(final Cours cours, final ResourceList list,
+			final String resourceIdentifier,
+			final AsyncHttpResponseHandler handler) {
+		RequestParams p = ClarolineClient.getRequestParams(
+				Enum.valueOf(SupportedModules.class, list.getLabel()),
+				SupportedMethods.getSingleResource, cours.getSysCode(),
+				resourceIdentifier);
+		mClient.serviceQuery(p, new AsyncHttpResponseHandler() {
+
+			@Override
+			public void onSuccess(final String response) {
+				ModelBase mb = new Gson().fromJson(response,
+						list.getResourceType());
+				mb.setLoadedDate(DateTime.now());
+				mb.save();
+
+				handler.onSuccess(response);
 			}
 		});
 	}

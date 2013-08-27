@@ -6,10 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
 import app.App;
 import app.AppActivity;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.activeandroid.query.Select;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -69,7 +69,7 @@ public class HomeActivity extends AppActivity {
 		coursListFragment list = (coursListFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.list_frag);
 		if (list != null) {
-			list.refreshList.sendEmptyMessage(0);
+			list.refreshUI();
 		}
 	}
 
@@ -84,19 +84,19 @@ public class HomeActivity extends AppActivity {
 			showLoginDialog();
 		} else {
 			if (forceUser || mustUpdate(6)) {
-				mService.getUserData(new AsyncHttpResponseHandler());
+				getService().getUserData(new AsyncHttpResponseHandler());
 			}
 
 			if (force || mustUpdate(1)) {
 				setProgressIndicator(true);
 				if (new Select("Id").from(Cours.class).execute().size() == 0) {
-					mService.getCourseList(new AsyncHttpResponseHandler(
+					getService().getCourseList(new AsyncHttpResponseHandler(
 					// TODO ResponseHandler
-					));
+							));
 				} else {
-					mService.getUpdates(new AsyncHttpResponseHandler(
+					getService().getUpdates(new AsyncHttpResponseHandler(
 					// TODO ResponseHandler
-					));
+							));
 				}
 				updatesNow();
 			}

@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Claroline Mobile - Android
@@ -30,18 +31,21 @@ public class Annonce extends ModelBase {
 	/**
 	 * Title column.
 	 */
+	@SerializedName("title")
 	@Column(name = "Title")
 	private String mTitle;
 
 	/**
 	 * ResourceString column.
 	 */
+	@SerializedName("resourceId")
 	@Column(name = "ResourceString")
 	private String mResourceString;
 
 	/**
 	 * IsVisible column.
 	 */
+	@SerializedName("visibility")
 	@Column(name = "IsVisible")
 	private boolean mIsVisible;
 
@@ -66,32 +70,43 @@ public class Annonce extends ModelBase {
 	/**
 	 * Content column.
 	 */
+	@SerializedName("content")
 	@Column(name = "Content")
 	private String mContent;
 
 	/**
 	 * Rank column.
 	 */
+	@SerializedName("rank")
 	@Column(name = "Rank")
 	private int mRank;
 
 	/**
 	 * Date column.
 	 */
+	@SerializedName("date")
 	@Column(name = "Date")
 	private DateTime mDate;
 
 	/**
 	 * SeenDate column.
 	 */
+	@SerializedName("seenDate")
 	@Column(name = "SeenDate")
 	private DateTime mSeenDate;
 
 	/**
 	 * NotifiedDate column.
 	 */
+	@SerializedName("notifiedDate")
 	@Column(name = "NotifiedDate")
 	private DateTime mNotifiedDate;
+
+	/**
+	 * LoadedDate column.
+	 */
+	@Column(name = "LoadedDate")
+	private DateTime mLoadedDate;
 
 	/**
 	 * @return the Content
@@ -121,6 +136,14 @@ public class Annonce extends ModelBase {
 	@Override
 	public ResourceList getList() {
 		return mList;
+	}
+
+	/**
+	 * @return the LoadedDate
+	 */
+	@Override
+	public DateTime getLoadedDate() {
+		return mLoadedDate;
 	}
 
 	/**
@@ -217,6 +240,15 @@ public class Annonce extends ModelBase {
 	@Override
 	public void setList(final ResourceList pList) {
 		mList = pList;
+	}
+
+	/**
+	 * @param pLoadedDate
+	 *            the LoadedDate to set
+	 */
+	@Override
+	public void setLoadedDate(final DateTime pLoadedDate) {
+		mLoadedDate = pLoadedDate;
 	}
 
 	/**

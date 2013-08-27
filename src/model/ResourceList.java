@@ -75,7 +75,7 @@ public class ResourceList extends Model {
 	 * ResourceType column.
 	 */
 	@Column(name = "ResourceType")
-	private Class<? extends ModelBase> mResourceType;
+	private Class<? extends ModelBase> mResourceType = ModelBase.class;
 
 	/**
 	 * Default constructor without arguments. Required.
@@ -134,11 +134,13 @@ public class ResourceList extends Model {
 	}
 
 	/**
+	 * @param <T>
+	 *            the type of list
 	 * @return the List of Resources
 	 */
 	@SuppressWarnings("unchecked")
-	public List<ModelBase> resources() {
-		return (List<ModelBase>) getMany(mResourceType, "List");
+	public <T extends ModelBase> List<T> resources() {
+		return (List<T>) getMany(mResourceType, "List");
 	}
 
 	/**

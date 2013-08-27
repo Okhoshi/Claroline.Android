@@ -63,7 +63,7 @@ public class ClarolineClient extends AsyncHttpClient {
 	/**
 	 * Registered {@link OnAccountStateChangedListener}.
 	 */
-	protected List<OnAccountStateChangedListener> mListeners;
+	private List<OnAccountStateChangedListener> mListeners;
 
 	/**
 	 * State of account.
@@ -87,7 +87,7 @@ public class ClarolineClient extends AsyncHttpClient {
 		if (sInstance == null) {
 			sInstance = new ClarolineClient();
 		}
-		return sInstance;
+		return ClarolineClient.sInstance;
 	}
 
 	/**
@@ -124,8 +124,11 @@ public class ClarolineClient extends AsyncHttpClient {
 		return p;
 	}
 
+	/**
+	 * @return the current account state
+	 */
 	public static boolean isValidAccount() {
-		return ClarolineClient.isValidAccount();
+		return getInstance().mValidAccount;
 	}
 
 	/**
@@ -211,8 +214,8 @@ public class ClarolineClient extends AsyncHttpClient {
 	 */
 	public static void unregisterOnAccountStateChangedListener(
 			final OnAccountStateChangedListener listener) {
-		if (getInstance().mListeners != null) {
-			getInstance().mListeners.remove(listener);
+		if (ClarolineClient.getInstance().mListeners != null) {
+			ClarolineClient.getInstance().mListeners.remove(listener);
 		}
 	}
 
@@ -226,6 +229,12 @@ public class ClarolineClient extends AsyncHttpClient {
 				App.SETTINGS_COOKIES_EXPIRES, 0));
 	}
 
+	/**
+	 * Gets the Authentication Cookies.
+	 * 
+	 * @param handler
+	 *            the handler to call when the process is finished
+	 */
 	public void connect(final AsyncHttpResponseHandler handler) {
 		RequestParams params = new RequestParams();
 		params.put("login",
@@ -238,7 +247,7 @@ public class ClarolineClient extends AsyncHttpClient {
 					@Override
 					public void onFailure(final Throwable arg0,
 							final String arg1) {
-						Log.w(TAG, "Authentication failed !");
+						Log.w(ClarolineClient.TAG, "Authentication failed !");
 						invalidateClient();
 						super.onFailure(arg0, arg1);
 						handler.onFailure(arg0, arg1);
@@ -249,8 +258,9 @@ public class ClarolineClient extends AsyncHttpClient {
 						boolean empty = response.isEmpty();
 						setValidAccount(empty);
 						if (empty) {
-							Log.d(TAG, "Authentication passed !");
-							mExpires = DateTime.now();
+							Log.d(ClarolineClient.TAG,
+									"Authentication passed !");
+							setExpirationTime(DateTime.now());
 							handler.onSuccess(response);
 						}
 					}
@@ -267,8 +277,11 @@ public class ClarolineClient extends AsyncHttpClient {
 		return App.SETTINGS_PLATFORM_HOST + append;
 	}
 
+	/**
+	 * Removes all settings related to the current account.
+	 */
 	public void invalidateClient() {
-		mExpires = new DateTime(0L);
+		setExpirationTime(new DateTime(0L));
 		mCookies.clear();
 		setValidAccount(false);
 		App.getPrefs().edit().remove(App.SETTINGS_USER_LOGIN)

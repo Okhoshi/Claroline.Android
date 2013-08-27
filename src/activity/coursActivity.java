@@ -1,19 +1,20 @@
 package activity;
 
-import model.OldCours;
+import model.Cours;
 import net.claroline.mobile.android.R;
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.view.MenuItem;
-import app.App;
 import app.AppActivity;
-import connectivity.SupportedMethods;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.view.MenuItem;
+import com.activeandroid.query.Select;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import fragments.annonceListFragment;
 import fragments.documentsListFragment;
 
@@ -26,12 +27,12 @@ public class coursActivity extends AppActivity {
 		private final Bundle mArgs;
 		private Fragment mFragment;
 
-		public TabListener(final Activity activity, final String tag,
+		public TabListener(final FragmentActivity activity, final String tag,
 				final Class<T> clz) {
 			this(activity, tag, clz, null);
 		}
 
-		public TabListener(final Activity activity, final String tag,
+		public TabListener(final FragmentActivity activity, final String tag,
 				final Class<T> clz, final Bundle args) {
 			mActivity = activity;
 			mTag = tag;
@@ -75,14 +76,17 @@ public class coursActivity extends AppActivity {
 		}
 	}
 
-	protected OldCours currentCours;
+	/**
+	 * Current course.
+	 */
+	private Cours mCurrentCours;
 
 	@Override
 	public void onBackPressed() {
-		documentsListFragment frag = (documentsListFragment) getFragmentManager()
+		documentsListFragment frag = (documentsListFragment) getSupportFragmentManager()
 				.findFragmentByTag("documents");
 		if (frag != null && !frag.isOnRoot()) {
-			frag.refreshList.sendEmptyMessage(1);
+			frag.goUp();
 		} else {
 			super.onBackPressed();
 		}
@@ -98,30 +102,32 @@ public class coursActivity extends AppActivity {
 		int id = -1;
 		int item = -1;
 		if (extras != null) {
-			currentCours = CoursRepository.GetById(extras.getInt("coursID"));
+			mCurrentCours = new Select().from(Cours.class)
+					.where("Id = ?", extras.getInt("coursID")).executeSingle();
 			id = extras.getInt("id", -1);
 			item = extras.getInt("tab", -1);
 		}
 
 		setTabs(id);
 
-		if (currentCours.isExpired()) {
+		if (mCurrentCours.isExpired()) {
 			setProgressIndicator(true);
-			new Thread(App.getClient(mAppHandler,
-					SupportedMethods.updateCompleteCourse, currentCours))
-					.start();
-		} else if (currentCours.isTimeToUpdate()) {
+			getService().updateCompleteCourse(new AsyncHttpResponseHandler() {
+
+			}, mCurrentCours);
+		} else if (mCurrentCours.isTimeToUpdate()) {
 			setProgressIndicator(true);
-			new Thread(App.getClient(mAppHandler, SupportedMethods.getUpdates))
-					.start();
+			getService().getUpdates(new AsyncHttpResponseHandler() {
+
+			});
 		}
 
 		if (item > -1) {
-			getActionBar().setSelectedNavigationItem(item);
+			getSupportActionBar().setSelectedNavigationItem(item);
 		}
 
 		if (savedInstanceState != null) {
-			getActionBar().setSelectedNavigationItem(
+			getSupportActionBar().setSelectedNavigationItem(
 					savedInstanceState.getInt("tab", 0));
 		}
 	}
@@ -130,16 +136,18 @@ public class coursActivity extends AppActivity {
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_refresh:
-			switch (getActionBar().getSelectedNavigationIndex()) {
+			switch (getSupportActionBar().getSelectedNavigationIndex()) {
 			default:
 				setProgressIndicator(true);
-				if (currentCours.isExpired()) {
-					new Thread(App.getClient(mAppHandler,
-							SupportedMethods.updateCompleteCourse,
-							currentCours)).start();
+				if (mCurrentCours.isExpired()) {
+					getService().updateCompleteCourse(
+							new AsyncHttpResponseHandler() {
+
+							}, mCurrentCours);
 				} else {
-					new Thread(App.getClient(mAppHandler,
-							SupportedMethods.getUpdates)).start();
+					getService().getUpdates(new AsyncHttpResponseHandler() {
+
+					});
 				}
 				break;
 			}
@@ -152,11 +160,12 @@ public class coursActivity extends AppActivity {
 	@Override
 	protected void onSaveInstanceState(final Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
+		outState.putInt("tab", getSupportActionBar()
+				.getSelectedNavigationIndex());
 	}
 
 	public void setTabs(final int id) {
-		final ActionBar bar = getActionBar();
+		final ActionBar bar = getSupportActionBar();
 		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
 			bar.setDisplayShowTitleEnabled(false);
@@ -165,7 +174,7 @@ public class coursActivity extends AppActivity {
 		}
 
 		Bundle args = new Bundle();
-		args.putInt("coursID", currentCours.getId());
+		args.putInt("coursID", mCurrentCours.getId().intValue());
 
 		bar.addTab(bar
 				.newTab()

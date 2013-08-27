@@ -3,53 +3,42 @@ package fragments;
 import java.util.List;
 
 import model.Annonce;
-import model.OldCours;
+import model.Cours;
+import model.ResourceList;
 import net.claroline.mobile.android.R;
 import adapter.AnnonceAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import dataStorage.AnnonceRepository;
-import dataStorage.CoursRepository;
-import dataStorage.Repository;
+
+import com.activeandroid.query.Select;
 
 public class annonceListFragment extends ListFragment {
 
-	private OldCours currentCours;
-
-	public Handler refreshList = new Handler() {
-		@Override
-		public void handleMessage(final Message mess) {
-			List<Annonce> liste = AnnonceRepository
-					.GetAllAnnoncesByCoursId(currentCours.getId());
-			AnnonceAdapter adapter = new AnnonceAdapter(getActivity(), liste);
-			setListAdapter(adapter);
-		}
-	};
+	/**
+	 * The current viewed list.
+	 */
+	private ResourceList mCurrentList;
 
 	@Override
 	public void onActivityCreated(final Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		if (!Repository.isOpen()) {
-			Repository.Open();
-		}
-
 		Bundle extras = getArguments();
 		if (extras != null) {
-			currentCours = CoursRepository.GetById(extras.getInt("coursID"));
+			mCurrentList = new Select()
+					.from(ResourceList.class)
+					.innerJoin(Cours.class)
+					.on("Cours.Id = ResourceList.Cours")
+					.where("Cours.Id = ? && ResourceList.label = CLANN",
+							(Long) extras.get("coursID")).executeSingle();
 		}
 
-		List<Annonce> liste = AnnonceRepository
-				.GetAllAnnoncesByCoursId(currentCours.getId());
-		AnnonceAdapter adapter = new AnnonceAdapter(getActivity(), liste);
-		setListAdapter(adapter);
+		refreshUI();
 	}
 
 	@Override
@@ -66,5 +55,11 @@ public class annonceListFragment extends ListFragment {
 		Intent intent = new Intent(getActivity(), activity.detailsAnnonce.class);
 		intent.putExtra("annID", item.getId());
 		startActivity(intent);
+	}
+
+	public void refreshUI() {
+		List<Annonce> liste = mCurrentList.resources();
+		AnnonceAdapter adapter = new AnnonceAdapter(getActivity(), liste);
+		setListAdapter(adapter);
 	}
 }

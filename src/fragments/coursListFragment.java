@@ -2,14 +2,11 @@ package fragments;
 
 import java.util.List;
 
-import model.OldCours;
+import model.Cours;
 import net.claroline.mobile.android.R;
 import adapter.CoursAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -19,33 +16,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
-import dataStorage.CoursRepository;
-import dataStorage.Repository;
 
-public class coursListFragment extends ListFragment {
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.activeandroid.query.Select;
 
+public class coursListFragment extends SherlockListFragment {
+
+	/**
+	 * Contextual Menu ID.
+	 */
 	private static final int MAIL_ID = 0;
-
-	public Handler refreshList = new Handler() {
-		@Override
-		public void handleMessage(final Message mess) {
-			List<OldCours> liste = CoursRepository.GetAllCours();
-			CoursAdapter adapter = new CoursAdapter(getActivity(), liste);
-			setListAdapter(adapter);
-		}
-	};
 
 	@Override
 	public void onActivityCreated(final Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		if (!Repository.isOpen()) {
-			Repository.Open();
-		}
-
-		List<OldCours> liste = CoursRepository.GetAllCours();
-		CoursAdapter adapter = new CoursAdapter(getActivity(), liste);
-		setListAdapter(adapter);
+		refreshUI();
 		registerForContextMenu(getListView());
 	}
 
@@ -58,7 +44,7 @@ public class coursListFragment extends ListFragment {
 			Intent i = new Intent(Intent.ACTION_SEND);
 			i.putExtra(
 					Intent.EXTRA_EMAIL,
-					new String[] { ((OldCours) getListAdapter().getItem(
+					new String[] { ((Cours) getListAdapter().getItem(
 							info.position)).getOfficialEmail() });
 			i.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_titulars));
 			i.setType("message/rfc822");
@@ -79,10 +65,6 @@ public class coursListFragment extends ListFragment {
 				getString(R.string.contextual_mail));
 	}
 
-	/*
-	 * All about the contextual menu
-	 */
-
 	@Override
 	public View onCreateView(final LayoutInflater inflater,
 			final ViewGroup container, final Bundle savedInstanceState) {
@@ -90,14 +72,27 @@ public class coursListFragment extends ListFragment {
 		return inflater.inflate(R.layout.standard_list, container);
 	}
 
+	/*
+	 * All about the contextual menu
+	 */
+
 	@Override
 	public void onListItemClick(final ListView l, final View v,
 			final int position, final long id) {
 
-		OldCours item = (OldCours) getListAdapter().getItem(position);
+		Cours item = (Cours) getListAdapter().getItem(position);
 
 		Intent intent = new Intent(getActivity(), activity.coursActivity.class);
 		intent.putExtra("coursID", item.getId());
 		startActivity(intent);
+	}
+
+	/**
+	 * Refreshes the UI.
+	 */
+	public void refreshUI() {
+		List<Cours> liste = new Select().from(Cours.class).execute();
+		CoursAdapter adapter = new CoursAdapter(getActivity(), liste);
+		setListAdapter(adapter);
 	}
 }

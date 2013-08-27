@@ -17,10 +17,12 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import app.App;
+
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import connectivity.ClarolineClient;
 import connectivity.ClarolineClient.OnAccountStateChangedListener;
 import connectivity.ClarolineService;
-import connectivity.SupportedMethods;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -41,9 +43,26 @@ public class LoginDialog extends Dialog implements
 			edit.putString(App.SETTINGS_USER_LOGIN, mLogin)
 					.putString(App.SETTINGS_USER_PASSWORD, mPassword).apply();
 
-			App.getClient(null, SupportedMethods.authenticate).run();
+			new ClarolineService().getUserData(new AsyncHttpResponseHandler() {
+				@Override
+				public void onSuccess(final String response) {
+					synchronized (LoginDialog.this) {
+						LoginDialog.this.notify();
+					}
+				}
+			});
 
-			return !ClarolineService.isExpired();
+			synchronized (this) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					mLoginView.setError(mContext
+							.getString(R.string.error_occured_retry));
+					e.printStackTrace();
+				}
+				ClarolineClient.getInstance();
+				return ClarolineClient.isValidAccount();
+			}
 		}
 
 		@Override
@@ -55,7 +74,7 @@ public class LoginDialog extends Dialog implements
 				dismiss();
 			} else {
 				Editor edit = App.getPrefs().edit();
-				edit.putString("user_login", "")
+				edit.putString(App.SETTINGS_USER_LOGIN, "")
 						.putString(App.SETTINGS_USER_PASSWORD, "").apply();
 
 				mPasswordView.setError(mContext
@@ -69,20 +88,53 @@ public class LoginDialog extends Dialog implements
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
 	private UserLoginTask mAuthTask = null;
-	// Values for email and password at the time of the login attempt.
+
+	/**
+	 * User login for login attempt.
+	 */
 	private String mLogin;
 
+	/**
+	 * User password for login attempt.
+	 */
 	private String mPassword;
-	// UI references.
+
+	/**
+	 * UI references.
+	 */
 	private EditText mLoginView;
+
+	/**
+	 * UI references.
+	 */
 	private EditText mPasswordView;
+
+	/**
+	 * UI references.
+	 */
 	private View mLoginFormView;
+
+	/**
+	 * UI references.
+	 */
 	private View mLoginStatusView;
 
+	/**
+	 * UI references.
+	 */
 	private TextView mLoginStatusMessageView;
 
+	/**
+	 * The current context.
+	 */
 	private Context mContext;
 
+	/**
+	 * Default constructor.
+	 * 
+	 * @param context
+	 *            the current context
+	 */
 	public LoginDialog(final Context context) {
 		super(context);
 		mContext = context;
@@ -97,31 +149,22 @@ public class LoginDialog extends Dialog implements
 		if (mAuthTask != null) {
 			return;
 		}
-
 		// Reset errors.
 		mLoginView.setError(null);
 		mPasswordView.setError(null);
-
 		// Store values at the time of the login attempt.
 		mLogin = mLoginView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
 
 		boolean cancel = false;
 		View focusView = null;
-
 		// Check for a valid password.
 		if (TextUtils.isEmpty(mPassword)) {
 			mPasswordView.setError(mContext
 					.getString(R.string.error_field_required));
 			focusView = mPasswordView;
 			cancel = true;
-		} else if (mPassword.length() < 2) {
-			mPasswordView.setError(mContext
-					.getString(R.string.error_invalid_password));
-			focusView = mPasswordView;
-			cancel = true;
 		}
-
 		// Check for a valid email address.
 		if (TextUtils.isEmpty(mLogin)) {
 			mLoginView.setError(mContext
@@ -129,7 +172,6 @@ public class LoginDialog extends Dialog implements
 			focusView = mLoginView;
 			cancel = true;
 		}
-
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
 			// form field with an error.
@@ -201,6 +243,10 @@ public class LoginDialog extends Dialog implements
 
 	/**
 	 * Shows the progress UI and hides the login form.
+	 * 
+	 * @param show
+	 *            <code>true</code> if the progress view must be shown,
+	 *            <code>false</code> if it must be hided
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	private void showProgress(final boolean show) {

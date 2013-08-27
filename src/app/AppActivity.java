@@ -8,32 +8,38 @@ import org.joda.time.DateTime;
 
 import activity.Settings;
 import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.widget.SearchView;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import connectivity.ClarolineClient;
 import connectivity.ClarolineClient.OnAccountStateChangedListener;
 import connectivity.ClarolineService;
 import fragments.AboutDialog;
 
-public abstract class AppActivity extends FragmentActivity implements
+public abstract class AppActivity extends SherlockFragmentActivity implements
 		OnAccountStateChangedListener {
 
 	/**
-	 * 
+	 * SavedInstanceState key.
 	 */
 	private static final String SIS_LAST_UPDATE = "lastUpdate";
 	// public Handler mAppHandler = new AppHandler(this);
+
+	/**
+	 * Menu instance.
+	 */
 	private Menu mMenu;
 	/*
 	 * private Handler mMenuHandler = new Handler(new Handler.Callback() {
@@ -53,12 +59,22 @@ public abstract class AppActivity extends FragmentActivity implements
 	 */
 	private DateTime mLastUpdate;
 
-	protected ClarolineService mService;
+	/**
+	 * Web Service Client instance.
+	 */
+	private ClarolineService mService;
 
 	/**
 	 * The progress dialog always present on these activity.
 	 */
 	private ProgressDialog mProgress;
+
+	/**
+	 * @return the mService
+	 */
+	public ClarolineService getService() {
+		return mService;
+	}
 
 	public void incrementProgression(final int value) {
 		if (mProgress != null && mProgress.isShowing()
@@ -78,12 +94,14 @@ public abstract class AppActivity extends FragmentActivity implements
 
 	@Override
 	public void onAccountStateChange(final boolean validity) {
-		mMenu.findItem(R.id.menu_login).setVisible(!validity)
-				.setEnabled(!validity);
-		mMenu.findItem(R.id.menu_logout).setVisible(validity)
-				.setEnabled(validity);
-		mMenu.findItem(R.id.menu_refresh).setVisible(validity)
-				.setEnabled(validity);
+		if (mMenu != null) {
+			mMenu.findItem(R.id.menu_login).setVisible(!validity)
+					.setEnabled(!validity);
+			mMenu.findItem(R.id.menu_logout).setVisible(validity)
+					.setEnabled(validity);
+			mMenu.findItem(R.id.menu_refresh).setVisible(validity)
+					.setEnabled(validity);
+		}
 	}
 
 	@Override
@@ -109,7 +127,7 @@ public abstract class AppActivity extends FragmentActivity implements
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.actionbar, menu);
+		getSupportMenuInflater().inflate(R.menu.actionbar, menu);
 
 		if (ClarolineClient.isValidAccount()) {
 			menu.findItem(R.id.menu_login).setVisible(false).setEnabled(false);
@@ -190,9 +208,8 @@ public abstract class AppActivity extends FragmentActivity implements
 	 * @param displayHomeAsUp
 	 *            displays the Up action
 	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void setActionBar(final boolean displayHomeAsUp) {
-		final ActionBar actionBar = getActionBar();
+		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(displayHomeAsUp);
 
 		onAccountStateChange(ClarolineClient.isValidAccount());

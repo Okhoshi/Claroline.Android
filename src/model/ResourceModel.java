@@ -14,6 +14,7 @@ package model;
 import org.joda.time.DateTime;
 
 import com.activeandroid.annotation.Column;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Claroline Mobile - Android
@@ -27,24 +28,28 @@ public class ResourceModel extends ModelBase {
 	/**
 	 * Title column.
 	 */
+	@SerializedName("title")
 	@Column(name = "Title")
 	private String mTitle;
 
 	/**
 	 * ResourceString column.
 	 */
+	@SerializedName("resourceId")
 	@Column(name = "ResourceString")
 	private String mResourceString;
 
 	/**
 	 * IsVisible column.
 	 */
+	@SerializedName("visibility")
 	@Column(name = "IsVisible")
 	private boolean mIsVisible;
 
 	/**
 	 * URL column.
 	 */
+	@SerializedName("url")
 	@Column(name = "URL")
 	private String mURL;
 
@@ -67,6 +72,12 @@ public class ResourceModel extends ModelBase {
 	private DateTime mSeenDate;
 
 	/**
+	 * LoadedDate column.
+	 */
+	@Column(name = "LoadedDate")
+	private DateTime mLoadedDate;
+
+	/**
 	 * @return the IsVisible
 	 */
 	@Override
@@ -80,6 +91,14 @@ public class ResourceModel extends ModelBase {
 	@Override
 	public ResourceList getList() {
 		return mList;
+	}
+
+	/**
+	 * @return the LoadedDate
+	 */
+	@Override
+	public DateTime getLoadedDate() {
+		return mLoadedDate;
 	}
 
 	/**
@@ -146,6 +165,15 @@ public class ResourceModel extends ModelBase {
 	@Override
 	public void setList(final ResourceList pList) {
 		mList = pList;
+	}
+
+	/**
+	 * @param pLoadedDate
+	 *            the LoadedDate to set
+	 */
+	@Override
+	public void setLoadedDate(final DateTime pLoadedDate) {
+		mLoadedDate = pLoadedDate;
 	}
 
 	/**
