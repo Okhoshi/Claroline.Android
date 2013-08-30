@@ -42,10 +42,5 @@
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/ActiveAndroid/dist/ActiveAndroid.jar</locationURI>
 		</link>
-		<link>
-			<name>libs/android-async-http.jar</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/android-async-http/dist/android-async-http.jar</locationURI>
-		</link>
 	</linkedResources>
 </projectDescription>
