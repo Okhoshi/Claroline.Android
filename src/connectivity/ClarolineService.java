@@ -98,7 +98,10 @@ public class ClarolineService {
 		};
 	};
 
-	int mCounter = 0;
+	/**
+	 * Internal counter.
+	 */
+	private int mCounter = 0;
 
 	/**
 	 * Default constructor without arguments.
@@ -166,16 +169,16 @@ public class ClarolineService {
 				Enum.valueOf(SupportedModules.class, list.getLabel()),
 				SupportedMethods.getSingleResource, cours.getSysCode(),
 				resourceIdentifier);
-		mClient.serviceQuery(p, new AsyncHttpResponseHandler() {
+		mClient.serviceQuery(p, new JsonHttpResponseHandler() {
 
 			@Override
-			public void onSuccess(final String response) {
-				ModelBase mb = new Gson().fromJson(response,
+			public void onSuccess(final JSONObject response) {
+				ModelBase mb = new Gson().fromJson(response.toString(),
 						list.getResourceType());
 				mb.setLoadedDate(DateTime.now());
 				mb.save();
 
-				handler.onSuccess(response);
+				handler.onSuccess(response.toString());
 			}
 		});
 	}
@@ -221,13 +224,26 @@ public class ClarolineService {
 		});
 	}
 
+	/**
+	 * Gets the last updates.
+	 * 
+	 * @param handler
+	 *            the handler to execute if the request is successful
+	 */
 	public void getUpdates(final AsyncHttpResponseHandler handler) {
 		RequestParams p = ClarolineClient.getRequestParams(
 				SupportedModules.USER, SupportedMethods.getUpdates);
 		mClient.serviceQuery(p, new JsonHttpResponseHandler() {
+
+			@Override
+			public void onFailure(final Throwable e, final JSONArray array) {
+				System.out.println("FAILURE ! :" + e.getLocalizedMessage());
+			}
+
 			@Override
 			public void onSuccess(final JSONArray array) {
 				if (array.length() > 0) {
+					System.out.println("Text");
 					// TODO Write the Update logic
 				}
 				handler.onSuccess(array.toString());
@@ -245,7 +261,6 @@ public class ClarolineService {
 		RequestParams p = ClarolineClient.getRequestParams(
 				SupportedModules.USER, SupportedMethods.getUserData);
 		mClient.serviceQuery(p, new JsonHttpResponseHandler() {
-
 			@Override
 			public void onSuccess(final JSONObject jsonUser) {
 				String previousPicture = App.getPrefs().getString(

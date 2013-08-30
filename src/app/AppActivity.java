@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.ViewConfiguration;
+import android.view.Window;
 import android.widget.SearchView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -32,37 +33,23 @@ public abstract class AppActivity extends SherlockFragmentActivity implements
 		OnAccountStateChangedListener {
 
 	/**
+	 * Maximum bound of Activity ProgressBar.
+	 */
+	private static final int MAX_PROGRESS_BAR_ACTIVITY = 10000;
+
+	/**
 	 * SavedInstanceState key.
 	 */
 	private static final String SIS_LAST_UPDATE = "lastUpdate";
-	// public Handler mAppHandler = new AppHandler(this);
 
-	/**
-	 * Menu instance.
-	 */
-	private Menu mMenu;
-	/*
-	 * private Handler mMenuHandler = new Handler(new Handler.Callback() {
-	 * 
-	 * @Override public boolean handleMessage(final Message msg) { if (menu !=
-	 * null) { if (msg.what == 1) {
-	 * menu.findItem(R.id.menu_login).setVisible(false) .setEnabled(false);
-	 * menu.findItem(R.id.menu_logout).setVisible(true) .setEnabled(true);
-	 * menu.findItem(R.id.menu_refresh).setVisible(true) .setEnabled(true); }
-	 * else { menu.findItem(R.id.menu_login).setVisible(true) .setEnabled(true);
-	 * menu.findItem(R.id.menu_logout).setVisible(false) .setEnabled(false);
-	 * menu.findItem(R.id.menu_refresh).setVisible(false) .setEnabled(false); }
-	 * } return true; } });
-	 */
 	/**
 	 * The time of last update of the data.
 	 */
 	private DateTime mLastUpdate;
-
 	/**
-	 * Web Service Client instance.
+	 * Menu instance.
 	 */
-	private ClarolineService mService;
+	private Menu mMenu;
 
 	/**
 	 * The progress dialog always present on these activity.
@@ -70,17 +57,20 @@ public abstract class AppActivity extends SherlockFragmentActivity implements
 	private ProgressDialog mProgress;
 
 	/**
+	 * Web Service Client instance.
+	 */
+	private ClarolineService mService;
+
+	/**
+	 * Current max for the ProgressBar. Only used when on API level > 14.
+	 */
+	private int mMax;
+
+	/**
 	 * @return the mService
 	 */
 	public ClarolineService getService() {
 		return mService;
-	}
-
-	public void incrementProgression(final int value) {
-		if (mProgress != null && mProgress.isShowing()
-				&& !mProgress.isIndeterminate()) {
-			mProgress.incrementProgressBy(value - mProgress.getProgress());
-		}
 	}
 
 	/**
@@ -94,19 +84,24 @@ public abstract class AppActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onAccountStateChange(final boolean validity) {
-		if (mMenu != null) {
-			mMenu.findItem(R.id.menu_login).setVisible(!validity)
-					.setEnabled(!validity);
-			mMenu.findItem(R.id.menu_logout).setVisible(validity)
-					.setEnabled(validity);
-			mMenu.findItem(R.id.menu_refresh).setVisible(validity)
-					.setEnabled(validity);
-		}
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (mMenu != null) {
+					mMenu.findItem(R.id.menu_login).setVisible(!validity)
+							.setEnabled(!validity);
+					mMenu.findItem(R.id.menu_logout).setVisible(validity)
+							.setEnabled(validity);
+					mMenu.findItem(R.id.menu_refresh).setVisible(validity)
+							.setEnabled(validity);
+				}
+			}
+		});
 	}
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
-
+		requestWindowFeature(Window.FEATURE_PROGRESS);
 		mService = new ClarolineService();
 
 		if (savedInstanceState != null
@@ -196,12 +191,6 @@ public abstract class AppActivity extends SherlockFragmentActivity implements
 		super.onResume();
 	}
 
-	@Override
-	protected void onSaveInstanceState(final Bundle outState) {
-		outState.putLong(SIS_LAST_UPDATE, mLastUpdate.getMillis());
-		super.onSaveInstanceState(outState);
-	}
-
 	/**
 	 * Sets up the {@link ActionBar}.
 	 * 
@@ -230,6 +219,17 @@ public abstract class AppActivity extends SherlockFragmentActivity implements
 
 	}
 
+	public void incrementProgress(final int value) {
+		if (App.isNewerAPI(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
+			setProgress(value / mMax * MAX_PROGRESS_BAR_ACTIVITY);
+		} else {
+			if (mProgress != null && mProgress.isShowing()
+					&& !mProgress.isIndeterminate()) {
+				mProgress.incrementProgressBy(value - mProgress.getProgress());
+			}
+		}
+	}
+
 	public void setProgressIndicator(final boolean visible) {
 		setProgressIndicator(visible,
 				getResources().getString(R.string.loading_default), true, 0);
@@ -244,29 +244,35 @@ public abstract class AppActivity extends SherlockFragmentActivity implements
 
 	public void setProgressIndicator(final boolean visible,
 			final String message, final boolean isIndeterminate, final int max) {
-		if (visible) {
-			if (mProgress == null) {
-				mProgress = new ProgressDialog(this);
-				mProgress.setCancelable(false);
-				mProgress.setIndeterminate(isIndeterminate);
-			} else if (mProgress.isIndeterminate() != isIndeterminate) {
+		if (App.isNewerAPI(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
+			setProgressBarVisibility(visible);
+			setProgressBarIndeterminate(isIndeterminate);
+			mMax = max;
+		} else {
+			if (visible) {
+				if (mProgress == null) {
+					mProgress = new ProgressDialog(this);
+					mProgress.setCancelable(false);
+					mProgress.setIndeterminate(isIndeterminate);
+				} else if (mProgress.isIndeterminate() != isIndeterminate) {
+					mProgress.dismiss();
+					mProgress = new ProgressDialog(mProgress.getContext());
+					mProgress.setCancelable(false);
+					mProgress.setIndeterminate(isIndeterminate);
+				}
+				if (!isIndeterminate) {
+					mProgress.setMax(max);
+					mProgress.setProgress(0);
+					mProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+				}
+				mProgress.setMessage(message);
+				if (!mProgress.isShowing()) {
+					mProgress.show();
+				}
+			} else if (mProgress != null) {
 				mProgress.dismiss();
-				mProgress = new ProgressDialog(mProgress.getContext());
-				mProgress.setCancelable(false);
-				mProgress.setIndeterminate(isIndeterminate);
+				mProgress = null;
 			}
-			if (!isIndeterminate) {
-				mProgress.setMax(max);
-				mProgress.setProgress(0);
-				mProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			}
-			mProgress.setMessage(message);
-			if (!mProgress.isShowing()) {
-				mProgress.show();
-			}
-		} else if (mProgress != null) {
-			mProgress.dismiss();
-			mProgress = null;
 		}
 	}
 
@@ -285,5 +291,11 @@ public abstract class AppActivity extends SherlockFragmentActivity implements
 	 */
 	public void updatesNow() {
 		mLastUpdate = DateTime.now();
+	}
+
+	@Override
+	protected void onSaveInstanceState(final Bundle outState) {
+		outState.putLong(SIS_LAST_UPDATE, mLastUpdate.getMillis());
+		super.onSaveInstanceState(outState);
 	}
 }

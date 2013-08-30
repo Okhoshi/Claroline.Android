@@ -15,10 +15,6 @@ public class App extends Application {
 	/**
 	 * Shared Preference tag.
 	 */
-	public static final String SETTINGS_COOKIES_EXPIRES = "cookies_expires";
-	/**
-	 * Shared Preference tag.
-	 */
 	public static final String SETTINGS_USER_PASSWORD = "user_password";
 	/**
 	 * Shared Preference tag.
@@ -66,24 +62,14 @@ public class App extends Application {
 	public static final String SETTINGS_USER_LOGIN = "user_login";
 
 	/**
+	 * Shared Preference tag.
+	 */
+	public static final String SETTINGS_ACCOUNT_VERIFIED = "account verified";
+
+	/**
 	 * Singleton instance.
 	 */
 	private static App sSingleton;
-
-	/*
-	 * public static ClaroClient getClient(final Handler handler, final
-	 * SupportedModules mod, final SupportedMethods op) { return
-	 * getClient(handler, mod, op, "", ""); }
-	 * 
-	 * public static ClaroClient getClient(final Handler handler, final
-	 * SupportedModules mod, final SupportedMethods op, final String syscode) {
-	 * return getClient(handler, mod, op, syscode, ""); }
-	 * 
-	 * public static ClaroClient getClient(final Handler handler, final
-	 * SupportedModules mod, final SupportedMethods op, final String syscode,
-	 * final String resource) { return new ClaroClient(handler, mod, op,
-	 * syscode, resource); }
-	 */
 
 	/**
 	 * @return the Download folder specific to this app.
@@ -97,15 +83,27 @@ public class App extends Application {
 		return dir;
 	}
 
+	/**
+	 * @return the App instance
+	 */
 	public static App getInstance() {
 		return sSingleton;
 	}
 
+	/**
+	 * @return the {@link SharedPreferences} manager
+	 */
 	public static SharedPreferences getPrefs() {
 		return PreferenceManager.getDefaultSharedPreferences(sSingleton
 				.getApplicationContext());
 	}
 
+	/**
+	 * @param apiLevel
+	 *            the API level to test against
+	 * @return <code>true</code> if the current API level is greater of equal to
+	 *         <code>apiLevel</code>, <code>false</code> otherwise
+	 */
 	public static boolean isNewerAPI(final int apiLevel) {
 		return Build.VERSION.SDK_INT >= apiLevel;
 	}

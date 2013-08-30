@@ -19,7 +19,7 @@ import app.AppActivity;
 
 import com.activeandroid.query.Select;
 
-public class searchableActivity extends AppActivity implements
+public class SearchableActivity extends AppActivity implements
 		OnChildClickListener {
 
 	private static final int COURS = 0;
@@ -83,20 +83,20 @@ public class searchableActivity extends AppActivity implements
 		Intent i;
 		switch (groupPosition) {
 		case COURS:
-			i = new Intent(this, coursActivity.class);
+			i = new Intent(this, CoursActivity.class);
 			i.putExtra("coursID", ((Cours) parent.getExpandableListAdapter()
 					.getChild(groupPosition, childPosition)).getId());
 			startActivity(i);
 			break;
 		case ANNONCE:
-			i = new Intent(this, detailsAnnonce.class);
+			i = new Intent(this, DetailsAnnonce.class);
 			i.putExtra("annID", ((Annonce) parent.getExpandableListAdapter()
 					.getChild(groupPosition, childPosition)).getId());
 			i.putExtra("tab", 0);
 			startActivity(i);
 			break;
 		case DOCUMENTS:
-			i = new Intent(this, coursActivity.class);
+			i = new Intent(this, CoursActivity.class);
 			i.putExtra("tab", 1);
 			i.putExtra("docID", ((Document) parent.getExpandableListAdapter()
 					.getChild(groupPosition, childPosition)).getId());

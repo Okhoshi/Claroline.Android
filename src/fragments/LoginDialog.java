@@ -22,7 +22,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import connectivity.ClarolineClient;
 import connectivity.ClarolineClient.OnAccountStateChangedListener;
-import connectivity.ClarolineService;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -38,31 +37,32 @@ public class LoginDialog extends Dialog implements
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(final Void... params) {
-
 			Editor edit = App.getPrefs().edit();
 			edit.putString(App.SETTINGS_USER_LOGIN, mLogin)
 					.putString(App.SETTINGS_USER_PASSWORD, mPassword).apply();
 
-			new ClarolineService().getUserData(new AsyncHttpResponseHandler() {
-				@Override
-				public void onSuccess(final String response) {
-					synchronized (LoginDialog.this) {
-						LoginDialog.this.notify();
-					}
-				}
-			});
+			ClarolineClient.getInstance().connect(
+					new AsyncHttpResponseHandler() {
+						@Override
+						public void onSuccess(final String response) {
+							synchronized (mAuthTask) {
+								System.out.println("Notify mAuthTask");
+								mAuthTask.notify();
+							}
+						}
+					});
 
-			synchronized (this) {
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					mLoginView.setError(mContext
-							.getString(R.string.error_occured_retry));
-					e.printStackTrace();
+			try {
+				synchronized (mAuthTask) {
+					System.out.println("Wait mAuthTask");
+					mAuthTask.wait();
 				}
-				ClarolineClient.getInstance();
-				return ClarolineClient.isValidAccount();
+			} catch (InterruptedException e) {
+				mLoginView.setError(mContext
+						.getString(R.string.error_occured_retry));
+				e.printStackTrace();
 			}
+			return ClarolineClient.isValidAccount();
 		}
 
 		@Override
@@ -194,43 +194,6 @@ public class LoginDialog extends Dialog implements
 	}
 
 	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		setTitle(R.string.title_activity_login);
-		setContentView(R.layout.dialog_login);
-
-		// Set up the login form.
-		mLoginView = (EditText) findViewById(R.id.login_text);
-
-		mPasswordView = (EditText) findViewById(R.id.password);
-		mPasswordView
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(final TextView textView,
-							final int id, final KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
-							attemptLogin();
-							return true;
-						}
-						return false;
-					}
-				});
-
-		mLoginFormView = findViewById(R.id.login_form);
-		mLoginStatusView = findViewById(R.id.login_status);
-		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
-
-		findViewById(R.id.sign_in_button).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(final View view) {
-						attemptLogin();
-					}
-				});
-	}
-
-	@Override
 	public void show() {
 		if (ClarolineClient.isValidAccount()
 				|| App.getPrefs().getString(App.SETTINGS_PLATFORM_HOST, "")
@@ -284,5 +247,46 @@ public class LoginDialog extends Dialog implements
 			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
+	}
+
+	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setTitle(R.string.title_activity_login);
+		setContentView(R.layout.dialog_login);
+		mLogin = App.getPrefs().getString(App.SETTINGS_USER_LOGIN, null);
+
+		// Set up the login form.
+		mLoginView = (EditText) findViewById(R.id.login_text);
+		if (mLogin != null) {
+			mLoginView.setText(mLogin);
+		}
+
+		mPasswordView = (EditText) findViewById(R.id.password);
+		mPasswordView
+				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+					@Override
+					public boolean onEditorAction(final TextView textView,
+							final int id, final KeyEvent keyEvent) {
+						if (id == R.id.login || id == EditorInfo.IME_NULL) {
+							attemptLogin();
+							return true;
+						}
+						return false;
+					}
+				});
+
+		mLoginFormView = findViewById(R.id.login_form);
+		mLoginStatusView = findViewById(R.id.login_status);
+		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+
+		findViewById(R.id.sign_in_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(final View view) {
+						attemptLogin();
+					}
+				});
 	}
 }

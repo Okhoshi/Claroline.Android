@@ -34,8 +34,8 @@ public class annonceListFragment extends ListFragment {
 					.from(ResourceList.class)
 					.innerJoin(Cours.class)
 					.on("Cours.Id = ResourceList.Cours")
-					.where("Cours.Id = ? && ResourceList.label = CLANN",
-							(Long) extras.get("coursID")).executeSingle();
+					.where("Cours.Id = ? AND ResourceList.label = CLANN",
+							extras.get("coursID")).executeSingle();
 		}
 
 		refreshUI();
@@ -52,7 +52,7 @@ public class annonceListFragment extends ListFragment {
 	public void onListItemClick(final ListView l, final View v,
 			final int position, final long id) {
 		Annonce item = (Annonce) getListAdapter().getItem(position);
-		Intent intent = new Intent(getActivity(), activity.detailsAnnonce.class);
+		Intent intent = new Intent(getActivity(), activity.DetailsAnnonce.class);
 		intent.putExtra("annID", item.getId());
 		startActivity(intent);
 	}

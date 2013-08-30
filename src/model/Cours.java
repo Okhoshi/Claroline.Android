@@ -79,7 +79,7 @@ public class Cours extends Model {
 	 * LoadedDate column.
 	 */
 	@Column(name = "LoadedDate")
-	private DateTime mLoadedDate;
+	private DateTime mLoadedDate = new DateTime(0L);
 
 	/**
 	 * IsUpdated column.

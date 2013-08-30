@@ -4,7 +4,6 @@ import model.Cours;
 import net.claroline.mobile.android.R;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import app.App;
 import app.AppActivity;
@@ -30,19 +29,8 @@ public class HomeActivity extends AppActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
 
-		if (App.isNewerAPI(Build.VERSION_CODES.HONEYCOMB)) {
-			setActionBar(false);
-		}
-
-		if (App.getPrefs().getString(App.SETTINGS_PLATFORM_HOST, "").equals("")) {
-			Intent i = new Intent(this, Settings.class);
-			startActivity(i);
-		} else if (App.getPrefs().getString(App.SETTINGS_USER_LOGIN, "")
-				.equals("")) {
-			showLoginDialog();
-		} else {
-			refresh(false, false, true);
-		}
+		setActionBar(false);
+		refresh(false, false, false);
 	}
 
 	@Override
@@ -65,7 +53,7 @@ public class HomeActivity extends AppActivity {
 	 * Menus,tabs,actionBar
 	 */
 
-	public void onRepositoryRefresh(final String type) {
+	public void onRepositoryRefresh() {
 		coursListFragment list = (coursListFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.list_frag);
 		if (list != null) {
@@ -83,22 +71,35 @@ public class HomeActivity extends AppActivity {
 		if (!noDialog && !ClarolineClient.isValidAccount()) {
 			showLoginDialog();
 		} else {
-			if (forceUser || mustUpdate(6)) {
-				getService().getUserData(new AsyncHttpResponseHandler());
-			}
-
-			if (force || mustUpdate(1)) {
+			if (forceUser || mustUpdate(6) && !force) {
+				getService().getUserData(new AsyncHttpResponseHandler() {
+					@Override
+					public void onSuccess(final String response) {
+						refresh(true, false, false);
+					}
+				});
+			} else if (force || mustUpdate(1)) {
 				setProgressIndicator(true);
 				if (new Select("Id").from(Cours.class).execute().size() == 0) {
-					getService().getCourseList(new AsyncHttpResponseHandler(
-					// TODO ResponseHandler
-							));
+					getService().getCourseList(new AsyncHttpResponseHandler() {
+						@Override
+						public void onSuccess(final String response) {
+							onRepositoryRefresh();
+							setProgressIndicator(false);
+							updatesNow();
+						}
+					});
 				} else {
-					getService().getUpdates(new AsyncHttpResponseHandler(
-					// TODO ResponseHandler
-							));
+					getService().getUpdates(new AsyncHttpResponseHandler() {
+						// TODO ResponseHandler
+						@Override
+						public void onSuccess(final String response) {
+							onRepositoryRefresh();
+							setProgressIndicator(false);
+							updatesNow();
+						}
+					});
 				}
-				updatesNow();
 			}
 		}
 	}

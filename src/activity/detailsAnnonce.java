@@ -12,9 +12,9 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import fragments.annonceDetailFragment;
 
-public class detailsAnnonce extends AppActivity {
+public class DetailsAnnonce extends AppActivity {
 
-	Annonce currentAnnonce;
+	private Annonce mCurrentAnnonce;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -22,12 +22,12 @@ public class detailsAnnonce extends AppActivity {
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			currentAnnonce = new Select().from(Annonce.class)
+			mCurrentAnnonce = new Select().from(Annonce.class)
 					.where("Id = ?", extras.getInt("annID")).executeSingle();
 		}
 
 		Bundle args = new Bundle();
-		args.putInt("annID", currentAnnonce.getId().intValue());
+		args.putInt("annID", mCurrentAnnonce.getId().intValue());
 		annonceDetailFragment frag = (annonceDetailFragment) Fragment
 				.instantiate(this, annonceDetailFragment.class.getName(), args);
 		getSupportFragmentManager().beginTransaction()
@@ -40,11 +40,11 @@ public class detailsAnnonce extends AppActivity {
 		case R.id.menu_refresh:
 			// Comportement du bouton "Rafraichir"
 			setProgressIndicator(true);
-			if (currentAnnonce.getLoadedDate().plusWeeks(1).isBeforeNow()) {
+			if (mCurrentAnnonce.getLoadedDate().plusWeeks(1).isBeforeNow()) {
 				getService().getSingleResource(
-						currentAnnonce.getList().getCours(),
-						currentAnnonce.getList(),
-						currentAnnonce.getResourceString(),
+						mCurrentAnnonce.getList().getCours(),
+						mCurrentAnnonce.getList(),
+						mCurrentAnnonce.getResourceString(),
 						new AsyncHttpResponseHandler() {
 
 						});

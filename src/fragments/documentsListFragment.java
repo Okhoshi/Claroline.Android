@@ -69,8 +69,8 @@ public class documentsListFragment extends ListFragment {
 					.from(ResourceList.class)
 					.innerJoin(Cours.class)
 					.on("Cours.Id = ResourceList.Cours")
-					.where("Cours.Id = ? && ResourceList.label = CLDOC",
-							(Long) extras.get("coursID")).executeSingle();
+					.where("Cours.Id = ? AND ResourceList.label = CLDOC",
+							extras.get("coursID")).executeSingle();
 			id = extras.getInt("docID", -1);
 		}
 

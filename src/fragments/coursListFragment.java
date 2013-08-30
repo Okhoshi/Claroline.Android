@@ -82,7 +82,7 @@ public class coursListFragment extends SherlockListFragment {
 
 		Cours item = (Cours) getListAdapter().getItem(position);
 
-		Intent intent = new Intent(getActivity(), activity.coursActivity.class);
+		Intent intent = new Intent(getActivity(), activity.CoursActivity.class);
 		intent.putExtra("coursID", item.getId());
 		startActivity(intent);
 	}

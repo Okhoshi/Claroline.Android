@@ -18,7 +18,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import fragments.annonceListFragment;
 import fragments.documentsListFragment;
 
-public class coursActivity extends AppActivity {
+public class CoursActivity extends AppActivity {
 	public static class TabListener<T extends Fragment> implements
 			ActionBar.TabListener {
 		private final FragmentActivity mActivity;
@@ -103,7 +103,7 @@ public class coursActivity extends AppActivity {
 		int item = -1;
 		if (extras != null) {
 			mCurrentCours = new Select().from(Cours.class)
-					.where("Id = ?", extras.getInt("coursID")).executeSingle();
+					.where("Id = ?", extras.get("coursID")).executeSingle();
 			id = extras.getInt("id", -1);
 			item = extras.getInt("tab", -1);
 		}
@@ -157,13 +157,6 @@ public class coursActivity extends AppActivity {
 		}
 	}
 
-	@Override
-	protected void onSaveInstanceState(final Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt("tab", getSupportActionBar()
-				.getSelectedNavigationIndex());
-	}
-
 	public void setTabs(final int id) {
 		final ActionBar bar = getSupportActionBar();
 		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -192,5 +185,12 @@ public class coursActivity extends AppActivity {
 				.setTabListener(
 						new TabListener<documentsListFragment>(this,
 								"documents", documentsListFragment.class, args)));
+	}
+
+	@Override
+	protected void onSaveInstanceState(final Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("tab", getSupportActionBar()
+				.getSelectedNavigationIndex());
 	}
 }

@@ -15,13 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.params.ClientPNames;
 import org.joda.time.DateTime;
 
+import android.accounts.AuthenticatorException;
+import android.util.Base64;
 import app.App;
 
 import com.activeandroid.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 /**
@@ -51,34 +55,9 @@ public class ClarolineClient extends AsyncHttpClient {
 	}
 
 	/**
-	 * {@link CookieStore}.
+	 * 
 	 */
-	private CookieStore mCookies;
-
-	/**
-	 * Expiration date.
-	 */
-	private DateTime mExpires;
-
-	/**
-	 * Registered {@link OnAccountStateChangedListener}.
-	 */
-	private List<OnAccountStateChangedListener> mListeners;
-
-	/**
-	 * State of account.
-	 */
-	private boolean mValidAccount = false;
-
-	/**
-	 * Debug tag.
-	 */
-	private static final String TAG = "ClaroClient";
-
-	/**
-	 * Singleton instance.
-	 */
-	private static ClarolineClient sInstance;
+	private static final int C60 = 60 * 1000;
 
 	/**
 	 * @return the Singleton instance
@@ -145,6 +124,42 @@ public class ClarolineClient extends AsyncHttpClient {
 		getInstance().mListeners.add(listener);
 	}
 
+	/**
+	 * @param listener
+	 *            the {@link OnAccountStateChangedListener} to unregister
+	 */
+	public static void unregisterOnAccountStateChangedListener(
+			final OnAccountStateChangedListener listener) {
+		if (ClarolineClient.getInstance().mListeners != null) {
+			ClarolineClient.getInstance().mListeners.remove(listener);
+		}
+	}
+
+	/**
+	 * {@link CookieStore}.
+	 */
+	private CookieStore mCookies;
+
+	/**
+	 * Expiration date.
+	 */
+	private DateTime mExpires;
+
+	/**
+	 * Registered {@link OnAccountStateChangedListener}.
+	 */
+	private List<OnAccountStateChangedListener> mListeners;
+
+	/**
+	 * State of account.
+	 */
+	private boolean mValidAccount;
+
+	/**
+	 * Debug tag.
+	 */
+	private static final String TAG = "ClaroClient";
+
 	/*
 	 * private boolean downloadFile(final Document doc) { try { // Exits the
 	 * function if the storage is not writable! if
@@ -209,15 +224,9 @@ public class ClarolineClient extends AsyncHttpClient {
 	 */
 
 	/**
-	 * @param listener
-	 *            the {@link OnAccountStateChangedListener} to unregister
+	 * Singleton instance.
 	 */
-	public static void unregisterOnAccountStateChangedListener(
-			final OnAccountStateChangedListener listener) {
-		if (ClarolineClient.getInstance().mListeners != null) {
-			ClarolineClient.getInstance().mListeners.remove(listener);
-		}
-	}
+	private static ClarolineClient sInstance;
 
 	/**
 	 * Default constructor without arguments.
@@ -225,8 +234,12 @@ public class ClarolineClient extends AsyncHttpClient {
 	public ClarolineClient() {
 		super();
 		setCookieStore(mCookies);
-		mExpires = new DateTime(App.getPrefs().getLong(
-				App.SETTINGS_COOKIES_EXPIRES, 0));
+		mExpires = new DateTime(0L);
+		mValidAccount = App.getPrefs().getBoolean(
+				App.SETTINGS_ACCOUNT_VERIFIED, false);
+		setTimeout(C60);
+		getHttpClient().getParams().setParameter(
+				ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
 	}
 
 	/**
@@ -241,6 +254,8 @@ public class ClarolineClient extends AsyncHttpClient {
 				App.getPrefs().getString(App.SETTINGS_USER_LOGIN, ""));
 		params.put("password",
 				App.getPrefs().getString(App.SETTINGS_USER_PASSWORD, ""));
+		params.put("sourceUrl",
+				Base64.encodeToString(getUrl("/").getBytes(), Base64.DEFAULT));
 		post(getUrl("/claroline/auth/login.php"), params,
 				new AsyncHttpResponseHandler() {
 
@@ -254,14 +269,25 @@ public class ClarolineClient extends AsyncHttpClient {
 					}
 
 					@Override
+					public void onSuccess(final int arg0, final String arg1) {
+						onSuccess(arg1);
+					}
+
+					@Override
 					public void onSuccess(final String response) {
-						boolean empty = response.isEmpty();
-						setValidAccount(empty);
-						if (empty) {
+						boolean authenticated = response
+								.contains("class=\"userName\"");
+						setValidAccount(authenticated);
+						if (authenticated) {
 							Log.d(ClarolineClient.TAG,
 									"Authentication passed !");
-							setExpirationTime(DateTime.now());
+							setExpirationTime(DateTime.now().plusHours(2));
 							handler.onSuccess(response);
+						} else {
+							Log.w(ClarolineClient.TAG,
+									"Authentication failed !");
+							handler.onFailure(new AuthenticatorException(
+									"Authentication failed"), response);
 						}
 					}
 				});
@@ -274,7 +300,8 @@ public class ClarolineClient extends AsyncHttpClient {
 	 * @return the complete URL
 	 */
 	public String getUrl(final String append) {
-		return App.SETTINGS_PLATFORM_HOST + append;
+		return App.getPrefs().getString(App.SETTINGS_PLATFORM_HOST, "")
+				+ append;
 	}
 
 	/**
@@ -282,7 +309,9 @@ public class ClarolineClient extends AsyncHttpClient {
 	 */
 	public void invalidateClient() {
 		setExpirationTime(new DateTime(0L));
-		mCookies.clear();
+		if (mCookies != null) {
+			mCookies.clear();
+		}
 		setValidAccount(false);
 		App.getPrefs().edit().remove(App.SETTINGS_USER_LOGIN)
 				.remove(App.SETTINGS_USER_PASSWORD)
@@ -292,7 +321,37 @@ public class ClarolineClient extends AsyncHttpClient {
 				.remove(App.SETTINGS_PLATFORM_NAME)
 				.remove(App.SETTINGS_INSTITUTION_NAME)
 				.remove(App.SETTINGS_USER_IMAGE).remove(App.SETTINGS_PICTURE)
-				.apply();
+				.remove(App.SETTINGS_ACCOUNT_VERIFIED).apply();
+	}
+
+	/**
+	 * @param parameters
+	 *            the RequestParams to use for this query
+	 * @param handler
+	 *            the {@link AsyncHttpResponseHandler} to execute on the query
+	 *            response
+	 */
+	public void serviceQuery(final RequestParams parameters,
+			final JsonHttpResponseHandler handler) {
+		if (mExpires.isBeforeNow()) {
+			connect(new AsyncHttpResponseHandler() {
+				@Override
+				public void onSuccess(final String response) {
+					serviceQuery(parameters, handler);
+				}
+			});
+		} else {
+			post(getUrl(App.getPrefs().getString(App.SETTINGS_PLATFORM_MODULE,
+					"/module/MOBILE/")), parameters, handler);
+		}
+	}
+
+	/**
+	 * @param pExpirationTime
+	 *            the ExpirationTime to set
+	 */
+	private void setExpirationTime(final DateTime pExpirationTime) {
+		mExpires = pExpirationTime;
 	}
 
 	/**
@@ -310,46 +369,13 @@ public class ClarolineClient extends AsyncHttpClient {
 	}
 
 	/**
-	 * @param parameters
-	 *            the RequestParams to use for this query
-	 * @param handler
-	 *            the {@link AsyncHttpResponseHandler} to execute on the query
-	 *            response
-	 */
-	public void serviceQuery(final RequestParams parameters,
-			final AsyncHttpResponseHandler handler) {
-		if (mExpires.isBeforeNow()) {
-			connect(new AsyncHttpResponseHandler() {
-				@Override
-				public void onSuccess(final String response) {
-					serviceQuery(parameters, handler);
-				}
-			});
-		} else {
-			post(getUrl(App.getPrefs().getString(App.SETTINGS_PLATFORM_MODULE,
-					"")), parameters, handler);
-		}
-	}
-
-	/**
-	 * @param pExpirationTime
-	 *            the ExpirationTime to set
-	 */
-	private void setExpirationTime(final DateTime pExpirationTime) {
-		mExpires = pExpirationTime;
-
-		App.getPrefs()
-				.edit()
-				.putLong(App.SETTINGS_COOKIES_EXPIRES,
-						pExpirationTime.getMillis()).commit();
-	}
-
-	/**
 	 * @param isValid
 	 *            the Account state to set
 	 */
 	protected void setValidAccount(final boolean isValid) {
 		mValidAccount = isValid;
+		App.getPrefs().edit()
+				.putBoolean(App.SETTINGS_ACCOUNT_VERIFIED, isValid).apply();
 		notifyAccountStateListener(isValid);
 	}
 }

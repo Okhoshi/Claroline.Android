@@ -128,7 +128,7 @@ public class AppHandler extends Handler {
 					mess.arg1 / mess.arg2, "%1d/%2d Ko");
 			break;
 		case INCREMENT_STATUS: // Renew the progress status
-			mActivity.incrementProgression(mess.arg1 / mess.arg2);
+			mActivity.incrementProgress(mess.arg1 / mess.arg2);
 			break;
 		case AUTH_FAILED:
 			AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
