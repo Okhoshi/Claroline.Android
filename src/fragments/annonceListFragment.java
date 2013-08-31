@@ -17,6 +17,8 @@ import android.widget.ListView;
 
 import com.activeandroid.query.Select;
 
+import connectivity.SupportedModules;
+
 public class annonceListFragment extends ListFragment {
 
 	/**
@@ -34,11 +36,14 @@ public class annonceListFragment extends ListFragment {
 					.from(ResourceList.class)
 					.innerJoin(Cours.class)
 					.on("Cours.Id = ResourceList.Cours")
-					.where("Cours.Id = ? AND ResourceList.label = CLANN",
-							extras.get("coursID")).executeSingle();
+					.where("Cours.Id = ? AND ResourceList.label = ?",
+							extras.get("coursID"),
+							SupportedModules.CLANN.name()).executeSingle();
 		}
 
-		refreshUI();
+		if (mCurrentList != null) {
+			refreshUI();
+		}
 	}
 
 	@Override

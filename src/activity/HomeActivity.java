@@ -1,5 +1,7 @@
 package activity;
 
+import java.util.List;
+
 import model.Cours;
 import net.claroline.mobile.android.R;
 import android.content.DialogInterface;
@@ -87,6 +89,13 @@ public class HomeActivity extends AppActivity {
 							onRepositoryRefresh();
 							setProgressIndicator(false);
 							updatesNow();
+
+							List<Cours> list = new Select().from(Cours.class)
+									.execute();
+							for (Cours cours : list) {
+								getService().updateCompleteCourse(
+										new AsyncHttpResponseHandler(), cours);
+							}
 						}
 					});
 				} else {
