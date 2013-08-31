@@ -51,6 +51,8 @@ public class Document extends ModelBase {
 	 * @return a new empty root Document
 	 */
 	public static Document getEmptyRoot(final ResourceList currentList) {
+		android.os.Debug.waitForDebugger();
+
 		Document doc = new Document();
 		doc.setList(currentList);
 		doc.setTitle("ROOT");
@@ -225,6 +227,7 @@ public class Document extends ModelBase {
 	/**
 	 * @return the LoadedDate
 	 */
+	@Override
 	public DateTime getLoadedDate() {
 		return mLoadedDate;
 	}
@@ -418,6 +421,7 @@ public class Document extends ModelBase {
 	 * @param pLoadedDate
 	 *            the LoadedDate to set
 	 */
+	@Override
 	public void setLoadedDate(final DateTime pLoadedDate) {
 		mLoadedDate = pLoadedDate;
 	}

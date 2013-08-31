@@ -28,6 +28,8 @@ import app.AppActivity;
 
 import com.activeandroid.query.Select;
 
+import connectivity.SupportedModules;
+
 public class documentsListFragment extends ListFragment {
 
 	/**
@@ -69,9 +71,14 @@ public class documentsListFragment extends ListFragment {
 					.from(ResourceList.class)
 					.innerJoin(Cours.class)
 					.on("Cours.Id = ResourceList.Cours")
-					.where("Cours.Id = ? AND ResourceList.label = CLDOC",
-							extras.get("coursID")).executeSingle();
+					.where("Cours.Id = ? AND ResourceList.label = ?",
+							extras.get("coursID"),
+							SupportedModules.CLDOC.name()).executeSingle();
 			id = extras.getInt("docID", -1);
+		}
+
+		if (mCurrentList == null) {
+			return;
 		}
 
 		if (id != -1) {
