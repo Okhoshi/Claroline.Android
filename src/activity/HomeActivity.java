@@ -5,10 +5,10 @@ import net.claroline.mobile.android.R;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import app.App;
 import app.AppActivity;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.activeandroid.query.Select;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 

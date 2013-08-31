@@ -302,22 +302,23 @@ public class ClarolineService {
 
 			@Override
 			public void onSuccess(final String response) {
-				synchronized (this) {
+				synchronized (cours) {
 					mCounter = 0;
 					for (ResourceList list : cours.lists()) {
 						getResourcesForList(list,
 								new AsyncHttpResponseHandler() {
-
 									@Override
 									public void onSuccess(final String response) {
-										mCounter++;
-										notify();
+										synchronized (cours) {
+											mCounter++;
+											cours.notify();
+										}
 									}
 								});
 					}
 					try {
 						while (mCounter < cours.lists().size()) {
-							wait();
+							cours.wait();
 						}
 						mCounter = 0;
 

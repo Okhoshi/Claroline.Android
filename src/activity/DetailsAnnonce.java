@@ -4,9 +4,9 @@ import model.Annonce;
 import net.claroline.mobile.android.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.MenuItem;
 import app.AppActivity;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.activeandroid.query.Select;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 

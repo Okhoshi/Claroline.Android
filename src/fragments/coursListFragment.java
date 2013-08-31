@@ -7,6 +7,7 @@ import net.claroline.mobile.android.R;
 import adapter.CoursAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -17,10 +18,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.activeandroid.query.Select;
 
-public class coursListFragment extends SherlockListFragment {
+public class coursListFragment extends ListFragment {
 
 	/**
 	 * Contextual Menu ID.

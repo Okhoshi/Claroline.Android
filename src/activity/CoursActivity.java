@@ -1,85 +1,128 @@
+/**
+ * Claroline Mobile - Android
+ * 
+ * @package     activity
+ * 
+ * @author      Devos Quentin (q.devos@student.uclouvain.be)
+ * @version     1.0
+ *
+ * @license     ##LICENSE##
+ * @copyright   2013 - Devos Quentin
+ */
 package activity;
 
+import java.util.List;
+
 import model.Cours;
+import model.ResourceList;
 import net.claroline.mobile.android.R;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import app.AppActivity;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.view.MenuItem;
 import com.activeandroid.query.Select;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import connectivity.SupportedModules;
 import fragments.annonceListFragment;
 import fragments.documentsListFragment;
 
+/**
+ * Claroline Mobile - Android
+ * 
+ * Cours resources activity.
+ * 
+ * @author Devos Quentin
+ * @version 1.0
+ */
 public class CoursActivity extends AppActivity {
-	public static class TabListener<T extends Fragment> implements
-			ActionBar.TabListener {
-		private final FragmentActivity mActivity;
-		private final String mTag;
-		private final Class<T> mClass;
-		private final Bundle mArgs;
-		private Fragment mFragment;
 
-		public TabListener(final FragmentActivity activity, final String tag,
-				final Class<T> clz) {
-			this(activity, tag, clz, null);
+	/**
+	 * Claroline Mobile - Android
+	 * 
+	 * ViewPager Adapter.
+	 * 
+	 * @author Devos Quentin
+	 * @version 1.0
+	 */
+	public class ResourcesListPagerAdapter extends FragmentStatePagerAdapter {
+		/**
+		 * Lists present in this course.
+		 */
+		private List<ResourceList> mResourceLists;
+
+		/**
+		 * Default constructor.
+		 * 
+		 * @param fm
+		 *            the current {@link FragmentManager}
+		 */
+		public ResourcesListPagerAdapter(final FragmentManager fm) {
+			super(fm);
 		}
 
-		public TabListener(final FragmentActivity activity, final String tag,
-				final Class<T> clz, final Bundle args) {
-			mActivity = activity;
-			mTag = tag;
-			mClass = clz;
-			mArgs = args;
+		@Override
+		public int getCount() {
+			return mResourceLists.size();
+		}
 
-			// Check to see if we already have a fragment for this tab, probably
-			// from a previously saved state. If so, deactivate it, because our
-			// initial state is that a tab isn't shown.
-			mFragment = mActivity.getSupportFragmentManager()
-					.findFragmentByTag(mTag);
-			if (mFragment != null && !mFragment.isDetached()) {
-				FragmentTransaction ft = mActivity.getSupportFragmentManager()
-						.beginTransaction();
-				ft.detach(mFragment);
-				ft.commit();
+		/**
+		 * @param label
+		 *            the label of the resource type to load
+		 * @return the Fragment instance of the resource type to load
+		 */
+		private Fragment getFragmentForLabel(final String label) {
+			switch (Enum.valueOf(SupportedModules.class, label)) {
+			case CLANN:
+				return new annonceListFragment();
+			case CLDOC:
+				return new documentsListFragment();
+			default:
+				return new Fragment();
 			}
 		}
 
 		@Override
-		public void onTabReselected(final Tab tab, final FragmentTransaction ft) {
-			// Ignore :)
+		public Fragment getItem(final int position) {
+			Fragment fragment = getFragmentForLabel(mResourceLists
+					.get(position).getLabel());
+			// Bundle args = new Bundle();
+			// args.putInt("coursID", mCurrentCours.getId().intValue());
+			fragment.setArguments(getIntent().getExtras());
+			return fragment;
 		}
 
 		@Override
-		public void onTabSelected(final Tab tab, final FragmentTransaction ft) {
-			if (mFragment == null) {
-				mFragment = Fragment.instantiate(mActivity, mClass.getName(),
-						mArgs);
-				ft.add(R.id.tab_content, mFragment, mTag);
-			} else {
-				ft.attach(mFragment);
-			}
+		public CharSequence getPageTitle(final int position) {
+			return mResourceLists.get(position).getName();
 		}
 
-		@Override
-		public void onTabUnselected(final Tab tab, final FragmentTransaction ft) {
-			if (mFragment != null) {
-				ft.detach(mFragment);
-			}
+		/**
+		 * @param lists
+		 *            the new {@link ResourceList} {@link List} to set
+		 */
+		public void setResourceLists(final List<ResourceList> lists) {
+			mResourceLists = lists;
+			notifyDataSetChanged();
 		}
 	}
 
 	/**
-	 * Current course.
+	 * Current cours.
 	 */
 	private Cours mCurrentCours;
+	/**
+	 * UI reference.
+	 */
+	private ViewPager mViewPager;
+	/**
+	 * {@link ViewPager} Adapter.
+	 */
+	private ResourcesListPagerAdapter mAdapter;
 
 	@Override
 	public void onBackPressed() {
@@ -95,48 +138,50 @@ public class CoursActivity extends AppActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.cours_activity);
 
 		Bundle extras = getIntent().getExtras();
-		int id = -1;
-		int item = -1;
+		int currentDocumentId = -1;
+		int tabIndex = -1;
+
 		if (extras != null) {
 			mCurrentCours = new Select().from(Cours.class)
 					.where("Id = ?", extras.get("coursID")).executeSingle();
-			id = extras.getInt("id", -1);
-			item = extras.getInt("tab", -1);
+			currentDocumentId = extras.getInt("currentDocumentId", -1);
+			tabIndex = extras.getInt("tab", -1);
+		}
+		if (mCurrentCours == null) {
+			finish();
 		}
 
-		setTabs(id);
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mAdapter = new ResourcesListPagerAdapter(getSupportFragmentManager());
+		mAdapter.setResourceLists(mCurrentCours.lists());
+		mViewPager.setAdapter(mAdapter);
 
 		if (mCurrentCours.isExpired()) {
 			setProgressIndicator(true);
 			getService().updateCompleteCourse(new AsyncHttpResponseHandler() {
-
 			}, mCurrentCours);
 		} else if (mCurrentCours.isTimeToUpdate()) {
 			setProgressIndicator(true);
 			getService().getUpdates(new AsyncHttpResponseHandler() {
-
 			});
 		}
-
-		if (item > -1) {
-			getSupportActionBar().setSelectedNavigationItem(item);
-		}
-
 		if (savedInstanceState != null) {
-			getSupportActionBar().setSelectedNavigationItem(
-					savedInstanceState.getInt("tab", 0));
+			// getActionBar().setSelectedNavigationItem(
+			// savedInstanceState.getInt("tab", 0));
+		} else if (tabIndex > -1) {
+			// getActionBar().setSelectedNavigationItem(item);
 		}
+
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_refresh:
-			switch (getSupportActionBar().getSelectedNavigationIndex()) {
+			switch (1) { // getActionBar().getSelectedNavigationIndex()) {
 			default:
 				setProgressIndicator(true);
 				if (mCurrentCours.isExpired()) {
@@ -157,40 +202,33 @@ public class CoursActivity extends AppActivity {
 		}
 	}
 
-	public void setTabs(final int id) {
-		final ActionBar bar = getSupportActionBar();
-		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-			bar.setDisplayShowTitleEnabled(false);
-		} else {
-			bar.setDisplayShowTitleEnabled(true);
-		}
-
-		Bundle args = new Bundle();
-		args.putInt("coursID", mCurrentCours.getId().intValue());
-
-		bar.addTab(bar
-				.newTab()
-				.setText(getString(R.string.onglet_annonces))
-				.setTag("annTab")
-				.setTabListener(
-						new TabListener<annonceListFragment>(this, "announce",
-								annonceListFragment.class, args)));
-
-		args.putInt("docID", id);
-		bar.addTab(bar
-				.newTab()
-				.setText(getString(R.string.onglet_documents))
-				.setTag("docTab")
-				.setTabListener(
-						new TabListener<documentsListFragment>(this,
-								"documents", documentsListFragment.class, args)));
-	}
-
 	@Override
 	protected void onSaveInstanceState(final Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt("tab", getSupportActionBar()
-				.getSelectedNavigationIndex());
+		// outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
+	}
+
+	public void setTabs(final int id) {
+		/*
+		 * final ActionBar bar = getActionBar();
+		 * bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS); if
+		 * (getResources().getConfiguration().orientation !=
+		 * Configuration.ORIENTATION_LANDSCAPE) {
+		 * bar.setDisplayShowTitleEnabled(false); } else {
+		 * bar.setDisplayShowTitleEnabled(true); }
+		 * 
+		 * Bundle args = new Bundle(); args.putInt("coursID",
+		 * mCurrentCours.getId().intValue());
+		 * 
+		 * bar.addTab(bar .newTab()
+		 * .setText(getString(R.string.onglet_annonces)) .setTag("annTab")
+		 * .setTabListener( new TabListener<annonceListFragment>(this,
+		 * "announce", annonceListFragment.class, args)));
+		 * 
+		 * args.putInt("docID", id); bar.addTab(bar .newTab()
+		 * .setText(getString(R.string.onglet_documents)) .setTag("docTab")
+		 * .setTabListener( new TabListener<documentsListFragment>(this,
+		 * "documents", documentsListFragment.class, args)));
+		 */
 	}
 }

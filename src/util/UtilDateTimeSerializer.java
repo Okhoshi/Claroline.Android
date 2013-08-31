@@ -1,13 +1,13 @@
 /**
- * Sopura - Consignment Stock Companion - Android
+ * Claroline Mobile - Android
  * 
- * @package     com.sopura.consignmentstock.companion.android.global
+ * @package     util
  * 
- * @author      Devos Quentin
+ * @author      Devos Quentin (q.devos@student.uclouvain.be)
  * @version     1.0
  *
  * @license     ##LICENSE##
- * @copyright   2013 - Devos Quentin - Sopura
+ * @copyright   2013 - Devos Quentin
  */
 package util;
 
@@ -16,7 +16,7 @@ import org.joda.time.DateTime;
 import com.activeandroid.serializer.TypeSerializer;
 
 /**
- * Sopura - Consignment Stock Companion - Android
+ * Claroline Mobile - Android
  * 
  * Serialize the Joda's {@link DateTime} type for ActiveAndroid record.
  * 

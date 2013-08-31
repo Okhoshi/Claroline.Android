@@ -8,28 +8,26 @@ import org.joda.time.DateTime;
 
 import activity.Settings;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.view.Window;
 import android.widget.SearchView;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
 import connectivity.ClarolineClient;
 import connectivity.ClarolineClient.OnAccountStateChangedListener;
 import connectivity.ClarolineService;
 import fragments.AboutDialog;
 
-public abstract class AppActivity extends SherlockFragmentActivity implements
+public abstract class AppActivity extends FragmentActivity implements
 		OnAccountStateChangedListener {
 
 	/**
@@ -71,6 +69,17 @@ public abstract class AppActivity extends SherlockFragmentActivity implements
 	 */
 	public ClarolineService getService() {
 		return mService;
+	}
+
+	public void incrementProgress(final int value) {
+		if (App.isNewerAPI(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
+			setProgress(value / mMax * MAX_PROGRESS_BAR_ACTIVITY);
+		} else {
+			if (mProgress != null && mProgress.isShowing()
+					&& !mProgress.isIndeterminate()) {
+				mProgress.incrementProgressBy(value - mProgress.getProgress());
+			}
+		}
 	}
 
 	/**
@@ -122,7 +131,7 @@ public abstract class AppActivity extends SherlockFragmentActivity implements
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.actionbar, menu);
+		getMenuInflater().inflate(R.menu.actionbar, menu);
 
 		if (ClarolineClient.isValidAccount()) {
 			menu.findItem(R.id.menu_login).setVisible(false).setEnabled(false);
@@ -191,16 +200,24 @@ public abstract class AppActivity extends SherlockFragmentActivity implements
 		super.onResume();
 	}
 
+	@Override
+	protected void onSaveInstanceState(final Bundle outState) {
+		outState.putLong(SIS_LAST_UPDATE, mLastUpdate.getMillis());
+		super.onSaveInstanceState(outState);
+	}
+
 	/**
 	 * Sets up the {@link ActionBar}.
 	 * 
 	 * @param displayHomeAsUp
 	 *            displays the Up action
 	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void setActionBar(final boolean displayHomeAsUp) {
-		final ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(displayHomeAsUp);
-
+		if (App.isNewerAPI(Build.VERSION_CODES.HONEYCOMB)) {
+			final ActionBar actionBar = getActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(displayHomeAsUp);
+		}
 		onAccountStateChange(ClarolineClient.isValidAccount());
 	}
 
@@ -217,17 +234,6 @@ public abstract class AppActivity extends SherlockFragmentActivity implements
 			// Ignore
 		}
 
-	}
-
-	public void incrementProgress(final int value) {
-		if (App.isNewerAPI(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
-			setProgress(value / mMax * MAX_PROGRESS_BAR_ACTIVITY);
-		} else {
-			if (mProgress != null && mProgress.isShowing()
-					&& !mProgress.isIndeterminate()) {
-				mProgress.incrementProgressBy(value - mProgress.getProgress());
-			}
-		}
 	}
 
 	public void setProgressIndicator(final boolean visible) {
@@ -291,11 +297,5 @@ public abstract class AppActivity extends SherlockFragmentActivity implements
 	 */
 	public void updatesNow() {
 		mLastUpdate = DateTime.now();
-	}
-
-	@Override
-	protected void onSaveInstanceState(final Bundle outState) {
-		outState.putLong(SIS_LAST_UPDATE, mLastUpdate.getMillis());
-		super.onSaveInstanceState(outState);
 	}
 }

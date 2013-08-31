@@ -1,7 +1,7 @@
 /**
  * Claroline Mobile - Android
  * 
- * @package     util
+ * @package     activity
  * 
  * @author      Devos Quentin (q.devos@student.uclouvain.be)
  * @version     1.0
@@ -12,10 +12,9 @@
 /**
  * Claroline Mobile - Android
  * 
- * Utility classes here.
+ * Activity classes here.
  *
- * 
  * @author      Devos Quentin
  * @version     1.0
  */
-package util;
+package activity;
