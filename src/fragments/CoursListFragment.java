@@ -20,7 +20,7 @@ import android.widget.ListView;
 
 import com.activeandroid.query.Select;
 
-public class coursListFragment extends ListFragment {
+public class CoursListFragment extends ListFragment {
 
 	/**
 	 * Contextual Menu ID.

@@ -75,7 +75,7 @@ public class ResourceList extends Model {
 	 * ResourceType column.
 	 */
 	@Column(name = "ResourceType")
-	private Class<? extends ModelBase> mResourceType = ModelBase.class;
+	private Class<? extends ModelBase> mResourceType = ResourceModel.class;
 
 	/**
 	 * Default constructor without arguments. Required.
@@ -131,6 +131,20 @@ public class ResourceList extends Model {
 	 */
 	public boolean getUpdated() {
 		return mUpdated;
+	}
+
+	/**
+	 * @return the expiration state
+	 */
+	public boolean isExpired() {
+		return mLoadedDate.isAfter(DateTime.now().plusWeeks(1));
+	}
+
+	/**
+	 * @return the update state
+	 */
+	public boolean isTimeToUpdate() {
+		return mLoadedDate.isAfter(DateTime.now().plusHours(2));
 	}
 
 	/**

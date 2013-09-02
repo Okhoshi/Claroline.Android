@@ -28,13 +28,10 @@ import app.App;
 public class Settings extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
-	private ArrayList<String> onScreenSettings = new ArrayList<String>(
+	private ArrayList<String> mOnScreenSettings = new ArrayList<String>(
 			Arrays.asList(new String[] { App.SETTINGS_PLATFORM_HOST,
 					App.SETTINGS_PLATFORM_MODULE }));
 
-	/**
-	 * 
-	 */
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,12 +43,12 @@ public class Settings extends PreferenceActivity implements
 		Map<String, ?> keys = App.getPrefs().getAll();
 
 		for (Map.Entry<String, ?> entry : keys.entrySet()) {
-			if (onScreenSettings.contains(entry.getKey())) {
+			if (mOnScreenSettings.contains(entry.getKey())) {
 				Log.d("map values", entry.getKey() + ": "
 						+ entry.getValue().toString());
-				Preference Pref = findPreference(entry.getKey());
+				Preference pref = findPreference(entry.getKey());
 				// Set summary to be the user-description for the selected value
-				Pref.setSummary(App.getPrefs().getString(entry.getKey(), ""));
+				pref.setSummary(App.getPrefs().getString(entry.getKey(), ""));
 			}
 		}
 
@@ -86,9 +83,9 @@ public class Settings extends PreferenceActivity implements
 	public void onSharedPreferenceChanged(
 			final SharedPreferences sharedPreferences, final String key) {
 		if (!key.contains("password")) {
-			Preference Pref = findPreference(key);
+			Preference pref = findPreference(key);
 			// Set summary to be the user-description for the selected value
-			Pref.setSummary(sharedPreferences.getString(key, ""));
+			pref.setSummary(sharedPreferences.getString(key, ""));
 		}
 	}
 

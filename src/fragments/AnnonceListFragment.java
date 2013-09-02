@@ -14,12 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import app.AppActivity;
 
 import com.activeandroid.query.Select;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import connectivity.SupportedModules;
 
-public class annonceListFragment extends ListFragment {
+public class AnnonceListFragment extends ListFragment {
 
 	/**
 	 * The current viewed list.
@@ -42,6 +44,31 @@ public class annonceListFragment extends ListFragment {
 		}
 
 		if (mCurrentList != null) {
+			if (mCurrentList.isExpired()
+					|| mCurrentList.resources().size() == 0) {
+				((AppActivity) getActivity()).setProgressIndicator(true);
+				((AppActivity) getActivity()).getService().getResourcesForList(
+						mCurrentList, new AsyncHttpResponseHandler() {
+							@Override
+							public void onSuccess(final String content) {
+								((AppActivity) getActivity())
+										.setProgressIndicator(false);
+								refreshUI();
+							}
+						});
+			} else if (mCurrentList.isTimeToUpdate()) {
+				((AppActivity) getActivity()).getService().getUpdates(
+						new AsyncHttpResponseHandler() {
+							@Override
+							public void onSuccess(final String content) {
+								((AppActivity) getActivity())
+										.setProgressIndicator(false);
+								if (!content.equals("[]")) {
+									refreshUI();
+								}
+							}
+						});
+			}
 			refreshUI();
 		}
 	}

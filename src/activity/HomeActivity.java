@@ -16,7 +16,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import connectivity.ClarolineClient;
 import fragments.LoginDialog;
-import fragments.coursListFragment;
+import fragments.CoursListFragment;
 
 public class HomeActivity extends AppActivity {
 
@@ -56,7 +56,7 @@ public class HomeActivity extends AppActivity {
 	 */
 
 	public void onRepositoryRefresh() {
-		coursListFragment list = (coursListFragment) getSupportFragmentManager()
+		CoursListFragment list = (CoursListFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.list_frag);
 		if (list != null) {
 			list.refreshUI();
@@ -93,17 +93,18 @@ public class HomeActivity extends AppActivity {
 							List<Cours> list = new Select().from(Cours.class)
 									.execute();
 							for (Cours cours : list) {
-								getService().updateCompleteCourse(
-										new AsyncHttpResponseHandler(), cours);
+								getService().getToolListForCours(cours,
+										new AsyncHttpResponseHandler());
 							}
 						}
 					});
 				} else {
 					getService().getUpdates(new AsyncHttpResponseHandler() {
-						// TODO ResponseHandler
 						@Override
 						public void onSuccess(final String response) {
-							onRepositoryRefresh();
+							if (!response.equals("[]")) {
+								onRepositoryRefresh();
+							}
 							setProgressIndicator(false);
 							updatesNow();
 						}

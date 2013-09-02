@@ -51,8 +51,6 @@ public class Document extends ModelBase {
 	 * @return a new empty root Document
 	 */
 	public static Document getEmptyRoot(final ResourceList currentList) {
-		android.os.Debug.waitForDebugger();
-
 		Document doc = new Document();
 		doc.setList(currentList);
 		doc.setTitle("ROOT");

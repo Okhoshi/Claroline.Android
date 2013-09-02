@@ -5,6 +5,7 @@ package connectivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 import model.Annonce;
 import model.Cours;
@@ -18,12 +19,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import util.Tools;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import app.App;
 
-import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -119,7 +121,7 @@ public class ClarolineService {
 				for (int i = 0; i < array.length(); i++) {
 					try {
 						JSONObject item = array.getJSONObject(i);
-						Cours c = new Gson().fromJson(item.toString(),
+						Cours c = App.getGSON().fromJson(item.toString(),
 								Cours.class);
 						c.setIsUpdated(true);
 						c.setLoadedDate(DateTime.now());
@@ -145,14 +147,18 @@ public class ClarolineService {
 			public void onSuccess(final JSONArray array) {
 				for (int i = 0; i < array.length(); i++) {
 					try {
-						JSONObject item = array.getJSONObject(i);
-						ModelBase mb = new Gson().fromJson(item.toString(),
-								list.getResourceType());
+						// JSONObject item = array..getJSONObject(i);
+						ModelBase mb = App.getGSON()
+								.fromJson(array.get(i).toString(),
+										list.getResourceType());
 						mb.setList(list);
 						mb.setLoadedDate(DateTime.now());
 						mb.setUpdated(true);
 						mb.save();
 					} catch (JSONException e) {
+						e.printStackTrace();
+					} catch (JsonSyntaxException e) {
+						android.os.Debug.waitForDebugger();
 						e.printStackTrace();
 					}
 				}
@@ -173,7 +179,7 @@ public class ClarolineService {
 
 			@Override
 			public void onSuccess(final JSONObject response) {
-				ModelBase mb = new Gson().fromJson(response.toString(),
+				ModelBase mb = App.getGSON().fromJson(response.toString(),
 						list.getResourceType());
 				mb.setLoadedDate(DateTime.now());
 				mb.save();
@@ -195,30 +201,34 @@ public class ClarolineService {
 				for (int i = 0; i < response.length(); i++) {
 					try {
 						JSONObject item = response.getJSONObject(i);
-						ResourceList rl = new Gson().fromJson(item.toString(),
-								ResourceList.class);
+						ResourceList rl = App.getGSON().fromJson(
+								item.toString(), ResourceList.class);
 						rl.setCours(cours);
 						rl.setLoadedDate(DateTime.now());
 						rl.setUpdated(true);
 
-						switch (Enum.valueOf(SupportedModules.class,
-								rl.getLabel())) {
-						case CLANN:
-							rl.setResourceType(Annonce.class);
-							break;
-						case CLDOC:
-							rl.setResourceType(Document.class);
-							break;
-						default:
+						if (Arrays.asList(
+								Tools.enumValuesToStrings(SupportedModules
+										.values())).contains(rl.getLabel())) {
+							switch (SupportedModules.valueOf(rl.getLabel())) {
+							case CLANN:
+								rl.setResourceType(Annonce.class);
+								break;
+							case CLDOC:
+								rl.setResourceType(Document.class);
+								break;
+							default:
+								rl.setResourceType(ResourceModel.class);
+								break;
+							}
+						} else {
 							rl.setResourceType(ResourceModel.class);
-							break;
 						}
 						rl.save();
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 				}
-
 				handler.onSuccess(response.toString());
 			}
 		});

@@ -14,13 +14,27 @@ package app;
 import java.io.File;
 
 import net.claroline.mobile.android.R;
+
+import org.joda.time.DateTime;
+
+import util.UtilDateTimeTypeConverter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import com.activeandroid.app.Application;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+/**
+ * Claroline Mobile - Android
+ * 
+ * Global {@link android.app.Application}.
+ * 
+ * @author Devos Quentin
+ * @version 1.0
+ */
 public class App extends Application {
 
 	/**
@@ -95,6 +109,13 @@ public class App extends Application {
 	}
 
 	/**
+	 * @return the custom GSON instance
+	 */
+	public static Gson getGSON() {
+		return getInstance().mGson;
+	}
+
+	/**
 	 * @return the App instance
 	 */
 	public static App getInstance() {
@@ -119,9 +140,16 @@ public class App extends Application {
 		return Build.VERSION.SDK_INT >= apiLevel;
 	}
 
+	/**
+	 * Custom Gson JSON deserializer.
+	 */
+	private Gson mGson;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		sSingleton = this;
+		mGson = new GsonBuilder().registerTypeAdapter(DateTime.class,
+				new UtilDateTimeTypeConverter()).create();
 	}
 }

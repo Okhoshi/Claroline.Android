@@ -76,9 +76,23 @@ public abstract class ModelBase extends Model {
 	public abstract String getURL();
 
 	/**
+	 * @return the expiration state
+	 */
+	public boolean isExpired() {
+		return getLoadedDate().isAfter(DateTime.now().plusWeeks(1));
+	}
+
+	/**
 	 * @return the Notified Status
 	 */
 	public abstract boolean isNotified();
+
+	/**
+	 * @return the update state
+	 */
+	public boolean isTimeToUpdate() {
+		return getLoadedDate().isAfter(DateTime.now().plusHours(2));
+	}
 
 	/**
 	 * @return the notifications of this resource

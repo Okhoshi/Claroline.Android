@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.activeandroid.query.Select;
 
-public class annonceDetailFragment extends Fragment {
+public class AnnonceDetailFragment extends Fragment {
 
 	/**
 	 * The current annonce.

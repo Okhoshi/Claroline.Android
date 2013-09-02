@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import app.App;
 
-public class contextFragment extends Fragment implements
+public class ContextFragment extends Fragment implements
 		OnSharedPreferenceChangeListener {
 
 	/**

@@ -27,7 +27,7 @@
             android:value="1" />
         <meta-data
             android:name="AA_SERIALIZERS"
-            android:value="util.UtilDateTimeSerializer" />
+            android:value="util.UtilDateTimeSerializer,util.UtilResourceListClassSerializer" />
 
         <activity
             android:name="activity.HomeActivity"

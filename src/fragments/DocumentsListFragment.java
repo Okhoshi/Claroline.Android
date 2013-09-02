@@ -30,7 +30,7 @@ import com.activeandroid.query.Select;
 
 import connectivity.SupportedModules;
 
-public class documentsListFragment extends ListFragment {
+public class DocumentsListFragment extends ListFragment {
 
 	/**
 	 * Current list viewed.
@@ -45,11 +45,11 @@ public class documentsListFragment extends ListFragment {
 	/**
 	 * UI references.
 	 */
-	private TextView currentPath;
+	private TextView mCurrentPath;
 
 	public void goUp() {
 		mCurrentRoot = mCurrentRoot.getRoot();
-		currentPath.setText(mCurrentRoot.getFullPath());
+		mCurrentPath.setText(mCurrentRoot.getFullPath());
 		refreshUI();
 	}
 
@@ -61,7 +61,7 @@ public class documentsListFragment extends ListFragment {
 	public void onActivityCreated(final Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		currentPath = (TextView) getView().findViewById(R.id.currentPath);
+		mCurrentPath = (TextView) getView().findViewById(R.id.currentPath);
 
 		int id = -1;
 
@@ -87,7 +87,7 @@ public class documentsListFragment extends ListFragment {
 		} else if (mCurrentRoot == null) {
 			mCurrentRoot = Document.getEmptyRoot(mCurrentList);
 		}
-		currentPath.setText(mCurrentRoot.getFullPath());
+		mCurrentPath.setText(mCurrentRoot.getFullPath());
 
 		refreshUI();
 	}
@@ -108,7 +108,7 @@ public class documentsListFragment extends ListFragment {
 
 		if (item.getIsFolder()) {
 			mCurrentRoot = item;
-			currentPath.setText(mCurrentRoot.getFullPath());
+			mCurrentPath.setText(mCurrentRoot.getFullPath());
 			refreshUI();
 		} else {
 			if (mime != null) {

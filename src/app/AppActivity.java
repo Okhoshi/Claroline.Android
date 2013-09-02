@@ -27,6 +27,14 @@ import connectivity.ClarolineClient.OnAccountStateChangedListener;
 import connectivity.ClarolineService;
 import fragments.AboutDialog;
 
+/**
+ * Claroline Mobile - Android
+ * 
+ * Global Activity overrode by all others (if possible).
+ * 
+ * @author Devos Quentin
+ * @version 1.0
+ */
 public abstract class AppActivity extends FragmentActivity implements
 		OnAccountStateChangedListener {
 
@@ -71,6 +79,10 @@ public abstract class AppActivity extends FragmentActivity implements
 		return mService;
 	}
 
+	/**
+	 * @param value
+	 *            the value to set to the ProgressBar.
+	 */
 	public void incrementProgress(final int value) {
 		if (App.isNewerAPI(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
 			setProgress(value / mMax * MAX_PROGRESS_BAR_ACTIVITY);

@@ -10,7 +10,7 @@ import app.AppActivity;
 import com.activeandroid.query.Select;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import fragments.annonceDetailFragment;
+import fragments.AnnonceDetailFragment;
 
 public class DetailsAnnonce extends AppActivity {
 
@@ -28,8 +28,8 @@ public class DetailsAnnonce extends AppActivity {
 
 		Bundle args = new Bundle();
 		args.putInt("annID", mCurrentAnnonce.getId().intValue());
-		annonceDetailFragment frag = (annonceDetailFragment) Fragment
-				.instantiate(this, annonceDetailFragment.class.getName(), args);
+		AnnonceDetailFragment frag = (AnnonceDetailFragment) Fragment
+				.instantiate(this, AnnonceDetailFragment.class.getName(), args);
 		getSupportFragmentManager().beginTransaction()
 				.add(android.R.id.content, frag, "annonce_detail").commit();
 	}

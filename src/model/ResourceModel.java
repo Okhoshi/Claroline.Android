@@ -14,6 +14,7 @@ package model;
 import org.joda.time.DateTime;
 
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -24,6 +25,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Devos Quentin
  * @version 1.0
  */
+@Table(name = "ResourceModel")
 public class ResourceModel extends ModelBase {
 	/**
 	 * Title column.

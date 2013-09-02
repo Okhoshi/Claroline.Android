@@ -18,9 +18,9 @@ import android.widget.TextView;
 
 public class SearchListAdapter extends BaseExpandableListAdapter {
 
-	private List<SparseArray<List<?>>> searchList;
-	private Context context;
-	private String query;
+	private List<SparseArray<List<?>>> mSearchList;
+	private Context mContext;
+	private String mQuery;
 
 	private static final int COURS = 0;
 	private static final int ANNONCE = 1;
@@ -28,14 +28,14 @@ public class SearchListAdapter extends BaseExpandableListAdapter {
 
 	public SearchListAdapter(final Context context,
 			final List<SparseArray<List<?>>> searchList, final String query) {
-		this.context = context;
-		this.searchList = searchList;
-		this.query = query;
+		mContext = context;
+		mSearchList = searchList;
+		mQuery = query;
 	}
 
 	@Override
 	public Object getChild(final int groupPosition, final int childPosition) {
-		return searchList.get(groupPosition).get(groupPosition)
+		return mSearchList.get(groupPosition).get(groupPosition)
 				.get(childPosition);
 	}
 
@@ -46,59 +46,58 @@ public class SearchListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public int getChildrenCount(final int groupPosition) {
-		return searchList.get(groupPosition).get(groupPosition).size();
+		return mSearchList.get(groupPosition).get(groupPosition).size();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public View getChildView(final int groupPosition, final int childPosition,
-			final boolean isLastChild, View view, final ViewGroup parent) {
+			final boolean isLastChild, final View view, final ViewGroup parent) {
 		BaseAdapter adapter = null;
 		int state = View.GONE;
-		String SysCode = "";
+		String sysCode = "";
+		View v = view;
 
 		switch (groupPosition) {
 		case COURS:
-			adapter = new CoursAdapter(context,
+			adapter = new CoursAdapter(mContext,
 					(List<Cours>) getGroup(groupPosition));
 			break;
 		case ANNONCE:
-			adapter = new AnnonceAdapter(context,
+			adapter = new AnnonceAdapter(mContext,
 					(List<Annonce>) getGroup(groupPosition));
-			SysCode = ((Annonce) getChild(groupPosition, childPosition))
+			sysCode = ((Annonce) getChild(groupPosition, childPosition))
 					.getList().getCours().getOfficialCode();
 			state = View.VISIBLE;
 			break;
 		case DOCUMENTS:
-			adapter = new DocumentsAdapter(context,
+			adapter = new DocumentsAdapter(mContext,
 					(List<Document>) getGroup(groupPosition));
-			SysCode = ((Document) getChild(groupPosition, childPosition))
+			sysCode = ((Document) getChild(groupPosition, childPosition))
 					.getList().getCours().getOfficialCode();
 			state = View.VISIBLE;
 			break;
 		default:
 			return view;
 		}
-		// Log.d("SearchList","GP : " + groupPosition + " - View : " + (view ==
-		// null?"null":((TextView)
-		// view.findViewById(R.id.name_item)).getText()));
-		view = adapter.getView(childPosition, null, parent);
-		TextView syscode = (TextView) view.findViewById(R.id.syscode);
+
+		v = adapter.getView(childPosition, null, parent);
+		TextView syscode = (TextView) v.findViewById(R.id.syscode);
 		if (syscode != null) {
-			syscode.setText(SysCode);
+			syscode.setText(sysCode);
 			syscode.setVisibility(state);
 		}
-		return view;
+		return v;
 	}
 
 	@Override
 	public Object getGroup(final int groupPosition) {
-		return searchList.get(groupPosition).get(groupPosition);
+		return mSearchList.get(groupPosition).get(groupPosition);
 	}
 
 	@Override
 	public int getGroupCount() {
-		return searchList.size();
+		return mSearchList.size();
 	}
 
 	@Override
@@ -114,7 +113,7 @@ public class SearchListAdapter extends BaseExpandableListAdapter {
 		LinearLayout v = (LinearLayout) view;
 
 		if (v == null) {
-			LayoutInflater inflater = (LayoutInflater) context
+			LayoutInflater inflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = (LinearLayout) inflater.inflate(R.layout.search, parent, false);
 		}
@@ -136,14 +135,14 @@ public class SearchListAdapter extends BaseExpandableListAdapter {
 		}
 		if (result.isEmpty()) {
 			// There are no results
-			mTextView.setText(context.getString(R.string.no_results,
-					new Object[] { query }));
+			mTextView.setText(mContext.getString(R.string.no_results,
+					new Object[] { mQuery }));
 		} else {
 			// Display the number of results
 			int count = getChildrenCount(groupPosition);
-			String countString = context.getResources().getQuantityString(
+			String countString = mContext.getResources().getQuantityString(
 					R.plurals.search_results, count,
-					new Object[] { count, query });
+					new Object[] { count, mQuery });
 			mTextView.setText(countString);
 		}
 		return v;
