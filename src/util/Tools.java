@@ -13,6 +13,10 @@ package util;
 
 import net.claroline.mobile.android.R;
 
+import com.activeandroid.Model;
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Update;
+
 /**
  * Claroline Mobile - Android
  * 
@@ -23,6 +27,11 @@ import net.claroline.mobile.android.R;
  * @version 1.0
  */
 public final class Tools {
+
+	public static void cleanTableAfterUpdate(final Class<? extends Model> table) {
+		new Delete().from(table).where("Updated = ?", false).execute();
+		new Update(table).set("Updated = ?", false).execute();
+	}
 
 	/**
 	 * Cast values from Enumeration to String array.
@@ -40,6 +49,10 @@ public final class Tools {
 			array[i] = values[i].name();
 		}
 		return array;
+	}
+
+	public static String getFragmentTag(final int pos) {
+		return "android:switcher:" + R.id.pager + ":" + pos;
 	}
 
 	/**

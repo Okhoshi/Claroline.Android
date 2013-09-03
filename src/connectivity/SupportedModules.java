@@ -11,6 +11,14 @@
  */
 package connectivity;
 
+import java.util.Arrays;
+
+import model.Annonce;
+import model.Document;
+import model.ModelBase;
+import model.ResourceModel;
+import util.Tools;
+
 /**
  * Claroline Mobile - Android
  * 
@@ -48,5 +56,27 @@ public enum SupportedModules {
 	/**
 	 * Calendar plugin.
 	 */
-	CLCAL
+	CLCAL;
+
+	/**
+	 * @param label
+	 *            the module label (equal to one of values of this enum)
+	 * @return the Class corresponding to the module, if any. ResourceModel
+	 *         class otherwise
+	 */
+	public static Class<? extends ModelBase> getTypeForModule(final String label) {
+		if (Arrays.asList(Tools.enumValuesToStrings(SupportedModules.values()))
+				.contains(label)) {
+			switch (SupportedModules.valueOf(label)) {
+			case CLANN:
+				return Annonce.class;
+			case CLDOC:
+				return Document.class;
+			default:
+				return ResourceModel.class;
+			}
+		} else {
+			return ResourceModel.class;
+		}
+	}
 }

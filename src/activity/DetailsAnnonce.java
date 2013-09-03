@@ -58,4 +58,9 @@ public class DetailsAnnonce extends AppActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
+	@Override
+	public void refreshUI() {
+
+	}
 }

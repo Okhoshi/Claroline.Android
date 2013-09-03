@@ -8,9 +8,7 @@
  */
 package adapter;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 import model.Document;
 import net.claroline.mobile.android.R;
@@ -82,8 +80,7 @@ public class DocumentsAdapter extends BaseAdapter {
 				detail1.setText(doc.getStringSize());
 			}
 			if (detail2 != null) {
-				detail2.setText(new SimpleDateFormat("E MMM y dd", Locale
-						.getDefault()).format(doc.getDate()));
+				detail2.setText(doc.getDate().toString("E MMM y dd"));
 			}
 			if (detail3 != null) {
 				detail3.setText(doc.getExtension());

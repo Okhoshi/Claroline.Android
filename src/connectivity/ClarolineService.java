@@ -5,11 +5,8 @@ package connectivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 
-import model.Annonce;
 import model.Cours;
-import model.Document;
 import model.ModelBase;
 import model.ResourceList;
 import model.ResourceModel;
@@ -23,6 +20,7 @@ import util.Tools;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 import app.App;
 
 import com.google.gson.JsonSyntaxException;
@@ -123,7 +121,7 @@ public class ClarolineService {
 						JSONObject item = array.getJSONObject(i);
 						Cours c = App.getGSON().fromJson(item.toString(),
 								Cours.class);
-						c.setIsUpdated(true);
+						c.setUpdated(true);
 						c.setLoadedDate(DateTime.now());
 						c.save();
 
@@ -131,6 +129,7 @@ public class ClarolineService {
 						e.printStackTrace();
 					}
 				}
+				Tools.cleanTableAfterUpdate(Cours.class);
 				handler.onSuccess(array.toString());
 			}
 		});
@@ -139,15 +138,20 @@ public class ClarolineService {
 	public void getResourcesForList(final ResourceList list,
 			final AsyncHttpResponseHandler handler) {
 		RequestParams rp = ClarolineClient
-				.getRequestParams(Enum.valueOf(SupportedModules.class,
-						list.getLabel()), SupportedMethods.getResourcesList,
-						list.getCours().getSysCode());
+				.getRequestParams(list.getLabel(),
+						SupportedMethods.getResourcesList, list.getCours()
+								.getSysCode());
+		if (ResourceModel.class.equals(list.getResourceType())) {
+			rp.add("forceGeneric", "1");
+		}
+
 		mClient.serviceQuery(rp, new JsonHttpResponseHandler() {
+
 			@Override
 			public void onSuccess(final JSONArray array) {
+				Log.i(TAG, array.toString());
 				for (int i = 0; i < array.length(); i++) {
 					try {
-						// JSONObject item = array..getJSONObject(i);
 						ModelBase mb = App.getGSON()
 								.fromJson(array.get(i).toString(),
 										list.getResourceType());
@@ -162,7 +166,7 @@ public class ClarolineService {
 						e.printStackTrace();
 					}
 				}
-
+				Tools.cleanTableAfterUpdate(list.getResourceType());
 				handler.onSuccess(array.toString());
 			}
 		});
@@ -206,29 +210,14 @@ public class ClarolineService {
 						rl.setCours(cours);
 						rl.setLoadedDate(DateTime.now());
 						rl.setUpdated(true);
-
-						if (Arrays.asList(
-								Tools.enumValuesToStrings(SupportedModules
-										.values())).contains(rl.getLabel())) {
-							switch (SupportedModules.valueOf(rl.getLabel())) {
-							case CLANN:
-								rl.setResourceType(Annonce.class);
-								break;
-							case CLDOC:
-								rl.setResourceType(Document.class);
-								break;
-							default:
-								rl.setResourceType(ResourceModel.class);
-								break;
-							}
-						} else {
-							rl.setResourceType(ResourceModel.class);
-						}
+						rl.setResourceType(SupportedModules.getTypeForModule(rl
+								.getLabel()));
 						rl.save();
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 				}
+				Tools.cleanTableAfterUpdate(ResourceList.class);
 				handler.onSuccess(response.toString());
 			}
 		});

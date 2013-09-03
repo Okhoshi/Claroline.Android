@@ -2,25 +2,21 @@ package fragments;
 
 import java.util.List;
 
-import model.Annonce;
 import model.ResourceList;
+import model.ResourceModel;
 import net.claroline.mobile.android.R;
-import adapter.AnnonceAdapter;
-import android.content.Intent;
+import adapter.GenericAdapter;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import app.AppActivity;
 
 import com.activeandroid.query.Select;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import connectivity.SupportedModules;
-
-public class AnnonceListFragment extends ListFragment {
+public class GenericListFragment extends ListFragment {
 
 	/**
 	 * The current viewed list.
@@ -33,10 +29,11 @@ public class AnnonceListFragment extends ListFragment {
 
 		Bundle extras = getArguments();
 		if (extras != null) {
+			// FIXME wrong request... Id replace with the course one
 			mCurrentList = new Select()
 					.from(ResourceList.class)
 					.where("Cours = ? AND label = ?", extras.get("coursID"),
-							SupportedModules.CLANN.name()).executeSingle();
+							extras.getString("type")).executeSingle();
 		}
 
 		if (mCurrentList != null) {
@@ -76,18 +73,10 @@ public class AnnonceListFragment extends ListFragment {
 		return inflater.inflate(R.layout.standard_list, null);
 	}
 
-	@Override
-	public void onListItemClick(final ListView l, final View v,
-			final int position, final long id) {
-		Annonce item = (Annonce) getListAdapter().getItem(position);
-		Intent intent = new Intent(getActivity(), activity.DetailsAnnonce.class);
-		intent.putExtra("annID", item.getId());
-		startActivity(intent);
-	}
-
 	public void refreshUI() {
-		List<Annonce> liste = mCurrentList.resources();
-		AnnonceAdapter adapter = new AnnonceAdapter(getActivity(), liste);
+		List<ResourceModel> liste = mCurrentList.resources();
+		GenericAdapter<ResourceModel> adapter = new GenericAdapter<ResourceModel>(
+				getActivity(), liste);
 		setListAdapter(adapter);
 	}
 }

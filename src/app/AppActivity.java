@@ -218,6 +218,8 @@ public abstract class AppActivity extends FragmentActivity implements
 		super.onSaveInstanceState(outState);
 	}
 
+	public abstract void refreshUI();
+
 	/**
 	 * Sets up the {@link ActionBar}.
 	 * 

@@ -37,6 +37,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Devos Quentin
  * @version 1.0
  */
+// FIXME Problem with the all logic about the path...
 @Table(name = "Document")
 public class Document extends ModelBase {
 
@@ -160,11 +161,12 @@ public class Document extends ModelBase {
 	public List<Document> getContent() {
 		List<Document> liste;
 		if (mIsFolder) {
-			String added = mTitle.equals("ROOT") ? "" : mTitle + "/";
 			liste = new Select()
 					.from(Document.class)
-					.where("List = ? AND Path = ?", mList.getId(),
-							mPath + added).execute();
+					.where("List = ? "
+							+ "AND ( Path = ( ? || Title || '.' || Extension ) "
+							+ "OR Path = ( ? || Title ) )", mList.getId(),
+							getFullPath(), getFullPath()).execute();
 		} else {
 			liste = new ArrayList<Document>();
 		}
@@ -196,7 +198,7 @@ public class Document extends ModelBase {
 	 * @return the full path
 	 */
 	public String getFullPath() {
-		return mTitle.equals("ROOT") ? "/" : mPath + mTitle + "/";
+		return mTitle.equals("ROOT") ? "/" : mPath + "/";
 	}
 
 	/**
@@ -241,7 +243,12 @@ public class Document extends ModelBase {
 	 * @return the Path
 	 */
 	public String getPath() {
-		return mPath;
+		String fullName = mIsFolder ? mTitle : mTitle + "." + mExtension;
+		if (mPath.contains(fullName)) {
+			return mPath.substring(0, mPath.lastIndexOf(fullName));
+		} else {
+			return mPath;
+		}
 	}
 
 	/**
@@ -256,10 +263,10 @@ public class Document extends ModelBase {
 	 * @return the Root of this Document
 	 */
 	public Document getRoot() {
-		if (mPath.equals("/")) {
+		if (getPath().equals("/")) {
 			return getEmptyRoot(mList);
 		} else {
-			String rootPath = mPath.substring(0, mPath.length() - 1);
+			String rootPath = getPath().substring(0, getPath().length() - 1);
 			String rootName = rootPath.substring(rootPath.lastIndexOf("/") + 1);
 			rootPath = rootPath.substring(0, rootPath.lastIndexOf(rootName));
 			return new Select()

@@ -15,8 +15,8 @@ import com.activeandroid.query.Select;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import connectivity.ClarolineClient;
-import fragments.LoginDialog;
 import fragments.CoursListFragment;
+import fragments.LoginDialog;
 
 public class HomeActivity extends AppActivity {
 
@@ -32,7 +32,7 @@ public class HomeActivity extends AppActivity {
 		setContentView(R.layout.home);
 
 		setActionBar(false);
-		refresh(false, false, false);
+		refreshUI();
 	}
 
 	@Override
@@ -112,6 +112,11 @@ public class HomeActivity extends AppActivity {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void refreshUI() {
+		refresh(false, false, false);
 	}
 
 	private void showLoginDialog() {

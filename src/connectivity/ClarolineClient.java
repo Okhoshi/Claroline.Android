@@ -83,24 +83,43 @@ public class ClarolineClient extends AsyncHttpClient {
 	 *            -CLXXX/getSingleResource requests : Cours syscode, resStr
 	 * @return the {@link RequestParams} constructed
 	 */
-	public static RequestParams getRequestParams(final SupportedModules module,
+	public static RequestParams getRequestParams(final String module,
 			final SupportedMethods operation, final String... params) {
 		RequestParams p = new RequestParams();
 
 		switch (operation) {
 		case getSingleResource:
-			p.put("resID", params[1]);
+			p.add("resID", params[1]);
 		case getResourcesList:
 		case getToolList:
-			p.put("cidReq", params[0]);
+			p.add("cidReq", params[0]);
 			break;
 		default:
 			break;
 		}
 
-		p.put("method", operation.name());
-		p.put("module", module.name());
+		p.add("method", operation.name());
+		p.add("module", module);
 		return p;
+	}
+
+	/**
+	 * @param module
+	 *            The module requested
+	 * @param operation
+	 *            the method requested
+	 * @param params
+	 *            depending on the operation: <br />
+	 *            - NOMOD/Authenticate requests : username, password <br />
+	 *            - USER/getToolList<br />
+	 *            - CLXXX/getResourcesList<br />
+	 *            resquest : Cours syscode <br />
+	 *            -CLXXX/getSingleResource requests : Cours syscode, resStr
+	 * @return the {@link RequestParams} constructed
+	 */
+	public static RequestParams getRequestParams(final SupportedModules module,
+			final SupportedMethods operation, final String... params) {
+		return getRequestParams(module.name(), operation, params);
 	}
 
 	/**
@@ -325,6 +344,20 @@ public class ClarolineClient extends AsyncHttpClient {
 	}
 
 	/**
+	 * Notify the {@link OnAccountStateChangedListener} registered.
+	 * 
+	 * @param newValidity
+	 *            new account state
+	 */
+	protected void notifyAccountStateListener(final boolean newValidity) {
+		if (mListeners != null && mListeners.size() > 0) {
+			for (OnAccountStateChangedListener listener : mListeners) {
+				listener.onAccountStateChange(newValidity);
+			}
+		}
+	}
+
+	/**
 	 * @param parameters
 	 *            the RequestParams to use for this query
 	 * @param handler
@@ -341,6 +374,7 @@ public class ClarolineClient extends AsyncHttpClient {
 				}
 			});
 		} else {
+			Log.i("Client", "Query " + parameters);
 			post(getUrl(App.getPrefs().getString(App.SETTINGS_PLATFORM_MODULE,
 					"/module/MOBILE/")), parameters, handler);
 		}
@@ -352,20 +386,6 @@ public class ClarolineClient extends AsyncHttpClient {
 	 */
 	private void setExpirationTime(final DateTime pExpirationTime) {
 		mExpires = pExpirationTime;
-	}
-
-	/**
-	 * Notify the {@link OnAccountStateChangedListener} registered.
-	 * 
-	 * @param newValidity
-	 *            new account state
-	 */
-	protected void notifyAccountStateListener(final boolean newValidity) {
-		if (mListeners != null && mListeners.size() > 0) {
-			for (OnAccountStateChangedListener listener : mListeners) {
-				listener.onAccountStateChange(newValidity);
-			}
-		}
 	}
 
 	/**

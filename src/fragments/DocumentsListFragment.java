@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
-import model.Cours;
 import model.Document;
 import model.ResourceList;
 import net.claroline.mobile.android.R;
@@ -27,6 +26,7 @@ import android.widget.Toast;
 import app.AppActivity;
 
 import com.activeandroid.query.Select;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import connectivity.SupportedModules;
 
@@ -63,33 +63,54 @@ public class DocumentsListFragment extends ListFragment {
 
 		mCurrentPath = (TextView) getView().findViewById(R.id.currentPath);
 
-		int id = -1;
+		long id = -1;
 
 		Bundle extras = getArguments();
 		if (extras != null) {
 			mCurrentList = new Select()
 					.from(ResourceList.class)
-					.innerJoin(Cours.class)
-					.on("Cours.Id = ResourceList.Cours")
-					.where("Cours.Id = ? AND ResourceList.label = ?",
-							extras.get("coursID"),
+					.where("Cours = ? AND label = ?", extras.get("coursID"),
 							SupportedModules.CLDOC.name()).executeSingle();
-			id = extras.getInt("docID", -1);
+			id = extras.getLong("docID", -1);
 		}
 
-		if (mCurrentList == null) {
-			return;
-		}
+		if (mCurrentList != null) {
+			if (mCurrentList.isExpired()
+					|| mCurrentList.resources().size() == 0) {
+				((AppActivity) getActivity()).setProgressIndicator(true);
+				((AppActivity) getActivity()).getService().getResourcesForList(
+						mCurrentList, new AsyncHttpResponseHandler() {
+							@Override
+							public void onSuccess(final String content) {
+								((AppActivity) getActivity())
+										.setProgressIndicator(false);
+								refreshUI();
+							}
+						});
+			} else if (mCurrentList.isTimeToUpdate()) {
+				((AppActivity) getActivity()).getService().getUpdates(
+						new AsyncHttpResponseHandler() {
+							@Override
+							public void onSuccess(final String content) {
+								((AppActivity) getActivity())
+										.setProgressIndicator(false);
+								if (!content.equals("[]")) {
+									refreshUI();
+								}
+							}
+						});
+			}
 
-		if (id != -1) {
-			mCurrentRoot = ((Document) new Select().from(Document.class)
-					.where("Id = ", id).executeSingle()).getRoot();
-		} else if (mCurrentRoot == null) {
-			mCurrentRoot = Document.getEmptyRoot(mCurrentList);
+			if (id != -1) {
+				mCurrentRoot = ((Document) new Select().from(Document.class)
+						.where("Id = ", id).executeSingle()).getRoot();
+			} else if (mCurrentRoot == null) {
+				mCurrentRoot = Document.getEmptyRoot(mCurrentList);
+			}
+			refreshUI();
+		} else {
+			getActivity().finish();
 		}
-		mCurrentPath.setText(mCurrentRoot.getFullPath());
-
-		refreshUI();
 	}
 
 	@Override
@@ -188,5 +209,6 @@ public class DocumentsListFragment extends ListFragment {
 		List<Document> liste = mCurrentRoot.getContent();
 		DocumentsAdapter adapter = new DocumentsAdapter(getActivity(), liste);
 		setListAdapter(adapter);
+		mCurrentPath.setText(mCurrentRoot.getFullPath());
 	}
 }

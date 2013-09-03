@@ -122,4 +122,9 @@ public class SearchableActivity extends AppActivity implements
 	public void onNewIntent(final Intent intent) {
 		handleIntent(intent);
 	}
+
+	@Override
+	public void refreshUI() {
+
+	}
 }

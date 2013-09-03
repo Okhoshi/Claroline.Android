@@ -48,6 +48,12 @@ public class Cours extends Model {
 	private int mCoursId;
 
 	/**
+	 * Updated column.
+	 */
+	@Column(name = "Updated")
+	private boolean mUpdated;
+
+	/**
 	 * OfficialCode column.
 	 */
 	@SerializedName("officialCode")
@@ -82,12 +88,6 @@ public class Cours extends Model {
 	private DateTime mLoadedDate = new DateTime(0L);
 
 	/**
-	 * IsUpdated column.
-	 */
-	@Column(name = "IsUpdated")
-	private boolean mIsUpdated;
-
-	/**
 	 * Default constructor without arguments. Required.
 	 */
 	public Cours() {
@@ -99,13 +99,6 @@ public class Cours extends Model {
 	 */
 	public int getCoursId() {
 		return mCoursId;
-	}
-
-	/**
-	 * @return the IsUpdated
-	 */
-	public boolean getIsUpdated() {
-		return mIsUpdated;
 	}
 
 	/**
@@ -151,6 +144,13 @@ public class Cours extends Model {
 	}
 
 	/**
+	 * @return the Updated
+	 */
+	public boolean getUpdated() {
+		return mUpdated;
+	}
+
+	/**
 	 * @return the expiration state
 	 */
 	public boolean isExpired() {
@@ -184,14 +184,6 @@ public class Cours extends Model {
 	 */
 	public void setCoursId(final int pCoursId) {
 		mCoursId = pCoursId;
-	}
-
-	/**
-	 * @param pIsUpdated
-	 *            the IsUpdated to set
-	 */
-	public void setIsUpdated(final boolean pIsUpdated) {
-		mIsUpdated = pIsUpdated;
 	}
 
 	/**
@@ -240,5 +232,13 @@ public class Cours extends Model {
 	 */
 	public void setTitular(final String pTitular) {
 		mTitular = pTitular;
+	}
+
+	/**
+	 * @param pUpdated
+	 *            the Updated to set
+	 */
+	public void setUpdated(final boolean pUpdated) {
+		mUpdated = pUpdated;
 	}
 }

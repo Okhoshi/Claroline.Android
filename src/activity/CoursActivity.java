@@ -12,7 +12,9 @@
 package activity;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.Cours;
 import model.ResourceList;
@@ -26,6 +28,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import app.App;
 import app.AppActivity;
 
@@ -35,6 +38,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import connectivity.SupportedModules;
 import fragments.AnnonceListFragment;
 import fragments.DocumentsListFragment;
+import fragments.GenericListFragment;
 
 /**
  * Claroline Mobile - Android
@@ -58,7 +62,9 @@ public class CoursActivity extends AppActivity {
 		/**
 		 * Lists present in this course.
 		 */
-		private List<ResourceList> mResourceLists;
+		private List<ResourceList> mCurrentList;
+
+		private Map<String, Fragment> mActiveFragmentMap;
 
 		/**
 		 * Default constructor.
@@ -66,13 +72,32 @@ public class CoursActivity extends AppActivity {
 		 * @param fm
 		 *            the current {@link FragmentManager}
 		 */
-		public ResourcesListPagerAdapter(final FragmentManager fm) {
+		public ResourcesListPagerAdapter(final FragmentManager fm,
+				final Cours cours) {
 			super(fm);
+			mCurrentList = cours.lists();
+			mActiveFragmentMap = new HashMap<String, Fragment>();
+		}
+
+		@Override
+		public void destroyItem(final ViewGroup container, final int position,
+				final Object object) {
+			super.destroyItem(container, position, object);
+			mActiveFragmentMap.remove(mCurrentList.get(position).getLabel());
 		}
 
 		@Override
 		public int getCount() {
-			return mResourceLists.size();
+			return mCurrentList.size();
+		}
+
+		/**
+		 * @param label
+		 *            the requested label
+		 * @return the Fragment corresponding if active, null otherwise
+		 */
+		public Fragment getFragment(final String label) {
+			return mActiveFragmentMap.get(label);
 		}
 
 		/**
@@ -90,34 +115,32 @@ public class CoursActivity extends AppActivity {
 				case CLDOC:
 					return new DocumentsListFragment();
 				default:
-					return new Fragment();
+					return new GenericListFragment();
 				}
 			} else {
-				return new Fragment();
+				return new GenericListFragment();
 			}
 		}
 
 		@Override
 		public Fragment getItem(final int position) {
-			Fragment fragment = getFragmentForLabel(mResourceLists
-					.get(position).getLabel());
-			// Bundle args = new Bundle();
-			// args.putInt("coursID", mCurrentCours.getId().intValue());
-			fragment.setArguments(getIntent().getExtras());
+			Fragment fragment = getFragmentForLabel(mCurrentList.get(position)
+					.getLabel());
+			Bundle args = new Bundle(getIntent().getExtras());
+			args.putString("type", mCurrentList.get(position).getLabel());
+			fragment.setArguments(args);
+			mActiveFragmentMap.put(mCurrentList.get(position).getLabel(),
+					fragment);
 			return fragment;
 		}
 
 		@Override
 		public CharSequence getPageTitle(final int position) {
-			return mResourceLists.get(position).getName();
+			return mCurrentList.get(position).getName();
 		}
 
-		/**
-		 * @param lists
-		 *            the new {@link ResourceList} {@link List} to set
-		 */
-		public void setResourceLists(final List<ResourceList> lists) {
-			mResourceLists = lists;
+		public void refresh(final Cours cours) {
+			mCurrentList = cours.lists();
 			notifyDataSetChanged();
 		}
 	}
@@ -137,10 +160,10 @@ public class CoursActivity extends AppActivity {
 
 	@Override
 	public void onBackPressed() {
-		DocumentsListFragment frag = (DocumentsListFragment) getSupportFragmentManager()
-				.findFragmentByTag("documents");
-		if (frag != null && !frag.isOnRoot()) {
-			frag.goUp();
+		Fragment frag = mAdapter.getFragment("CLDOC");
+		if (frag != null && frag instanceof DocumentsListFragment
+				&& !((DocumentsListFragment) frag).isOnRoot()) {
+			((DocumentsListFragment) frag).goUp();
 		} else {
 			super.onBackPressed();
 		}
@@ -172,8 +195,8 @@ public class CoursActivity extends AppActivity {
 		}
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mAdapter = new ResourcesListPagerAdapter(getSupportFragmentManager());
-		mAdapter.setResourceLists(mCurrentCours.lists());
+		mAdapter = new ResourcesListPagerAdapter(getSupportFragmentManager(),
+				mCurrentCours);
 		mViewPager.setAdapter(mAdapter);
 
 		if (mCurrentCours.isExpired()) {
@@ -219,6 +242,7 @@ public class CoursActivity extends AppActivity {
 								@Override
 								public void onSuccess(final String response) {
 									refreshUI();
+									setProgressIndicator(false);
 								}
 							}, mCurrentCours);
 				} else {
@@ -228,6 +252,7 @@ public class CoursActivity extends AppActivity {
 							if (!response.equals("[]")) {
 								refreshUI();
 							}
+							setProgressIndicator(false);
 						}
 					});
 				}
@@ -245,9 +270,8 @@ public class CoursActivity extends AppActivity {
 		outState.putInt("tab", mViewPager.getCurrentItem());
 	}
 
-	private void refreshUI() {
-		int position = mViewPager.getCurrentItem();
-		mAdapter.setResourceLists(mCurrentCours.lists());
-		mViewPager.setCurrentItem(position, false);
+	@Override
+	public void refreshUI() {
+		mAdapter.refresh(mCurrentCours);
 	}
 }
