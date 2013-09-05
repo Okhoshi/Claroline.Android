@@ -28,8 +28,11 @@ import com.activeandroid.query.Update;
  */
 public final class Tools {
 
-	public static void cleanTableAfterUpdate(final Class<? extends Model> table) {
-		new Delete().from(table).where("Updated = ?", false).execute();
+	public static void cleanTableAfterUpdate(
+			final Class<? extends Model> table, final String cond,
+			final Object... args) {
+		new Delete().from(table).where("Updated = 0 AND " + cond, args)
+				.execute();
 		new Update(table).set("Updated = ?", false).execute();
 	}
 

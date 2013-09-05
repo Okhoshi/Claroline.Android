@@ -72,6 +72,8 @@ public abstract class AppActivity extends FragmentActivity implements
 	 */
 	private int mMax;
 
+	public static final int ONCE_PER_DAY = 24;
+
 	/**
 	 * @return the mService
 	 */
@@ -272,12 +274,12 @@ public abstract class AppActivity extends FragmentActivity implements
 			if (visible) {
 				if (mProgress == null) {
 					mProgress = new ProgressDialog(this);
-					mProgress.setCancelable(false);
+					mProgress.setCancelable(true);
 					mProgress.setIndeterminate(isIndeterminate);
 				} else if (mProgress.isIndeterminate() != isIndeterminate) {
 					mProgress.dismiss();
 					mProgress = new ProgressDialog(mProgress.getContext());
-					mProgress.setCancelable(false);
+					mProgress.setCancelable(true);
 					mProgress.setIndeterminate(isIndeterminate);
 				}
 				if (!isIndeterminate) {

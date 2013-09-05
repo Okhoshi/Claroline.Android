@@ -76,15 +76,22 @@ public class DocumentsListFragment extends ListFragment {
 
 		if (mCurrentList != null) {
 			if (mCurrentList.isExpired()
-					|| mCurrentList.resources().size() == 0) {
+					|| mCurrentList.resources().size() == 0
+					&& ((AppActivity) getActivity())
+							.mustUpdate(AppActivity.ONCE_PER_DAY)) {
 				((AppActivity) getActivity()).setProgressIndicator(true);
 				((AppActivity) getActivity()).getService().getResourcesForList(
 						mCurrentList, new AsyncHttpResponseHandler() {
 							@Override
-							public void onSuccess(final String content) {
+							public void onFinish() {
 								((AppActivity) getActivity())
 										.setProgressIndicator(false);
+							}
+
+							@Override
+							public void onSuccess(final String content) {
 								refreshUI();
+								((AppActivity) getActivity()).updatesNow();
 							}
 						});
 			} else if (mCurrentList.isTimeToUpdate()) {
@@ -92,11 +99,10 @@ public class DocumentsListFragment extends ListFragment {
 						new AsyncHttpResponseHandler() {
 							@Override
 							public void onSuccess(final String content) {
-								((AppActivity) getActivity())
-										.setProgressIndicator(false);
 								if (!content.equals("[]")) {
 									refreshUI();
 								}
+								((AppActivity) getActivity()).updatesNow();
 							}
 						});
 			}

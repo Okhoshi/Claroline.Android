@@ -14,6 +14,7 @@ package model;
 import org.joda.time.DateTime;
 
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Column.ForeignKeyAction;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.SerializedName;
 
@@ -64,7 +65,7 @@ public class Annonce extends ModelBase {
 	/**
 	 * List column.
 	 */
-	@Column(name = "List")
+	@Column(name = "List", onDelete = ForeignKeyAction.CASCADE)
 	private ResourceList mList;
 
 	/**
@@ -118,6 +119,7 @@ public class Annonce extends ModelBase {
 	/**
 	 * @return the Date
 	 */
+	@Override
 	public DateTime getDate() {
 		return mDate;
 	}
@@ -149,6 +151,7 @@ public class Annonce extends ModelBase {
 	/**
 	 * @return the NotifiedDate
 	 */
+	@Override
 	public DateTime getNotifiedDate() {
 		return mNotifiedDate;
 	}
@@ -220,6 +223,7 @@ public class Annonce extends ModelBase {
 	 * @param pDate
 	 *            the Date to set
 	 */
+	@Override
 	public void setDate(final DateTime pDate) {
 		mDate = pDate;
 	}
@@ -255,6 +259,7 @@ public class Annonce extends ModelBase {
 	 * @param pNotifiedDate
 	 *            the NotifiedDate to set
 	 */
+	@Override
 	public void setNotifiedDate(final DateTime pNotifiedDate) {
 		mNotifiedDate = pNotifiedDate;
 	}

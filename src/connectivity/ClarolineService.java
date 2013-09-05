@@ -5,6 +5,7 @@ package connectivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 
 import model.Cours;
 import model.ModelBase;
@@ -12,17 +13,20 @@ import model.ResourceList;
 import model.ResourceModel;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import util.Tools;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
 import app.App;
 
+import com.activeandroid.query.Select;
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -115,6 +119,11 @@ public class ClarolineService {
 				SupportedModules.USER, SupportedMethods.getCourseList);
 		mClient.serviceQuery(p, new JsonHttpResponseHandler() {
 			@Override
+			public void onFinish() {
+				handler.onFinish();
+			}
+
+			@Override
 			public void onSuccess(final JSONArray array) {
 				for (int i = 0; i < array.length(); i++) {
 					try {
@@ -129,7 +138,7 @@ public class ClarolineService {
 						e.printStackTrace();
 					}
 				}
-				Tools.cleanTableAfterUpdate(Cours.class);
+				Tools.cleanTableAfterUpdate(Cours.class, "1=1");
 				handler.onSuccess(array.toString());
 			}
 		});
@@ -148,6 +157,11 @@ public class ClarolineService {
 		mClient.serviceQuery(rp, new JsonHttpResponseHandler() {
 
 			@Override
+			public void onFinish() {
+				handler.onFinish();
+			}
+
+			@Override
 			public void onSuccess(final JSONArray array) {
 				Log.i(TAG, array.toString());
 				for (int i = 0; i < array.length(); i++) {
@@ -162,11 +176,14 @@ public class ClarolineService {
 					} catch (JSONException e) {
 						e.printStackTrace();
 					} catch (JsonSyntaxException e) {
-						android.os.Debug.waitForDebugger();
 						e.printStackTrace();
 					}
 				}
-				Tools.cleanTableAfterUpdate(list.getResourceType());
+				list.setLoadedDate(DateTime.now());
+				list.save();
+
+				Tools.cleanTableAfterUpdate(list.getResourceType(), "List = ?",
+						list);
 				handler.onSuccess(array.toString());
 			}
 		});
@@ -180,6 +197,11 @@ public class ClarolineService {
 				SupportedMethods.getSingleResource, cours.getSysCode(),
 				resourceIdentifier);
 		mClient.serviceQuery(p, new JsonHttpResponseHandler() {
+
+			@Override
+			public void onFinish() {
+				handler.onFinish();
+			}
 
 			@Override
 			public void onSuccess(final JSONObject response) {
@@ -201,6 +223,11 @@ public class ClarolineService {
 		mClient.serviceQuery(rp, new JsonHttpResponseHandler() {
 
 			@Override
+			public void onFinish() {
+				handler.onFinish();
+			}
+
+			@Override
 			public void onSuccess(final JSONArray response) {
 				for (int i = 0; i < response.length(); i++) {
 					try {
@@ -208,7 +235,6 @@ public class ClarolineService {
 						ResourceList rl = App.getGSON().fromJson(
 								item.toString(), ResourceList.class);
 						rl.setCours(cours);
-						rl.setLoadedDate(DateTime.now());
 						rl.setUpdated(true);
 						rl.setResourceType(SupportedModules.getTypeForModule(rl
 								.getLabel()));
@@ -217,7 +243,11 @@ public class ClarolineService {
 						e.printStackTrace();
 					}
 				}
-				Tools.cleanTableAfterUpdate(ResourceList.class);
+
+				cours.setLoadedDate(DateTime.now());
+				cours.save();
+				Tools.cleanTableAfterUpdate(ResourceList.class, "Cours = ?",
+						cours);
 				handler.onSuccess(response.toString());
 			}
 		});
@@ -235,17 +265,120 @@ public class ClarolineService {
 		mClient.serviceQuery(p, new JsonHttpResponseHandler() {
 
 			@Override
-			public void onFailure(final Throwable e, final JSONArray array) {
+			public void onFailure(final Throwable e, final String array) {
 				System.out.println("FAILURE ! :" + e.getLocalizedMessage());
 			}
 
 			@Override
-			public void onSuccess(final JSONArray array) {
-				if (array.length() > 0) {
-					System.out.println("Text");
-					// TODO Write the Update logic
+			public void onFinish() {
+				handler.onFinish();
+			}
+
+			@Override
+			public void onSuccess(final JSONArray response) {
+				handler.onSuccess(response.toString());
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public void onSuccess(final JSONObject object) {
+
+				Iterator<String> iterOnCours = object.keys();
+				while (iterOnCours.hasNext()) {
+					final String syscode = iterOnCours.next();
+					final Cours upCours = new Select().from(Cours.class)
+							.where("Syscode = ", syscode).executeSingle();
+
+					if (upCours == null) {
+						getCourseList(new AsyncHttpResponseHandler() {
+							@Override
+							public void onSuccess(final String content) {
+								Cours cours = new Select().from(Cours.class)
+										.where("Syscode = ", syscode)
+										.executeSingle();
+
+								if (cours != null) {
+									updateCompleteCourse(cours, null,
+											new AsyncHttpResponseHandler());
+								}
+							}
+						});
+						continue;
+					} else {
+						try {
+							JSONObject jsonCours = object
+									.getJSONObject(syscode);
+							Iterator<String> iterOnMod = jsonCours.keys();
+							while (iterOnMod.hasNext()) {
+								final String modKey = iterOnMod.next();
+								ResourceList upList = new Select()
+										.from(ResourceList.class)
+										.where("Cours = ? AND label = ?",
+												upCours, modKey)
+										.executeSingle();
+
+								if (upList == null) {
+									getToolListForCours(upCours,
+											new AsyncHttpResponseHandler() {
+												@Override
+												public void onSuccess(
+														final String content) {
+													ResourceList list = new Select()
+															.from(ResourceList.class)
+															.where("Cours = ? AND label = ?",
+																	upCours,
+																	modKey)
+															.executeSingle();
+													if (list != null) {
+														getResourcesForList(
+																list,
+																new AsyncHttpResponseHandler());
+													}
+												}
+											});
+									continue;
+								} else {
+									try {
+										JSONObject jsonRes = jsonCours
+												.getJSONObject(modKey);
+										Iterator<String> iterOnKeys = jsonRes
+												.keys();
+										while (iterOnKeys.hasNext()) {
+											String resourceString = iterOnKeys
+													.next();
+											ModelBase upRes = new Select()
+													.from(SupportedModules
+															.getTypeForModule(modKey))
+													.where("List = ?", upList)
+													.executeSingle();
+											if (upRes == null) {
+												getResourcesForList(
+														upList,
+														new AsyncHttpResponseHandler());
+											} else {
+												DateTime date = DateTime.parse(
+														jsonRes.optString(
+																resourceString,
+																""),
+														DateTimeFormat
+																.forPattern("yyyy-MM-dd HH:mm:ss"));
+												upRes.setDate(date);
+												upRes.setNotifiedDate(date);
+											}
+										}
+									} catch (JSONException e) {
+										e.printStackTrace();
+									}
+
+								}
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
 				}
-				handler.onSuccess(array.toString());
+
+				handler.onSuccess(object.toString());
 			}
 		});
 	}
@@ -260,6 +393,11 @@ public class ClarolineService {
 		RequestParams p = ClarolineClient.getRequestParams(
 				SupportedModules.USER, SupportedMethods.getUserData);
 		mClient.serviceQuery(p, new JsonHttpResponseHandler() {
+			@Override
+			public void onFinish() {
+				handler.onFinish();
+			}
+
 			@Override
 			public void onSuccess(final JSONObject jsonUser) {
 				String previousPicture = App.getPrefs().getString(
@@ -295,38 +433,55 @@ public class ClarolineService {
 		});
 	}
 
-	public void updateCompleteCourse(final AsyncHttpResponseHandler handler,
-			final Cours cours) {
+	public void updateCompleteCourse(final Cours cours,
+			final Activity activity, final AsyncHttpResponseHandler handler) {
 		getToolListForCours(cours, new AsyncHttpResponseHandler() {
 
 			@Override
+			public void onFinish() {
+				handler.onFinish();
+			}
+
+			@Override
 			public void onSuccess(final String response) {
-				synchronized (cours) {
-					mCounter = 0;
-					for (ResourceList list : cours.lists()) {
-						getResourcesForList(list,
-								new AsyncHttpResponseHandler() {
+				mCounter = 0;
+				for (ResourceList list : cours.lists()) {
+					getResourcesForList(list, new AsyncHttpResponseHandler() {
+						@Override
+						public void onSuccess(final String response) {
+							synchronized (cours) {
+								mCounter++;
+								cours.notify();
+							}
+						}
+					});
+				}
+				new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						try {
+							synchronized (cours) {
+								while (mCounter < cours.lists().size()) {
+									cours.wait();
+								}
+								mCounter = 0;
+
+							}
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} finally {
+							if (activity != null) {
+								activity.runOnUiThread(new Runnable() {
 									@Override
-									public void onSuccess(final String response) {
-										synchronized (cours) {
-											mCounter++;
-											cours.notify();
-										}
+									public void run() {
+										handler.onSuccess(response);
 									}
 								});
-					}
-					try {
-						while (mCounter < cours.lists().size()) {
-							cours.wait();
+							}
 						}
-						mCounter = 0;
-
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} finally {
-						handler.onSuccess(response);
 					}
-				}
+				}).start();
 			}
 		});
 	}

@@ -14,6 +14,7 @@ package model;
 import org.joda.time.DateTime;
 
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Column.ForeignKeyAction;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.SerializedName;
 
@@ -64,7 +65,7 @@ public class ResourceModel extends ModelBase {
 	/**
 	 * List column.
 	 */
-	@Column(name = "List")
+	@Column(name = "List", onDelete = ForeignKeyAction.CASCADE)
 	private ResourceList mList;
 
 	/**
@@ -74,10 +75,30 @@ public class ResourceModel extends ModelBase {
 	private DateTime mSeenDate;
 
 	/**
+	 * Date column.
+	 */
+	@Column(name = "Date")
+	private DateTime mDate;
+
+	/**
+	 * NotifiedDate column.
+	 */
+	@Column(name = "NotifiedDate")
+	private DateTime mNotifiedDate;
+
+	/**
 	 * LoadedDate column.
 	 */
 	@Column(name = "LoadedDate")
 	private DateTime mLoadedDate;
+
+	/**
+	 * @return the Date
+	 */
+	@Override
+	public DateTime getDate() {
+		return mDate;
+	}
 
 	/**
 	 * @return the IsVisible
@@ -101,6 +122,14 @@ public class ResourceModel extends ModelBase {
 	@Override
 	public DateTime getLoadedDate() {
 		return mLoadedDate;
+	}
+
+	/**
+	 * @return the NotifiedDate
+	 */
+	@Override
+	public DateTime getNotifiedDate() {
+		return mNotifiedDate;
 	}
 
 	/**
@@ -152,6 +181,15 @@ public class ResourceModel extends ModelBase {
 	}
 
 	/**
+	 * @param pDate
+	 *            the Date to set
+	 */
+	@Override
+	public void setDate(final DateTime pDate) {
+		mDate = pDate;
+	}
+
+	/**
 	 * @param pIsVisible
 	 *            the IsVisible to set
 	 */
@@ -176,6 +214,15 @@ public class ResourceModel extends ModelBase {
 	@Override
 	public void setLoadedDate(final DateTime pLoadedDate) {
 		mLoadedDate = pLoadedDate;
+	}
+
+	/**
+	 * @param pNotifiedDate
+	 *            the NotifiedDate to set
+	 */
+	@Override
+	public void setNotifiedDate(final DateTime pNotifiedDate) {
+		mNotifiedDate = pNotifiedDate;
 	}
 
 	/**

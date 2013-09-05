@@ -64,6 +64,9 @@ public class CoursActivity extends AppActivity {
 		 */
 		private List<ResourceList> mCurrentList;
 
+		/**
+		 * Currently active fragment in ViewPager.
+		 */
 		private Map<String, Fragment> mActiveFragmentMap;
 
 		/**
@@ -71,6 +74,8 @@ public class CoursActivity extends AppActivity {
 		 * 
 		 * @param fm
 		 *            the current {@link FragmentManager}
+		 * @param cours
+		 *            the current cours
 		 */
 		public ResourcesListPagerAdapter(final FragmentManager fm,
 				final Cours cours) {
@@ -199,24 +204,36 @@ public class CoursActivity extends AppActivity {
 				mCurrentCours);
 		mViewPager.setAdapter(mAdapter);
 
-		if (mCurrentCours.isExpired()) {
+		if (mCurrentCours.isExpired() || mCurrentCours.lists().size() == 0
+				&& mustUpdate(ONCE_PER_DAY)) {
 			setProgressIndicator(true);
-			getService().updateCompleteCourse(new AsyncHttpResponseHandler() {
-				@Override
-				public void onSuccess(final String response) {
-					if (!response.equals("[]")) {
-						refreshUI();
-					}
-				}
-			}, mCurrentCours);
+			getService().updateCompleteCourse(mCurrentCours, this,
+					new AsyncHttpResponseHandler() {
+						@Override
+						public void onFinish() {
+							setProgressIndicator(false);
+						}
+
+						@Override
+						public void onSuccess(final String response) {
+							refreshUI();
+							updatesNow();
+						}
+					});
 		} else if (mCurrentCours.isTimeToUpdate()) {
 			setProgressIndicator(true);
 			getService().getUpdates(new AsyncHttpResponseHandler() {
 				@Override
+				public void onFinish() {
+					setProgressIndicator(false);
+				}
+
+				@Override
 				public void onSuccess(final String response) {
 					if (!response.equals("[]")) {
 						refreshUI();
 					}
+					updatesNow();
 				}
 			});
 		}
@@ -237,22 +254,32 @@ public class CoursActivity extends AppActivity {
 			default:
 				setProgressIndicator(true);
 				if (mCurrentCours.isExpired()) {
-					getService().updateCompleteCourse(
+					getService().updateCompleteCourse(mCurrentCours, this,
 							new AsyncHttpResponseHandler() {
+								@Override
+								public void onFinish() {
+									setProgressIndicator(false);
+								}
+
 								@Override
 								public void onSuccess(final String response) {
 									refreshUI();
-									setProgressIndicator(false);
+									updatesNow();
 								}
-							}, mCurrentCours);
+							});
 				} else {
 					getService().getUpdates(new AsyncHttpResponseHandler() {
+						@Override
+						public void onFinish() {
+							setProgressIndicator(false);
+						}
+
 						@Override
 						public void onSuccess(final String response) {
 							if (!response.equals("[]")) {
 								refreshUI();
 							}
-							setProgressIndicator(false);
+							updatesNow();
 						}
 					});
 				}

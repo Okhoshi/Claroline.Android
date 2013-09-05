@@ -82,8 +82,14 @@ public class HomeActivity extends AppActivity {
 				});
 			} else if (force || mustUpdate(1)) {
 				setProgressIndicator(true);
-				if (new Select("Id").from(Cours.class).execute().size() == 0) {
+				if (new Select(new Select.Column("Name", "Name"))
+						.from(Cours.class).execute().size() == 0) {
 					getService().getCourseList(new AsyncHttpResponseHandler() {
+						@Override
+						public void onFinish() {
+							setProgressIndicator(false);
+						}
+
 						@Override
 						public void onSuccess(final String response) {
 							onRepositoryRefresh();
@@ -101,11 +107,15 @@ public class HomeActivity extends AppActivity {
 				} else {
 					getService().getUpdates(new AsyncHttpResponseHandler() {
 						@Override
+						public void onFinish() {
+							setProgressIndicator(false);
+						}
+
+						@Override
 						public void onSuccess(final String response) {
 							if (!response.equals("[]")) {
 								onRepositoryRefresh();
 							}
-							setProgressIndicator(false);
 							updatesNow();
 						}
 					});

@@ -36,6 +36,11 @@ public abstract class ModelBase extends Model {
 	}
 
 	/**
+	 * @return the Date
+	 */
+	public abstract DateTime getDate();
+
+	/**
 	 * @return the IsVisible
 	 */
 	public abstract boolean getIsVisible();
@@ -49,6 +54,11 @@ public abstract class ModelBase extends Model {
 	 * @return the last loading date
 	 */
 	public abstract DateTime getLoadedDate();
+
+	/**
+	 * @return the NotifiedDate
+	 */
+	public abstract DateTime getNotifiedDate();
 
 	/**
 	 * @return the ResourceString
@@ -102,6 +112,12 @@ public abstract class ModelBase extends Model {
 	}
 
 	/**
+	 * @param pDate
+	 *            the Date to set
+	 */
+	public abstract void setDate(final DateTime pDate);
+
+	/**
 	 * @param pIsVisible
 	 *            the IsVisible to set
 	 */
@@ -118,6 +134,12 @@ public abstract class ModelBase extends Model {
 	 *            the last loading date to set
 	 */
 	public abstract void setLoadedDate(DateTime date);
+
+	/**
+	 * @param pNotifiedDate
+	 *            the NotifiedDate to set
+	 */
+	public abstract void setNotifiedDate(final DateTime pNotifiedDate);
 
 	/**
 	 * @param pResourceString

@@ -17,6 +17,7 @@ import org.joda.time.DateTime;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Column.ForeignKeyAction;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.SerializedName;
 
@@ -35,7 +36,7 @@ public class ResourceList extends Model {
 	/**
 	 * Cours column.
 	 */
-	@Column(name = "Cours")
+	@Column(name = "Cours", onDelete = ForeignKeyAction.CASCADE)
 	private Cours mCours;
 
 	/**
@@ -109,6 +110,9 @@ public class ResourceList extends Model {
 	 * @return the LoadedDate
 	 */
 	public DateTime getLoadedDate() {
+		if (mLoadedDate == null) {
+			mLoadedDate = new DateTime(0L);
+		}
 		return mLoadedDate;
 	}
 
@@ -137,14 +141,14 @@ public class ResourceList extends Model {
 	 * @return the expiration state
 	 */
 	public boolean isExpired() {
-		return mLoadedDate.isAfter(DateTime.now().plusWeeks(1));
+		return getLoadedDate().isBefore(DateTime.now().minusWeeks(1));
 	}
 
 	/**
 	 * @return the update state
 	 */
 	public boolean isTimeToUpdate() {
-		return mLoadedDate.isAfter(DateTime.now().plusHours(2));
+		return getLoadedDate().isBefore(DateTime.now().minusHours(2));
 	}
 
 	/**
