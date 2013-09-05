@@ -89,7 +89,7 @@ public class SearchableActivity extends AppActivity implements
 			startActivity(i);
 			break;
 		case ANNONCE:
-			i = new Intent(this, DetailsAnnonce.class);
+			i = new Intent(this, DetailsActivity.class);
 			i.putExtra("annID", ((Annonce) parent.getExpandableListAdapter()
 					.getChild(groupPosition, childPosition)).getId());
 			i.putExtra("tab", 0);

@@ -9,6 +9,7 @@
 package adapter;
 
 import java.util.List;
+import java.util.Locale;
 
 import model.Annonce;
 import net.claroline.mobile.android.R;
@@ -74,7 +75,8 @@ public class AnnonceAdapter extends BaseAdapter {
 				name.setText(ann.getTitle());
 			}
 			if (detail1 != null) {
-				detail1.setText(ann.getDate().toString("E MMM y dd"));
+				detail1.setText(ann.getDate().toString("E MMM y dd",
+						Locale.getDefault()));
 			}
 			if (detail2 != null) {
 				detail2.setText("");

@@ -15,6 +15,7 @@
     <string name="menu_refresh">Refresh</string>
     <string name="menu_search">Search</string>
     <string name="menu_settings">Settings</string>
+    <string name="actionbar_subtitle">%1$s\'s Campus</string>
     
     
     <!-- Strings des onglets Documents et Annonces -->
@@ -59,6 +60,7 @@
     <!-- Divers -->
     <string name="list_no_items">This list is empty</string>
     <string name="extension_image_desc">Extension</string>
+    <string name="welcome">Welcome, %1$s %2$s</string>
     
     <!-- Connectivité -->
     <string name="loading_default">Loading&#8230;</string>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/details_annonce"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="right"
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/details_annonce_1"
+        android:id="@+id/details_generic_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
@@ -19,16 +19,9 @@
         android:layout_height="1dp"
         android:background="#2B497B" />
 
-    <ScrollView
-        android:id="@+id/scroll_text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/details_annonce_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </ScrollView>
+    <WebView
+        android:id="@+id/details_generic_2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

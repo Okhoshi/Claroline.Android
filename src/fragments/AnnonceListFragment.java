@@ -86,8 +86,10 @@ public class AnnonceListFragment extends ListFragment {
 	public void onListItemClick(final ListView l, final View v,
 			final int position, final long id) {
 		Annonce item = (Annonce) getListAdapter().getItem(position);
-		Intent intent = new Intent(getActivity(), activity.DetailsAnnonce.class);
-		intent.putExtra("annID", item.getId());
+		Intent intent = new Intent(getActivity(),
+				activity.DetailsActivity.class);
+		intent.putExtra("resID", item.getId());
+		intent.putExtra("label", "CLANN");
 		startActivity(intent);
 	}
 

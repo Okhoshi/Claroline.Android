@@ -72,6 +72,9 @@ public abstract class AppActivity extends FragmentActivity implements
 	 */
 	private int mMax;
 
+	/**
+	 * 24 hours constant.
+	 */
 	public static final int ONCE_PER_DAY = 24;
 
 	/**
@@ -220,6 +223,9 @@ public abstract class AppActivity extends FragmentActivity implements
 		super.onSaveInstanceState(outState);
 	}
 
+	/**
+	 * Call this when something in Dataset has changed.
+	 */
 	public abstract void refreshUI();
 
 	/**
@@ -237,6 +243,9 @@ public abstract class AppActivity extends FragmentActivity implements
 		onAccountStateChange(ClarolineClient.isValidAccount());
 	}
 
+	/**
+	 * Force the Overflow Menu.
+	 */
 	public void setOverflowMenu() {
 		try {
 			ViewConfiguration config = ViewConfiguration.get(this);
@@ -247,16 +256,34 @@ public abstract class AppActivity extends FragmentActivity implements
 				menuKeyField.setBoolean(config, false);
 			}
 		} catch (Exception ex) {
-			// Ignore
+			ex.printStackTrace();
 		}
-
 	}
 
+	/**
+	 * Convenience for
+	 * <code>setProgressIndicator( visible, Default message, true, 0)</code>.
+	 * 
+	 * @param visible
+	 *            the visibility to set
+	 */
 	public void setProgressIndicator(final boolean visible) {
 		setProgressIndicator(visible,
 				getResources().getString(R.string.loading_default), true, 0);
 	}
 
+	/**
+	 * Convenience for
+	 * <code>setProgressIndicator( visible, Default message, isIndeterminate, max)</code>
+	 * .
+	 * 
+	 * @param visible
+	 *            the visibility to set
+	 * @param isIndeterminate
+	 *            the state of {@link ProgressDialog} to set
+	 * @param max
+	 *            the max to set
+	 */
 	public void setProgressIndicator(final boolean visible,
 			final boolean isIndeterminate, final int max) {
 		setProgressIndicator(visible,
@@ -264,6 +291,19 @@ public abstract class AppActivity extends FragmentActivity implements
 				isIndeterminate, max);
 	}
 
+	/**
+	 * Sets the {@link ProgressDialog}, either the system one if on API > 14, or
+	 * custom one otherwise.
+	 * 
+	 * @param visible
+	 *            the visibility to set
+	 * @param message
+	 *            the message to set
+	 * @param isIndeterminate
+	 *            the state of {@link ProgressDialog} to set
+	 * @param max
+	 *            the max to set
+	 */
 	public void setProgressIndicator(final boolean visible,
 			final String message, final boolean isIndeterminate, final int max) {
 		if (App.isNewerAPI(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
@@ -298,6 +338,18 @@ public abstract class AppActivity extends FragmentActivity implements
 		}
 	}
 
+	/**
+	 * @param visible
+	 *            the visibility to set
+	 * @param message
+	 *            the message to set
+	 * @param isIndeterminate
+	 *            the state of {@link ProgressDialog} to set
+	 * @param max
+	 *            the maximum of {@link ProgressDialog} to set
+	 * @param format
+	 *            the format to use for the message (can be null on API < 11 )
+	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void setProgressIndicator(final boolean visible,
 			final String message, final boolean isIndeterminate, final int max,
@@ -305,6 +357,21 @@ public abstract class AppActivity extends FragmentActivity implements
 		setProgressIndicator(visible, message, isIndeterminate, max);
 		if (App.isNewerAPI(Build.VERSION_CODES.HONEYCOMB)) {
 			mProgress.setProgressNumberFormat(format);
+		}
+	}
+
+	/**
+	 * @param title
+	 *            the Activity title to set
+	 * @param subTitle
+	 *            the Activity subtitle to set (can be null, no effect on API
+	 *            preHoneycomb )
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void setTitle(final String title, final String subTitle) {
+		setTitle(title);
+		if (App.isNewerAPI(Build.VERSION_CODES.HONEYCOMB)) {
+			getActionBar().setSubtitle(subTitle);
 		}
 	}
 

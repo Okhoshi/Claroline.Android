@@ -20,6 +20,8 @@ import fragments.LoginDialog;
 
 public class HomeActivity extends AppActivity {
 
+	private static final int SIX_HOURS = 6;
+
 	/**
 	 * Called when the activity is first created.
 	 * 
@@ -33,6 +35,7 @@ public class HomeActivity extends AppActivity {
 
 		setActionBar(false);
 		refreshUI();
+		refresh(false, false, false);
 	}
 
 	@Override
@@ -50,19 +53,6 @@ public class HomeActivity extends AppActivity {
 		}
 	}
 
-	/*
-	 * 
-	 * Menus,tabs,actionBar
-	 */
-
-	public void onRepositoryRefresh() {
-		CoursListFragment list = (CoursListFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.list_frag);
-		if (list != null) {
-			list.refreshUI();
-		}
-	}
-
 	private void refresh(final boolean force, final boolean forceUser,
 			final boolean noDialog) {
 		if (App.getPrefs().getString(App.SETTINGS_PLATFORM_HOST, "").equals("")) {
@@ -73,7 +63,7 @@ public class HomeActivity extends AppActivity {
 		if (!noDialog && !ClarolineClient.isValidAccount()) {
 			showLoginDialog();
 		} else {
-			if (forceUser || mustUpdate(6) && !force) {
+			if (forceUser || mustUpdate(SIX_HOURS) && !force) {
 				getService().getUserData(new AsyncHttpResponseHandler() {
 					@Override
 					public void onSuccess(final String response) {
@@ -92,7 +82,7 @@ public class HomeActivity extends AppActivity {
 
 						@Override
 						public void onSuccess(final String response) {
-							onRepositoryRefresh();
+							refreshUI();
 							setProgressIndicator(false);
 							updatesNow();
 
@@ -114,7 +104,7 @@ public class HomeActivity extends AppActivity {
 						@Override
 						public void onSuccess(final String response) {
 							if (!response.equals("[]")) {
-								onRepositoryRefresh();
+								refreshUI();
 							}
 							updatesNow();
 						}
@@ -126,7 +116,16 @@ public class HomeActivity extends AppActivity {
 
 	@Override
 	public void refreshUI() {
-		refresh(false, false, false);
+		setTitle(
+				App.getPrefs().getString(App.SETTINGS_PLATFORM_NAME,
+						getString(R.string.app_name)),
+				getString(R.string.actionbar_subtitle, App.getPrefs()
+						.getString(App.SETTINGS_INSTITUTION_NAME, "Claroline")));
+		CoursListFragment list = (CoursListFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.list_frag);
+		if (list != null) {
+			list.refreshUI();
+		}
 	}
 
 	private void showLoginDialog() {

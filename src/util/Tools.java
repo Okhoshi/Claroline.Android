@@ -11,6 +11,8 @@
  */
 package util;
 
+import java.util.Arrays;
+
 import net.claroline.mobile.android.R;
 
 import com.activeandroid.Model;
@@ -54,6 +56,11 @@ public final class Tools {
 		return array;
 	}
 
+	/**
+	 * @param pos
+	 *            the position of requested Fragment in ViewPager
+	 * @return the tag of requested fragment for the FragmentManager
+	 */
 	public static String getFragmentTag(final int pos) {
 		return "android:switcher:" + R.id.pager + ":" + pos;
 	}
@@ -67,22 +74,22 @@ public final class Tools {
 		int img;
 		if (extension.equals("")) {
 			img = R.drawable.folder;
-		} else if (extension.equals("gz") || extension.equals("bz2")
-				|| extension.equals("zip") || extension.equals("tar")
-				|| extension.equals("rar")) {
+		} else if (Arrays.asList(
+				new String[] { "gz", "bz2", "zip", "tar", "rar" }).contains(
+				extension)) {
 			img = R.drawable.package_x_generic;
 		} else if (extension.equals("pgp")) {
 			img = R.drawable.text_x_pgp;
-		} else if (extension.equals("url") || extension.equals("htm")
-				|| extension.equals("html") || extension.equals("htx")
-				|| extension.equals("swf")) {
+		} else if (Arrays.asList(
+				new String[] { "url", "htm", "html", "htx", "swf" }).contains(
+				extension)) {
 			img = R.drawable.link;
-		} else if (extension.equals("sh") || extension.equals("exe")) {
+		} else if (Arrays.asList(new String[] { "sh", "exe" }).contains(
+				extension)) {
 			img = R.drawable.applications_system;
-		} else if (extension.equals("js") || extension.equals("css")
-				|| extension.equals("xsl") || extension.equals("pl")
-				|| extension.equals("plm") || extension.equals("ml")
-				|| extension.equals("lsp") || extension.equals("cls")) {
+		} else if (Arrays.asList(
+				new String[] { "js", "css", "xsl", "pl", "plm", "ml", "lsp",
+						"cls" }).contains(extension)) {
 			img = R.drawable.text_x_script;
 		} else if (extension.equals("php")) {
 			img = R.drawable.application_x_php;
@@ -90,40 +97,40 @@ public final class Tools {
 			img = R.drawable.text_x_python;
 		} else if (extension.equals("rb")) {
 			img = R.drawable.application_x_ruby;
-		} else if (extension.equals("c") || extension.equals("h")
-				|| extension.equals("cpp") || extension.equals("java")) {
+		} else if (Arrays.asList(new String[] { "c", "h", "cpp", "java" })
+				.contains(extension)) {
 			img = R.drawable.text_x_code;
-		} else if (extension.equals("xml") || extension.equals("tex")
-				|| extension.equals("txt") || extension.equals("rtf")) {
+		} else if (Arrays.asList(new String[] { "xml", "tex", "txt", "rtf" })
+				.contains(extension)) {
 			img = R.drawable.text_x_generic;
 		} else if (extension.equals("pdf")) {
 			img = R.drawable.pdf;
 		} else if (extension.equals("ps")) {
 			img = R.drawable.x_office_document;
-		} else if (extension.equals("ogg") || extension.equals("wav")
-				|| extension.equals("midi") || extension.equals("mp2")
-				|| extension.equals("mp3") || extension.equals("mp4")
-				|| extension.equals("vqf")) {
+		} else if (Arrays
+				.asList(new String[] { "ogg", "wav", "midi", "mp2", "mp3",
+						"mp4", "vqf" }).contains(extension)) {
 			img = R.drawable.audio_x_generic;
-		} else if (extension.equals("avi") || extension.equals("mpg")
-				|| extension.equals("mpeg") || extension.equals("mov")
-				|| extension.equals("wmv")) {
+		} else if (Arrays.asList(
+				new String[] { "avi", "mpg", "mpeg", "mov", "wmv" }).contains(
+				extension)) {
 			img = R.drawable.video_x_generic;
-		} else if (extension.equals("png") || extension.equals("jpeg")
-				|| extension.equals("jpg") || extension.equals("xcf")
-				|| extension.equals("gif") || extension.equals("bmp")) {
+		} else if (Arrays.asList(
+				new String[] { "png", "jpeg", "jpg", "xcf", "gif", "bmp" })
+				.contains(extension)) {
 			img = R.drawable.image_x_generic;
-		} else if (extension.equals("svg") || extension.equals("odg")) {
+		} else if (Arrays.asList(new String[] { "svg", "odg" }).contains(
+				extension)) {
 			img = R.drawable.x_office_drawing;
-		} else if (extension.equals("odt") || extension.equals("doc")
-				|| extension.equals("docx") || extension.equals("dot")
-				|| extension.equals("mcw") || extension.equals("wps")) {
+		} else if (Arrays.asList(
+				new String[] { "odt", "doc", "docx", "dot", "mcw", "wps" })
+				.contains(extension)) {
 			img = R.drawable.x_office_document;
-		} else if (extension.equals("ods") || extension.equals("xls")
-				|| extension.equals("xlsx") || extension.equals("xlt")) {
+		} else if (Arrays.asList(new String[] { "ods", "xls", "xlsx", "xlt" })
+				.contains(extension)) {
 			img = R.drawable.x_office_spreadsheet;
-		} else if (extension.equals("odp") || extension.equals("ppt")
-				|| extension.equals("pptx") || extension.equals("pps")) {
+		} else if (Arrays.asList(new String[] { "odp", "ppt", "pptx", "pps" })
+				.contains(extension)) {
 			img = R.drawable.x_office_presentation;
 		} else if (extension.equals("odf")) {
 			img = R.drawable.x_office_formula;

@@ -20,8 +20,6 @@ import model.Cours;
 import model.ResourceList;
 import net.claroline.mobile.android.R;
 import util.Tools;
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -29,7 +27,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import app.App;
 import app.AppActivity;
 
 import com.activeandroid.query.Select;
@@ -174,7 +171,6 @@ public class CoursActivity extends AppActivity {
 		}
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -194,10 +190,7 @@ public class CoursActivity extends AppActivity {
 			finish();
 		}
 		setTitle(String.format("[%s] %s", mCurrentCours.getOfficialCode(),
-				mCurrentCours.getName()));
-		if (App.isNewerAPI(Build.VERSION_CODES.HONEYCOMB)) {
-			getActionBar().setSubtitle(mCurrentCours.getTitular());
-		}
+				mCurrentCours.getName()), mCurrentCours.getTitular());
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mAdapter = new ResourcesListPagerAdapter(getSupportFragmentManager(),

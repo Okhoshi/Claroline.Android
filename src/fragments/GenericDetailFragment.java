@@ -1,34 +1,38 @@
 package fragments;
 
-import java.util.Locale;
-
-import model.Annonce;
+import model.ResourceModel;
 import net.claroline.mobile.android.R;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.TextView;
 import app.AppActivity;
 
 import com.activeandroid.query.Select;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-public class AnnonceDetailFragment extends DetailFragment {
+public class GenericDetailFragment extends DetailFragment {
 
 	/**
-	 * The current announce.
+	 * The current resource.
 	 */
-	private Annonce mCurrentAnnonce;
+	private ResourceModel mCurrentResource;
 
 	/**
 	 * UI references.
 	 */
-	private TextView mTV1, mTV2;
+	private TextView mTV1;
+
+	/**
+	 * UI references.
+	 */
+	private WebView mWV2;
 
 	@Override
 	public boolean isExpired() {
-		return mCurrentAnnonce.isExpired();
+		return mCurrentResource.isExpired();
 	}
 
 	@Override
@@ -36,14 +40,14 @@ public class AnnonceDetailFragment extends DetailFragment {
 			final ViewGroup container, final Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View view = inflater
-				.inflate(R.layout.details_annonce, container, false);
+				.inflate(R.layout.details_generic, container, false);
 
-		mTV1 = (TextView) view.findViewById(R.id.details_annonce_1);
-		mTV2 = (TextView) view.findViewById(R.id.details_annonce_2);
+		mTV1 = (TextView) view.findViewById(R.id.details_generic_1);
+		mWV2 = (WebView) view.findViewById(R.id.details_generic_2);
 
 		Bundle extras = getArguments();
 		if (extras != null) {
-			mCurrentAnnonce = new Select().from(Annonce.class)
+			mCurrentResource = new Select().from(ResourceModel.class)
 					.where("Id = ?", extras.get("resID")).executeSingle();
 
 			refreshUI();
@@ -55,18 +59,15 @@ public class AnnonceDetailFragment extends DetailFragment {
 	@Override
 	public void refreshResource(final AsyncHttpResponseHandler handler) {
 		((AppActivity) getActivity()).getService().getSingleResource(
-				mCurrentAnnonce.getList().getCours(),
-				mCurrentAnnonce.getList(), mCurrentAnnonce.getResourceString(),
-				handler);
+				mCurrentResource.getList().getCours(),
+				mCurrentResource.getList(),
+				mCurrentResource.getResourceString(), handler);
 	}
 
 	@Override
 	public void refreshUI() {
-		((AppActivity) getActivity()).setTitle(mCurrentAnnonce.getTitle(),
-				mCurrentAnnonce.getList().getCours().getName());
-
-		mTV1.setText(mCurrentAnnonce.getDate().toString("E dd/MMM/y",
-				Locale.getDefault()));
-		mTV2.setText(mCurrentAnnonce.getContent());
+		((AppActivity) getActivity()).setTitle(mCurrentResource.getTitle(),
+				mCurrentResource.getList().getCours().getName());
+		mTV1.setVisibility(View.GONE);
 	}
 }

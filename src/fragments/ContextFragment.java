@@ -13,19 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import app.App;
+import app.AppActivity;
 
 public class ContextFragment extends Fragment implements
 		OnSharedPreferenceChangeListener {
-
-	/**
-	 * UI reference.
-	 */
-	private TextView mPlatformView;
-
-	/**
-	 * UI reference.
-	 */
-	private TextView mInstitutionView;
 
 	/**
 	 * UI reference.
@@ -47,21 +38,16 @@ public class ContextFragment extends Fragment implements
 			final ViewGroup container, final Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.context_frag, container, false);
 
-		mPlatformView = (TextView) view.findViewById(R.id.platformName);
-		mInstitutionView = (TextView) view.findViewById(R.id.institutionName);
 		mFirstLastView = (TextView) view.findViewById(R.id.firstLastName);
 		mNomaView = (TextView) view.findViewById(R.id.NOMA);
 		mUserPicture = (ImageView) view.findViewById(R.id.user_image);
 
-		mPlatformView.setText(App.getPrefs().getString(
-				App.SETTINGS_PLATFORM_NAME, ""));
-		mInstitutionView.setText(App.getPrefs().getString(
-				App.SETTINGS_INSTITUTION_NAME, ""));
-		mFirstLastView.setText(App.getPrefs().getString(App.SETTINGS_FIRST_NAME,
-				"")
-				+ " " + App.getPrefs().getString(App.SETTINGS_LAST_NAME, ""));
+		mFirstLastView.setText(getString(R.string.welcome, App.getPrefs()
+				.getString(App.SETTINGS_FIRST_NAME, ""), App.getPrefs()
+				.getString(App.SETTINGS_LAST_NAME, "")));
 		mNomaView.setText(App.getPrefs().getString(App.SETTINGS_OFFICIAL_CODE,
 				""));
+
 		String pic64 = App.getPrefs().getString(App.SETTINGS_USER_IMAGE, "");
 		if (!pic64.equals("")) {
 			byte[] pic = Base64.decode(pic64, Base64.DEFAULT);
@@ -96,11 +82,11 @@ public class ContextFragment extends Fragment implements
 					+ " "
 					+ App.getPrefs().getString(App.SETTINGS_LAST_NAME, ""));
 		} else if (key.equals(App.SETTINGS_PLATFORM_NAME)) {
-			mPlatformView.setText(App.getPrefs().getString(key, ""));
+			((AppActivity) getActivity()).refreshUI();
 		} else if (key.equals(App.SETTINGS_OFFICIAL_CODE)) {
 			mNomaView.setText(App.getPrefs().getString(key, ""));
 		} else if (key.equals(App.SETTINGS_INSTITUTION_NAME)) {
-			mInstitutionView.setText(App.getPrefs().getString(key, ""));
+			((AppActivity) getActivity()).refreshUI();
 		} else if (key.equals(App.SETTINGS_USER_IMAGE)) {
 			String pic64 = App.getPrefs()
 					.getString(App.SETTINGS_USER_IMAGE, "");

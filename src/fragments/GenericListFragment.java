@@ -2,15 +2,18 @@ package fragments;
 
 import java.util.List;
 
+import model.ModelBase;
 import model.ResourceList;
 import model.ResourceModel;
 import net.claroline.mobile.android.R;
 import adapter.GenericAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import app.AppActivity;
 
 import com.activeandroid.query.Select;
@@ -29,7 +32,6 @@ public class GenericListFragment extends ListFragment {
 
 		Bundle extras = getArguments();
 		if (extras != null) {
-			// FIXME wrong request... Id replace with the course one
 			mCurrentList = new Select()
 					.from(ResourceList.class)
 					.where("Cours = ? AND label = ?", extras.get("coursID"),
@@ -77,6 +79,17 @@ public class GenericListFragment extends ListFragment {
 			final ViewGroup container, final Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		return inflater.inflate(R.layout.standard_list, null);
+	}
+
+	@Override
+	public void onListItemClick(final ListView l, final View v,
+			final int position, final long id) {
+		ModelBase item = (ModelBase) getListAdapter().getItem(position);
+		Intent intent = new Intent(getActivity(),
+				activity.DetailsActivity.class);
+		intent.putExtra("resID", item.getId());
+		intent.putExtra("label", mCurrentList.getLabel());
+		startActivity(intent);
 	}
 
 	public void refreshUI() {
