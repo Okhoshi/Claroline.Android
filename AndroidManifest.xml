@@ -71,7 +71,7 @@
         <!-- Points to searchable activity so the whole app can invoke search. -->
         <meta-data
             android:name="android.app.default_searchable"
-            android:value="activity.searchableActivity" />
+            android:value="activity.SearchableActivity" />
 
         <activity
             android:name="activity.Settings"

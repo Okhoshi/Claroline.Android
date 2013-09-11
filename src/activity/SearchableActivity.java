@@ -69,7 +69,7 @@ public class SearchableActivity extends AppActivity implements
 
 		List<Cours> courses = new Select()
 				.from(Cours.class)
-				.where("Name LIKE ? OR SysCode LIKE ?", '%' + query + '%',
+				.where("Name LIKE ? OR OfficialCode LIKE ?", '%' + query + '%',
 						'%' + query + '%').execute();
 
 		SparseArray<List<?>> resultC = new SparseArray<List<?>>();
@@ -85,7 +85,7 @@ public class SearchableActivity extends AppActivity implements
 
 		List<Document> documents = new Select()
 				.from(Document.class)
-				.where("Title LIKE ? OR Description LIKE ? OR Extension LIKE ?",
+				.where("IsFolder = 0 AND Title LIKE ? OR Description LIKE ? OR Extension LIKE ?",
 						'%' + query + '%', '%' + query + '%', '%' + query + '%')
 				.execute();
 
@@ -126,16 +126,16 @@ public class SearchableActivity extends AppActivity implements
 			break;
 		case ANNONCE:
 			i = new Intent(this, DetailsActivity.class);
-			i.putExtra("annID", ((Annonce) parent.getExpandableListAdapter()
+			i.putExtra("resID", ((Annonce) parent.getExpandableListAdapter()
 					.getChild(groupPosition, childPosition)).getId());
-			i.putExtra("tab", 0);
+			i.putExtra("label", "CLANN");
 			startActivity(i);
 			break;
 		case DOCUMENTS:
-			i = new Intent(this, CoursActivity.class);
-			i.putExtra("tab", 1);
-			i.putExtra("docID", ((Document) parent.getExpandableListAdapter()
+			i = new Intent(this, DetailsActivity.class);
+			i.putExtra("resID", ((Document) parent.getExpandableListAdapter()
 					.getChild(groupPosition, childPosition)).getId());
+			i.putExtra("label", "CLDOC");
 			startActivity(i);
 			break;
 		default:

@@ -36,6 +36,7 @@ import app.App;
 import com.activeandroid.query.Select;
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -67,14 +68,18 @@ public class ClarolineService {
 	/**
 	 * Specific handler for the profile picture.
 	 */
-	private AsyncHttpResponseHandler mProfilePictureAsyncHandler = new AsyncHttpResponseHandler() {
+	private BinaryHttpResponseHandler mProfilePictureHandler = new BinaryHttpResponseHandler() {
 		@Override
-		public void onSuccess(final String response) {
+		public void onFailure(final Throwable error, final byte[] binaryData) {
+			System.out.println(error.getLocalizedMessage());
+		};
 
-			byte[] b = response.getBytes();
+		@Override
+		public void onSuccess(final byte[] binaryData) {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-			Bitmap bm = BitmapFactory.decodeByteArray(b, 0, b.length);
+			Bitmap bm = BitmapFactory.decodeByteArray(binaryData, 0,
+					binaryData.length);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			bm.compress(Bitmap.CompressFormat.JPEG, C100, baos);
 
@@ -534,7 +539,8 @@ public class ClarolineService {
 
 				String imgUrl = jsonUser.optString(App.SETTINGS_PICTURE, "");
 				if (!imgUrl.equals("") && !imgUrl.equals(previousPicture)) {
-					mClient.get(imgUrl, mProfilePictureAsyncHandler);
+					System.out.println("Profile : " + imgUrl);
+					mClient.get(imgUrl, mProfilePictureHandler);
 				}
 				handler.onSuccess(jsonUser.toString());
 			}
