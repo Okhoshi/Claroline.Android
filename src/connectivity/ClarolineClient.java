@@ -335,4 +335,27 @@ public class ClarolineClient extends AsyncHttpClient {
 				.putBoolean(App.SETTINGS_ACCOUNT_VERIFIED, isValid).apply();
 		notifyAccountStateListener(isValid);
 	}
+
+	/**
+	 * Makes a GET request on url with authentication for Claroline.
+	 * 
+	 * @param url
+	 *            the url to request authentified
+	 * @param handler
+	 *            the handler to execute after the request
+	 */
+	public void siteCall(final String url,
+			final AsyncHttpResponseHandler handler) {
+		if (mExpires.isBeforeNow()) {
+			connect(new AsyncHttpResponseHandler() {
+				@Override
+				public void onSuccess(final String response) {
+					siteCall(url, handler);
+				}
+			});
+		} else {
+			Log.d("Client", "Query " + url);
+			get(url, handler);
+		}
+	}
 }

@@ -107,7 +107,7 @@ public class DocumentsListFragment extends ListFragment {
 	 * @return true if the current document is the root, false otherwise
 	 */
 	public boolean isOnRoot() {
-		return mCurrentRoot.equals(Document.getEmptyRoot(mCurrentList));
+		return mCurrentRoot.getFullPath().equals("/");
 	}
 
 	@Override

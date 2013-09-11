@@ -187,7 +187,7 @@ public class ClarolineService {
 	 */
 	public void getPageFor(final String url,
 			final AsyncHttpResponseHandler handler) {
-		mClient.get(url, handler);
+		mClient.siteCall(url, handler);
 	}
 
 	/**

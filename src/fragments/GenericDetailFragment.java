@@ -8,7 +8,6 @@ import net.claroline.mobile.android.R;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Xml.Encoding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +72,7 @@ public class GenericDetailFragment extends DetailFragment {
 													+ "\"/>\n</head>");
 
 							mWV2.loadDataWithBaseURL(url, data, "text/html",
-									Encoding.UTF_8.name(), null);
+									"utf-8", null);
 							((AppActivity) getActivity())
 									.setProgressIndicator(false);
 						}

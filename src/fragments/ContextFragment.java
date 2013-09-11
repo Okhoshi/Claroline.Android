@@ -96,10 +96,9 @@ public class ContextFragment extends Fragment implements
 			final SharedPreferences sharedPreference, final String key) {
 		if (key.equals(App.SETTINGS_FIRST_NAME)
 				|| key.equals(App.SETTINGS_LAST_NAME)) {
-			mFirstLastView.setText(App.getPrefs().getString(
-					App.SETTINGS_FIRST_NAME, "")
-					+ " "
-					+ App.getPrefs().getString(App.SETTINGS_LAST_NAME, ""));
+			mFirstLastView.setText(getString(R.string.welcome, App.getPrefs()
+					.getString(App.SETTINGS_FIRST_NAME, ""), App.getPrefs()
+					.getString(App.SETTINGS_LAST_NAME, "")));
 		} else if (key.equals(App.SETTINGS_PLATFORM_NAME)) {
 			((AppActivity) getActivity()).refreshUI();
 		} else if (key.equals(App.SETTINGS_OFFICIAL_CODE)) {

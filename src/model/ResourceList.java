@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Column.ConflictAction;
 import com.activeandroid.annotation.Column.ForeignKeyAction;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.SerializedName;
@@ -47,6 +48,12 @@ public class ResourceList extends Model {
 	@SerializedName("name")
 	@Column(name = "Name")
 	private String mName;
+
+	/**
+	 * Index column.
+	 */
+	@Column(name = "UniqueIndex", unique = true, onUniqueConflict = ConflictAction.IGNORE)
+	private String mIndex;
 
 	/**
 	 * Label column.
@@ -92,6 +99,17 @@ public class ResourceList extends Model {
 	 */
 	public Cours getCours() {
 		return mCours;
+	}
+
+	/**
+	 * @return the Index
+	 */
+	public String getIndex() {
+		if (mIndex == null) {
+			setIndex(getCours().getSysCode() + getLabel());
+			save();
+		}
+		return mIndex;
 	}
 
 	/**
@@ -169,6 +187,15 @@ public class ResourceList extends Model {
 	 */
 	public void setCours(final Cours pCours) {
 		mCours = pCours;
+		setIndex(mCours.getSysCode() + getLabel());
+	}
+
+	/**
+	 * @param pIndex
+	 *            the Index to set
+	 */
+	public void setIndex(final String pIndex) {
+		mIndex = pIndex;
 	}
 
 	/**
@@ -185,6 +212,7 @@ public class ResourceList extends Model {
 	 */
 	public void setLabel(final String pLabel) {
 		mLabel = pLabel;
+		setIndex(getCours().getSysCode() + mLabel);
 	}
 
 	/**
