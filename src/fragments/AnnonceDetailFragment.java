@@ -55,9 +55,9 @@ public class AnnonceDetailFragment extends DetailFragment {
 	@Override
 	public void refreshResource(final AsyncHttpResponseHandler handler) {
 		((AppActivity) getActivity()).getService().getSingleResource(
-				mCurrentAnnonce.getList().getCours(),
-				mCurrentAnnonce.getList(), mCurrentAnnonce.getResourceString(),
-				handler);
+				mCurrentAnnonce.getList().getCours().getSysCode(),
+				mCurrentAnnonce.getList().getLabel(), Annonce.class,
+				mCurrentAnnonce.getResourceString(), handler);
 	}
 
 	@Override

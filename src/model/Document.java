@@ -18,12 +18,15 @@ import java.util.List;
 import net.claroline.mobile.android.R;
 
 import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.os.Environment;
 import android.util.Log;
 import app.App;
 
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Column.ConflictAction;
 import com.activeandroid.annotation.Column.ForeignKeyAction;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
@@ -38,7 +41,6 @@ import com.google.gson.annotations.SerializedName;
  * @author Devos Quentin
  * @version 1.0
  */
-// FIXME Problem with the all logic about the path...
 @Table(name = "Document")
 public class Document extends ModelBase {
 
@@ -86,7 +88,7 @@ public class Document extends ModelBase {
 	 * Path column.
 	 */
 	@SerializedName("path")
-	@Column(name = "Path")
+	@Column(name = "ResourceString", unique = true, onUniqueConflict = ConflictAction.IGNORE)
 	private String mPath;
 
 	/**
@@ -165,9 +167,10 @@ public class Document extends ModelBase {
 			liste = new Select()
 					.from(Document.class)
 					.where("List = ? "
-							+ "AND ( Path = ( ? || Title || '.' || Extension ) "
-							+ "OR Path = ( ? || Title ) )", mList.getId(),
-							getFullPath(), getFullPath()).execute();
+							+ "AND ( ResourceString = ( ? || Title || '.' || Extension ) "
+							+ "OR ResourceString = ( ? || Title ) )",
+							mList.getId(), getFullPath(), getFullPath())
+					.execute();
 		} else {
 			liste = new ArrayList<Document>();
 		}
@@ -274,7 +277,7 @@ public class Document extends ModelBase {
 			rootPath = rootPath.substring(0, rootPath.lastIndexOf(rootName));
 			return new Select()
 					.from(Document.class)
-					.where("IsFolder = 1 AND List = ? AND Path = ? AND Title = ?",
+					.where("IsFolder = 1 AND List = ? AND ResourceString = ? AND Title = ?",
 							mList.getId(), rootPath, rootName).executeSingle();
 		}
 	}
@@ -368,7 +371,8 @@ public class Document extends ModelBase {
 			File file = new File(root.getAbsolutePath()
 					+ "/"
 					+ App.getInstance().getResources()
-							.getString(R.string.app_name), getTitle() + "."
+							.getString(R.string.app_name) + "/"
+					+ mList.getCours().getOfficialCode(), getTitle() + "."
 					+ getExtension());
 			return file.exists() && file.canRead();
 		}
@@ -503,5 +507,11 @@ public class Document extends ModelBase {
 	@Override
 	public void setURL(final String pURL) {
 		mURL = pURL;
+	}
+
+	@Override
+	public void update(final JSONObject item) throws JSONException {
+		setDescription(item.getString("description"));
+		setDate(new DateTime(item.getString("date")));
 	}
 }

@@ -20,8 +20,6 @@
             android:layout_gravity="center_vertical"
             android:baselineAlignBottom="false"
             android:contentDescription="@string/user_picture_desc"
-            android:maxHeight="50dp"
-            android:maxWidth="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/nopicture" />
 

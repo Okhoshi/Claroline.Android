@@ -15,6 +15,8 @@ package model;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -37,7 +39,7 @@ public class Cours extends Model {
 	 * SysCode column.
 	 */
 	@SerializedName("sysCode")
-	@Column(name = "SysCode", unique = true, onUniqueConflict = ConflictAction.REPLACE)
+	@Column(name = "SysCode", unique = true, onUniqueConflict = ConflictAction.IGNORE)
 	private String mSysCode;
 
 	/**
@@ -240,5 +242,20 @@ public class Cours extends Model {
 	 */
 	public void setUpdated(final boolean pUpdated) {
 		mUpdated = pUpdated;
+	}
+
+	/**
+	 * Loads the infos from JSON item.
+	 * 
+	 * @param item
+	 *            the data to load
+	 * @throws JSONException
+	 *             if the data does not match the format
+	 */
+	public void update(final JSONObject item) throws JSONException {
+		setName(item.getString("title"));
+		setOfficialCode(item.getString("officialCode"));
+		setOfficialEmail(item.getString("officialEmail"));
+		setTitular(item.getString("titular"));
 	}
 }

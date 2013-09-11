@@ -141,6 +141,12 @@ public class CoursActivity extends AppActivity {
 			return mCurrentList.get(position).getName();
 		}
 
+		/**
+		 * Refresh the tabs.
+		 * 
+		 * @param cours
+		 *            the course data to refresh with
+		 */
 		public void refresh(final Cours cours) {
 			mCurrentList = cours.lists();
 			notifyDataSetChanged();
@@ -177,13 +183,11 @@ public class CoursActivity extends AppActivity {
 		setContentView(R.layout.cours_activity);
 
 		Bundle extras = getIntent().getExtras();
-		int currentDocumentId = -1;
 		int tabIndex = -1;
 
 		if (extras != null) {
 			mCurrentCours = new Select().from(Cours.class)
 					.where("Id = ?", extras.get("coursID")).executeSingle();
-			currentDocumentId = extras.getInt("currentDocumentId", -1);
 			tabIndex = extras.getInt("tab", -1);
 		}
 		if (mCurrentCours == null) {

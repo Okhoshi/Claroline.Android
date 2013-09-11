@@ -2,18 +2,20 @@
 <resources>
     <string name="imgdsc_logo">Claroline Logo</string>
     <!-- Nom de l'application --> 
-    <string name="app_name">ClaroMobile</string>
+    <string name="app_name">Claroline Mobile</string>
     <string name="version">1.5 - BETA</string>
     <string name="authors_names">Devos Quentin\nUytterhoeven Dimitri</string>
     <string name="about_us_mail_quentin">q.devos@student.uclouvain.be</string>
     <string name="about_us_mail_dimitri">dimitri.uytterhoeven@student.uclouvain.be</string>
     <string name="app_description">© Claroline 2013</string>
     <string name="joda">Joda Time</string>
-    <string name="joda_version">V 2.2</string>
+    <string name="joda_version">V 2.3</string>
+    <string name="gson">GSON</string>
+    <string name="gson_version">V 2.2.4</string>
     <string name="asynchttp">Android Async HTTP</string>
-    <string name="asynchttp_version">V 1.4.3</string>
+    <string name="asynchttp_version"></string>
     <string name="activeandroid">ActiveAndroid</string>
-    <string name="activeandroid_version">424cfa9078 (&gt; V 3.0.0)</string>
+    <string name="activeandroid_version"></string>
     <string name="thanks_names">G.-H. Leclercq (BetaTester) \nS. Sluysmans \nL. Delvaux \nPr K. Mens (UCL) \nClaroline Dev Team</string>
     <string name="about_us_contact_us_email">support.develop@live.be</string>
 </resources>

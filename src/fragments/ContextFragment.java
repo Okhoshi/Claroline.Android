@@ -1,3 +1,14 @@
+/**
+ * Claroline Mobile - Android
+ * 
+ * @package     fragments
+ * 
+ * @author      Devos Quentin (q.devos@student.uclouvain.be)
+ * @version     1.0
+ *
+ * @license     ##LICENSE##
+ * @copyright   2013 - Devos Quentin
+ */
 package fragments;
 
 import net.claroline.mobile.android.R;
@@ -15,6 +26,14 @@ import android.widget.TextView;
 import app.App;
 import app.AppActivity;
 
+/**
+ * Claroline Mobile - Android
+ * 
+ * Fragment showing user related infos.
+ * 
+ * @author Devos Quentin (q.devos@student.uclouvain.be)
+ * @version 1.0
+ */
 public class ContextFragment extends Fragment implements
 		OnSharedPreferenceChangeListener {
 

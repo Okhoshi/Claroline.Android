@@ -1,3 +1,14 @@
+/**
+ * Claroline Mobile - Android
+ * 
+ * @package     activity
+ * 
+ * @author      Devos Quentin (q.devos@student.uclouvain.be)
+ * @version     1.0
+ *
+ * @license     ##LICENSE##
+ * @copyright   2013 - Devos Quentin
+ */
 package activity;
 
 import java.util.List;
@@ -18,8 +29,19 @@ import connectivity.ClarolineClient;
 import fragments.CoursListFragment;
 import fragments.LoginDialog;
 
+/**
+ * Claroline Mobile - Android
+ * 
+ * Home activity class.
+ * 
+ * @author Devos Quentin
+ * @version 1.0
+ */
 public class HomeActivity extends AppActivity {
 
+	/**
+	 * Numeric constant.
+	 */
 	private static final int SIX_HOURS = 6;
 
 	/**
@@ -53,6 +75,16 @@ public class HomeActivity extends AppActivity {
 		}
 	}
 
+	/**
+	 * Refreshes.
+	 * 
+	 * @param force
+	 *            force the list refresh
+	 * @param forceUser
+	 *            force the user data refresh
+	 * @param noDialog
+	 *            cannot show the login dialog if the user is not logged in
+	 */
 	private void refresh(final boolean force, final boolean forceUser,
 			final boolean noDialog) {
 		if (App.getPrefs().getString(App.SETTINGS_PLATFORM_HOST, "").equals("")) {
@@ -62,7 +94,7 @@ public class HomeActivity extends AppActivity {
 
 		if (!noDialog && !ClarolineClient.isValidAccount()) {
 			showLoginDialog();
-		} else {
+		} else if (ClarolineClient.isValidAccount()) {
 			if (forceUser || mustUpdate(SIX_HOURS) && !force) {
 				getService().getUserData(new AsyncHttpResponseHandler() {
 					@Override
@@ -128,6 +160,9 @@ public class HomeActivity extends AppActivity {
 		}
 	}
 
+	/**
+	 * Shows the login Dialog.
+	 */
 	private void showLoginDialog() {
 		LoginDialog login = new LoginDialog(this);
 		login.setOnDismissListener(new DialogInterface.OnDismissListener() {

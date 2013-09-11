@@ -1,5 +1,13 @@
 /**
+ * Claroline Mobile - Android
  * 
+ * @package     activity
+ * 
+ * @author      Devos Quentin (q.devos@student.uclouvain.be)
+ * @version     1.0
+ *
+ * @license     ##LICENSE##
+ * @copyright   2013 - Devos Quentin
  */
 package activity;
 
@@ -22,13 +30,21 @@ import android.view.MenuItem;
 import app.App;
 
 /**
- * @author Quentin
+ * Claroline Mobile - Android
  * 
+ * Settings activity.
+ * 
+ * @author Devos Quentin (q.devos@student.uclouvain.be)
+ * @version 1.0
  */
+@SuppressWarnings("deprecation")
 public class Settings extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
-	private ArrayList<String> mOnScreenSettings = new ArrayList<String>(
+	/**
+	 * On Screen settings.
+	 */
+	private static final ArrayList<String> ON_SCREEN_SETTINGS = new ArrayList<String>(
 			Arrays.asList(new String[] { App.SETTINGS_PLATFORM_HOST,
 					App.SETTINGS_PLATFORM_MODULE }));
 
@@ -43,7 +59,7 @@ public class Settings extends PreferenceActivity implements
 		Map<String, ?> keys = App.getPrefs().getAll();
 
 		for (Map.Entry<String, ?> entry : keys.entrySet()) {
-			if (mOnScreenSettings.contains(entry.getKey())) {
+			if (ON_SCREEN_SETTINGS.contains(entry.getKey())) {
 				Log.d("map values", entry.getKey() + ": "
 						+ entry.getValue().toString());
 				Preference pref = findPreference(entry.getKey());
@@ -84,8 +100,10 @@ public class Settings extends PreferenceActivity implements
 			final SharedPreferences sharedPreferences, final String key) {
 		if (!key.contains("password")) {
 			Preference pref = findPreference(key);
-			// Set summary to be the user-description for the selected value
-			pref.setSummary(sharedPreferences.getString(key, ""));
+			if (pref != null) {
+				// Set summary to be the user-description for the selected value
+				pref.setSummary(sharedPreferences.getString(key, ""));
+			}
 		}
 	}
 

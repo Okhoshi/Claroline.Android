@@ -1,10 +1,13 @@
 /**
- * @author Dim
- * @version 1
+ * Claroline Mobile - Android
  * 
- * @description :  An Adapter object acts as a bridge between an AdapterView and the underlying data for that view. 
- * 				   The Adapter provides access to the data items. 
- * 			       The Adapter is also responsible for making a View for each item in the data set. 
+ * @package     adapter
+ * 
+ * @author      Devos Quentin (q.devos@student.uclouvain.be)
+ * @version     1.0
+ *
+ * @license     ##LICENSE##
+ * @copyright   2013 - Devos Quentin
  */
 package adapter;
 
@@ -21,6 +24,14 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * Claroline Mobile - Android
+ * 
+ * The {@link Annonce} adapter.
+ * 
+ * @author Devos Quentin (q.devos@student.uclouvain.be)
+ * @version 1.0
+ */
 public class AnnonceAdapter extends BaseAdapter {
 	/**
 	 * Resource View to use for line.

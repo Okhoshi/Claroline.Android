@@ -12,6 +12,8 @@
 package model;
 
 import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Column.ForeignKeyAction;
@@ -270,4 +272,10 @@ public class ResourceModel extends ModelBase {
 		mURL = pURL;
 	}
 
+	@Override
+	public void update(final JSONObject item) throws JSONException {
+		setDate(new DateTime(item.getString("date")));
+		setTitle(item.getString("title"));
+		setURL(item.getString("url"));
+	}
 }

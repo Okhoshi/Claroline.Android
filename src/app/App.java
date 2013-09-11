@@ -24,6 +24,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import com.activeandroid.app.Application;
+import com.activeandroid.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -151,5 +152,6 @@ public class App extends Application {
 		sSingleton = this;
 		mGson = new GsonBuilder().registerTypeAdapter(DateTime.class,
 				new UtilDateTimeTypeConverter()).create();
+		Log.setEnabled(false);
 	}
 }

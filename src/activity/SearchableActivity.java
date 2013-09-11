@@ -1,3 +1,14 @@
+/**
+ * Claroline Mobile - Android
+ * 
+ * @package     activity
+ * 
+ * @author      Devos Quentin (q.devos@student.uclouvain.be)
+ * @version     1.0
+ *
+ * @license     ##LICENSE##
+ * @copyright   2013 - Devos Quentin
+ */
 package activity;
 
 import java.util.ArrayList;
@@ -19,12 +30,33 @@ import app.AppActivity;
 
 import com.activeandroid.query.Select;
 
+/**
+ * Claroline Mobile - Android
+ * 
+ * Search Results Activity class.
+ * 
+ * @author Devos Quentin
+ * @version 1.0
+ */
 public class SearchableActivity extends AppActivity implements
 		OnChildClickListener {
 
+	/**
+	 * ID.
+	 */
 	private static final int COURS = 0;
+	/**
+	 * ID.
+	 */
 	private static final int ANNONCE = 1;
+	/**
+	 * ID.
+	 */
 	private static final int DOCUMENTS = 2;
+
+	/**
+	 * UI reference.
+	 */
 	private ExpandableListView mListView;
 
 	/**
@@ -70,6 +102,10 @@ public class SearchableActivity extends AppActivity implements
 		mListView.setOnChildClickListener(this);
 	}
 
+	/**
+	 * @param intent
+	 *            the {@link Intent} to handle
+	 */
 	private void handleIntent(final Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);

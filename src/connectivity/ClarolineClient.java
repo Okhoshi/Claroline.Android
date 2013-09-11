@@ -20,9 +20,9 @@ import org.joda.time.DateTime;
 
 import android.accounts.AuthenticatorException;
 import android.util.Base64;
+import android.util.Log;
 import app.App;
 
-import com.activeandroid.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -179,69 +179,6 @@ public class ClarolineClient extends AsyncHttpClient {
 	 */
 	private static final String TAG = "ClaroClient";
 
-	/*
-	 * private boolean downloadFile(final Document doc) { try { // Exits the
-	 * function if the storage is not writable! if
-	 * (!Environment.getExternalStorageState().equals(
-	 * Environment.MEDIA_MOUNTED)) { Log.d("DownloadManager", "Missing SDCard");
-	 * return false; }
-	 * 
-	 * File dir = App.getDownloadFolder(); if (!dir.exists()) { if
-	 * (!dir.mkdirs()) { // Exits if the directory asked cannot be created!
-	 * Log.d("DownloadManager", "Unable to write on SDCard"); } return false; }
-	 * 
-	 * File file = new File(dir, doc.getTitle() + "." + doc.getExtension());
-	 * 
-	 * // create the new connection URL url = new URL("http://" + doc.getURL());
-	 * HttpURLConnection urlConnection = (HttpURLConnection) url
-	 * .openConnection();
-	 * 
-	 * // Do this so that Java.net impl should work List<Cookie> cookList =
-	 * mCookies.getCookies(); String requiredCookies = ""; for (int i = 0; i <
-	 * cookList.size(); i++) { requiredCookies += cookList.get(i).getName() +
-	 * "=" + cookList.get(i).getValue() + ";"; }
-	 * 
-	 * // set up some things on the connection
-	 * urlConnection.setRequestProperty("Cookie", requiredCookies);
-	 * urlConnection.setRequestMethod("GET"); urlConnection.setDoOutput(true);
-	 * 
-	 * // and connect! urlConnection.connect();
-	 * 
-	 * // this will be used to write the downloaded data into the file we //
-	 * created FileOutputStream fileOutput = new FileOutputStream(file);
-	 * 
-	 * // this will be used in reading the data from the Internet InputStream
-	 * inputStream = urlConnection.getInputStream();
-	 * 
-	 * // this is the total size of the file int totalSize =
-	 * urlConnection.getContentLength(); // variable to store total downloaded
-	 * bytes int downloadedSize = 0; int iterationSize = C1024;
-	 * 
-	 * if (mHandler != null) { Message msg = new Message(); msg.what =
-	 * AppHandler.SET_PROGRESS_DWL; msg.obj = "Downloading " + file.getName() +
-	 * "..."; msg.arg1 = totalSize; msg.arg2 = iterationSize;
-	 * mHandler.sendMessage(msg); }
-	 * 
-	 * // create a buffer... byte[] buffer = new byte[iterationSize]; int
-	 * bufferLength = 0; // used to store a temporary size of the // buffer
-	 * 
-	 * // now, read through the input buffer and write the contents to the //
-	 * file while ((bufferLength = inputStream.read(buffer)) > 0) { // add the
-	 * data in the buffer to the file in the file output // stream (the file on
-	 * the sd card) fileOutput.write(buffer, 0, bufferLength); // add up the
-	 * size so we know how much is downloaded downloadedSize += bufferLength;
-	 * 
-	 * // Reports the progress to the UI if (mHandler != null) { Message msg =
-	 * new Message(); msg.what = AppHandler.INCREMENT_STATUS; msg.arg1 =
-	 * downloadedSize; msg.arg2 = iterationSize; mHandler.sendMessage(msg); } }
-	 * // close the output stream when done fileOutput.close();
-	 * 
-	 * doc.setLoadedDate(DateTime.now()); doc.save(); return true;
-	 * 
-	 * } catch (IOException e) { Log.d("DownloadManager", "Error: " + e); }
-	 * return false; // Something were wrong if it passes here }
-	 */
-
 	/**
 	 * Singleton instance.
 	 */
@@ -374,7 +311,7 @@ public class ClarolineClient extends AsyncHttpClient {
 				}
 			});
 		} else {
-			Log.i("Client", "Query " + parameters);
+			Log.d("Client", "Query " + parameters);
 			post(getUrl(App.getPrefs().getString(App.SETTINGS_PLATFORM_MODULE,
 					"/module/MOBILE/")), parameters, handler);
 		}

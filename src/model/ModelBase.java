@@ -14,6 +14,8 @@ package model;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.activeandroid.Model;
 
@@ -170,5 +172,15 @@ public abstract class ModelBase extends Model {
 	 *            the URL to set
 	 */
 	public abstract void setURL(final String pURL);
+
+	/**
+	 * Loads the infos from JSON item.
+	 * 
+	 * @param item
+	 *            the data to load
+	 * @throws JSONException
+	 *             if the data does not match the format
+	 */
+	public abstract void update(JSONObject item) throws JSONException;
 
 }

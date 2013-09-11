@@ -1,6 +1,8 @@
 /**
  * Claroline Mobile - Android
  * 
+ * Activity classes here.
+ * 
  * @package     activity
  * 
  * @author      Devos Quentin (q.devos@student.uclouvain.be)
@@ -8,13 +10,5 @@
  *
  * @license     ##LICENSE##
  * @copyright   2013 - Devos Quentin
- */
-/**
- * Claroline Mobile - Android
- * 
- * Activity classes here.
- *
- * @author      Devos Quentin
- * @version     1.0
  */
 package activity;

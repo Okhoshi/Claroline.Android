@@ -12,6 +12,8 @@
 package model;
 
 import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Column.ForeignKeyAction;
@@ -315,5 +317,14 @@ public class Annonce extends ModelBase {
 	@Override
 	public void setURL(final String pURL) {
 		mURL = pURL;
+	}
+
+	@Override
+	public void update(final JSONObject item) throws JSONException {
+		setContent(item.getString("content"));
+		setRank(item.getInt("rank"));
+		setIsVisible(item.getBoolean("visibility"));
+		setTitle(item.getString("title"));
+		setDate(new DateTime(item.getString("date")));
 	}
 }

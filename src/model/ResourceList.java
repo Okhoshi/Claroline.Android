@@ -14,6 +14,8 @@ package model;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -215,5 +217,17 @@ public class ResourceList extends Model {
 	 */
 	public void setUpdated(final boolean pUpdated) {
 		mUpdated = pUpdated;
+	}
+
+	/**
+	 * Loads the infos from JSON item.
+	 * 
+	 * @param item
+	 *            the data to load
+	 * @throws JSONException
+	 *             if the data does not match the format
+	 */
+	public void update(final JSONObject item) throws JSONException {
+		setName(item.getString("name"));
 	}
 }

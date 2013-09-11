@@ -1,19 +1,107 @@
 package fragments;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import model.ResourceModel;
 import net.claroline.mobile.android.R;
+import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Xml.Encoding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 import app.AppActivity;
 
 import com.activeandroid.query.Select;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+/**
+ * Claroline Mobile - Android
+ * 
+ * TODO Description HERE.
+ * 
+ * @author Devos Quentin
+ * @version 1.0
+ */
 public class GenericDetailFragment extends DetailFragment {
+
+	/**
+	 * Claroline Mobile - Android
+	 * 
+	 * TODO Description HERE.
+	 * 
+	 * @author Devos Quentin
+	 * @version 1.0
+	 */
+	private class GenericWebViewClient extends WebViewClient {
+		@Override
+		public void onPageFinished(final WebView view, final String url) {
+			((AppActivity) getActivity()).setProgressIndicator(false);
+			super.onPageFinished(view, url);
+		}
+
+		@Override
+		public void onPageStarted(final WebView view, final String url,
+				final Bitmap favicon) {
+			((AppActivity) getActivity()).setProgressIndicator(true, false,
+					C100);
+			super.onPageStarted(view, url, favicon);
+		}
+
+		@Override
+		public boolean shouldOverrideUrlLoading(final WebView view,
+				final String url) {
+
+			((AppActivity) getActivity()).setProgressIndicator(true);
+			((AppActivity) getActivity()).getService().getPageFor(url,
+					new AsyncHttpResponseHandler() {
+						@Override
+						public void onSuccess(final String content) {
+
+							Matcher matcher = REGEX.matcher(content);
+							String data = matcher.replaceAll(REGEX_REPLACE);
+							data = data
+									.replace("</head>",
+											"<meta name=\"viewport\" content=\"width="
+													+ mWV2.getWidth()
+													+ "\"/>\n</head>");
+
+							mWV2.loadDataWithBaseURL(url, data, "text/html",
+									Encoding.UTF_8.name(), null);
+							((AppActivity) getActivity())
+									.setProgressIndicator(false);
+						}
+					});
+
+			return true;
+		}
+	}
+
+	/**
+	 * Numeric constant.
+	 */
+	private static final int C100 = 100;
+
+	/**
+	 * Regex pattern.
+	 */
+	private static final Pattern REGEX = Pattern
+			.compile(
+					"(?:<div id=\"claroPage\">.*?<div id=\"courseRightContent\">(.+?)</div>\\s*?"
+							+ "<!-- rightContent -->.*?<!-- end of claroPage -->.*?</div>)",
+					Pattern.DOTALL);
+
+	/**
+	 * Regex replacement.
+	 */
+	public static final String REGEX_REPLACE = "<div id=\"claroPage\">$1"
+			+ "<!-- end of claroPage --></div>";
 
 	/**
 	 * The current resource.
@@ -35,6 +123,7 @@ public class GenericDetailFragment extends DetailFragment {
 		return mCurrentResource.isExpired();
 	}
 
+	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public View onCreateView(final LayoutInflater inflater,
 			final ViewGroup container, final Bundle savedInstanceState) {
@@ -53,14 +142,26 @@ public class GenericDetailFragment extends DetailFragment {
 			refreshUI();
 		}
 
+		mWV2.getSettings().setJavaScriptEnabled(true);
+		mWV2.setWebChromeClient(new WebChromeClient() {
+			@Override
+			public void onProgressChanged(final WebView view,
+					final int newProgress) {
+				// ((AppActivity) getActivity()).incrementProgress(newProgress);
+			}
+		});
+
+		mWV2.setWebViewClient(new GenericWebViewClient());
+
 		return view;
 	}
 
 	@Override
 	public void refreshResource(final AsyncHttpResponseHandler handler) {
 		((AppActivity) getActivity()).getService().getSingleResource(
-				mCurrentResource.getList().getCours(),
-				mCurrentResource.getList(),
+				mCurrentResource.getList().getCours().getSysCode(),
+				mCurrentResource.getList().getLabel(),
+				mCurrentResource.getList().getResourceType(),
 				mCurrentResource.getResourceString(), handler);
 	}
 
@@ -69,5 +170,6 @@ public class GenericDetailFragment extends DetailFragment {
 		((AppActivity) getActivity()).setTitle(mCurrentResource.getTitle(),
 				mCurrentResource.getList().getCours().getName());
 		mTV1.setVisibility(View.GONE);
+		mWV2.loadUrl(mCurrentResource.getURL());
 	}
 }

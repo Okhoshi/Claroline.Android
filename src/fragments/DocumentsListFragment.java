@@ -1,3 +1,14 @@
+/**
+ * Claroline Mobile - Android
+ * 
+ * @package     fragments
+ * 
+ * @author      Devos Quentin (q.devos@student.uclouvain.be)
+ * @version     1.0
+ *
+ * @license     ##LICENSE##
+ * @copyright   2013 - Devos Quentin
+ */
 package fragments;
 
 import java.io.File;
@@ -7,12 +18,20 @@ import java.util.Locale;
 import model.Document;
 import model.ResourceList;
 import net.claroline.mobile.android.R;
+
+import org.joda.time.DateTime;
+
 import adapter.DocumentsAdapter;
-import android.app.AlertDialog;
+import android.annotation.TargetApi;
+import android.app.DownloadManager;
+import android.app.DownloadManager.Request;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ListFragment;
@@ -30,6 +49,14 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import connectivity.SupportedModules;
 
+/**
+ * Claroline Mobile - Android
+ * 
+ * The {@link Document} {@link ListFragment}.
+ * 
+ * @author Devos Quentin (q.devos@student.uclouvain.be)
+ * @version 1.0
+ */
 public class DocumentsListFragment extends ListFragment {
 
 	/**
@@ -47,12 +74,38 @@ public class DocumentsListFragment extends ListFragment {
 	 */
 	private TextView mCurrentPath;
 
+	/**
+	 * Handler for the {@link Document} download with token.
+	 */
+	private final AsyncHttpResponseHandler mTokenizedURLHandler = new AsyncHttpResponseHandler() {
+
+		@Override
+		public void onSuccess(final String content) {
+			System.out.println("Call with Tokenized : " + content);
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setData(Uri.parse(content));
+			try {
+				startActivity(i);
+			} catch (ActivityNotFoundException e) {
+				Toast.makeText(getActivity(),
+						getString(R.string.app_not_found), Toast.LENGTH_LONG)
+						.show();
+			}
+		}
+	};
+
+	/**
+	 * Shows the content of the root of the current document.
+	 */
 	public void goUp() {
 		mCurrentRoot = mCurrentRoot.getRoot();
 		mCurrentPath.setText(mCurrentRoot.getFullPath());
 		refreshUI();
 	}
 
+	/**
+	 * @return true if the current document is the root, false otherwise
+	 */
 	public boolean isOnRoot() {
 		return mCurrentRoot.equals(Document.getEmptyRoot(mCurrentList));
 	}
@@ -139,47 +192,12 @@ public class DocumentsListFragment extends ListFragment {
 			refreshUI();
 		} else {
 			if (mime != null) {
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						getActivity());
-				builder.setMessage(R.string.save_or_open_dialog)
-						.setCancelable(true)
-						.setPositiveButton(R.string.save_dialog,
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(
-											final DialogInterface dialog,
-											final int id) {
-										openFileInMemory(item, mime);
-									}
-								})
-						.setNegativeButton(R.string.open_dialog,
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(
-											final DialogInterface dialog,
-											final int id) {
-										Intent i = new Intent(
-												Intent.ACTION_VIEW);
-										// TODO Get the url tokenized for this
-										// document
-										i.setData(Uri.parse(""));
-										try {
-											startActivity(i);
-										} catch (ActivityNotFoundException e) {
-											Toast.makeText(
-													getActivity(),
-													getString(R.string.app_not_found),
-													Toast.LENGTH_LONG).show();
-										}
-										dialog.dismiss();
-									}
-								}).show();
+				openFileInMemory(item, mime);
 			} else {
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				// TODO Get the url tokenized
-				i.setData(Uri.parse(""));
-				startActivity(i);
+				((AppActivity) getActivity()).getService()
+						.getDownloadTokenizedUrl(
+								mCurrentList.getCours().getSysCode(),
+								item.getResourceString(), mTokenizedURLHandler);
 			}
 		}
 	}
@@ -201,16 +219,81 @@ public class DocumentsListFragment extends ListFragment {
 					+ "/"
 					+ getString(R.string.app_name)
 					+ "/"
+					+ mCurrentList.getCours().getOfficialCode()
+					+ "/"
 					+ item.getTitle() + "." + item.getExtension())), mime
 					.toLowerCase(Locale.US));
 			startActivity(Intent.createChooser(i,
 					getString(R.string.dialog_choose_app)));
 		} else {
-			((AppActivity) getActivity()).setProgressIndicator(true);
-			// TODO Download the doc
+			((AppActivity) getActivity()).getService().getDownloadTokenizedUrl(
+					mCurrentList.getCours().getSysCode(),
+					item.getResourceString(), new AsyncHttpResponseHandler() {
+
+						@Override
+						public void onFailure(final Throwable error,
+								final String content) {
+							System.out.println(error.getLocalizedMessage()
+									+ " : " + content);
+							super.onFailure(error, content);
+						}
+
+						@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+						@Override
+						public void onSuccess(final String content) {
+							System.out.println("Call with Tokenized : "
+									+ content);
+							Request request = new Request(Uri.parse(content));
+
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+								request.allowScanningByMediaScanner();
+								request.setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+							}
+							request.setDestinationInExternalPublicDir(
+									Environment.DIRECTORY_DOWNLOADS
+											+ "/"
+											+ getString(R.string.app_name)
+											+ "/"
+											+ mCurrentList.getCours()
+													.getOfficialCode() + "/",
+									item.getTitle() + "." + item.getExtension());
+
+							final DownloadManager manager = (DownloadManager) getActivity()
+									.getSystemService(Context.DOWNLOAD_SERVICE);
+							final long id = manager.enqueue(request);
+
+							BroadcastReceiver bcr = new BroadcastReceiver() {
+								@Override
+								public void onReceive(final Context context,
+										final Intent intent) {
+									String action = intent.getAction();
+									if (DownloadManager.ACTION_DOWNLOAD_COMPLETE
+											.equals(action)) {
+										Bundle extras = intent.getExtras();
+										if (id == extras
+												.getLong(DownloadManager.EXTRA_DOWNLOAD_ID)) {
+											openFileInMemory(item, mime);
+											getActivity().unregisterReceiver(
+													this);
+										}
+									}
+								}
+							};
+
+							getActivity()
+									.registerReceiver(
+											bcr,
+											new IntentFilter(
+													DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+							item.setLoadedDate(DateTime.now());
+						}
+					});
 		}
 	}
 
+	/**
+	 * Refresh the UI.
+	 */
 	public void refreshUI() {
 		List<Document> liste = mCurrentRoot.getContent();
 		DocumentsAdapter adapter = new DocumentsAdapter(getActivity(), liste);

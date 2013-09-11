@@ -1,3 +1,14 @@
+/**
+ * Claroline Mobile - Android
+ * 
+ * @package     activity
+ * 
+ * @author      Devos Quentin (q.devos@student.uclouvain.be)
+ * @version     1.0
+ *
+ * @license     ##LICENSE##
+ * @copyright   2013 - Devos Quentin
+ */
 package activity;
 
 import java.util.Arrays;
@@ -16,6 +27,14 @@ import fragments.AnnonceDetailFragment;
 import fragments.DetailFragment;
 import fragments.GenericDetailFragment;
 
+/**
+ * Claroline Mobile - Android
+ * 
+ * Details activity.
+ * 
+ * @author Devos Quentin (q.devos@student.uclouvain.be)
+ * @version 1.0
+ */
 public class DetailsActivity extends AppActivity {
 
 	/**
@@ -42,7 +61,6 @@ public class DetailsActivity extends AppActivity {
 	 */
 	private DetailFragment mFragment;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

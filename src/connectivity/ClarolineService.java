@@ -1,10 +1,17 @@
 /**
- * author : Quentin
+ * Claroline Mobile - Android
+ * 
+ * @package     connectivity
+ * 
+ * @author      Devos Quentin (q.devos@student.uclouvain.be)
+ * @version     1.0
+ *
+ * @license     ##LICENSE##
+ * @copyright   2013 - Devos Quentin
  */
 package connectivity;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Iterator;
 
 import model.Cours;
@@ -33,39 +40,17 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 /**
- * @author Quentin
+ * Claroline Mobile - Android
  * 
+ * Service providing all the methods callable on the web service of Claroline.
+ * 
+ * @author Devos Quentin (q.devos@student.uclouvain.be)
+ * @version 1.0
  */
 public class ClarolineService {
 
 	/**
-	 * Claroline Mobile - Android
-	 * 
-	 * Exception in case of Web Response different from OK.
-	 * 
-	 * @author Devos Quentin
-	 * @version 1.0
-	 */
-	class NotOKResponseCode extends IOException {
-
-		/**
-		 * Serializable UID.
-		 */
-		private static final long serialVersionUID = 4367959832676790410L;
-
-		/**
-		 * Fires a new {@link NotOKResponseCode} with the message.
-		 * 
-		 * @param message
-		 *            the message to associate
-		 */
-		public NotOKResponseCode(final String message) {
-			super(message);
-		}
-	}
-
-	/**
-	 * 
+	 * Numeric Constant.
 	 */
 	private static final int C100 = 100;
 
@@ -114,6 +99,13 @@ public class ClarolineService {
 		mClient = ClarolineClient.getInstance();
 	}
 
+	/**
+	 * Gets the cours list.
+	 * 
+	 * @param handler
+	 *            the handler to execute after the request
+	 * 
+	 */
 	public void getCourseList(final AsyncHttpResponseHandler handler) {
 		RequestParams p = ClarolineClient.getRequestParams(
 				SupportedModules.USER, SupportedMethods.getCourseList);
@@ -128,8 +120,15 @@ public class ClarolineService {
 				for (int i = 0; i < array.length(); i++) {
 					try {
 						JSONObject item = array.getJSONObject(i);
-						Cours c = App.getGSON().fromJson(item.toString(),
-								Cours.class);
+						Cours c = new Select().from(Cours.class)
+								.where("SysCode = ?", item.get("sysCode"))
+								.executeSingle();
+						if (c == null) {
+							c = App.getGSON().fromJson(item.toString(),
+									Cours.class);
+						} else {
+							c.update(item);
+						}
 						c.setUpdated(true);
 						c.setLoadedDate(DateTime.now());
 						c.save();
@@ -144,6 +143,61 @@ public class ClarolineService {
 		});
 	}
 
+	/**
+	 * Gets the URL tokenized for the requested document. Can be used during 30
+	 * secs.
+	 * 
+	 * @param syscode
+	 *            the syscode of the document course
+	 * @param resId
+	 *            the unique resource identifier of the requested document.
+	 * @param handler
+	 *            the handler to execute after the request
+	 */
+	public void getDownloadTokenizedUrl(final String syscode,
+			final String resId, final AsyncHttpResponseHandler handler) {
+		RequestParams rp = ClarolineClient.getRequestParams(
+				SupportedModules.CLDOC, SupportedMethods.getSingleResource,
+				syscode, resId);
+		mClient.serviceQuery(rp, new JsonHttpResponseHandler() {
+			@Override
+			public void onSuccess(final JSONObject response) {
+				if (response.has("token")) {
+					try {
+						handler.onSuccess(mClient.getUrl(App.getPrefs()
+								.getString(App.SETTINGS_PLATFORM_MODULE,
+										"/module/MOBILE/")
+								+ "download.php?token="
+								+ response.getString("token")));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+	}
+
+	/**
+	 * Retrieves the page at the specified url.
+	 * 
+	 * @param url
+	 *            the url of the page to get
+	 * @param handler
+	 *            the handler to execute after the request
+	 */
+	public void getPageFor(final String url,
+			final AsyncHttpResponseHandler handler) {
+		mClient.get(url, handler);
+	}
+
+	/**
+	 * Gets all the resources for a requested Tool.
+	 * 
+	 * @param list
+	 *            the requested Tool
+	 * @param handler
+	 *            the handler to execute after the request
+	 */
 	public void getResourcesForList(final ResourceList list,
 			final AsyncHttpResponseHandler handler) {
 		RequestParams rp = ClarolineClient
@@ -166,9 +220,19 @@ public class ClarolineService {
 				Log.i(TAG, array.toString());
 				for (int i = 0; i < array.length(); i++) {
 					try {
-						ModelBase mb = App.getGSON()
-								.fromJson(array.get(i).toString(),
-										list.getResourceType());
+						ModelBase mb = new Select()
+								.from(list.getResourceType())
+								.where("List = ? AND ResourceString = ?",
+										array.getJSONObject(i)
+												.get("resourceId"))
+								.executeSingle();
+						if (mb == null) {
+							mb = App.getGSON().fromJson(
+									array.get(i).toString(),
+									list.getResourceType());
+						} else {
+							mb.update(array.getJSONObject(i));
+						}
 						mb.setList(list);
 						mb.setLoadedDate(DateTime.now());
 						mb.setUpdated(true);
@@ -189,13 +253,28 @@ public class ClarolineService {
 		});
 	}
 
-	public void getSingleResource(final Cours cours, final ResourceList list,
+	/**
+	 * Gets the content of one specific resource.
+	 * 
+	 * @param syscode
+	 *            the course code
+	 * @param label
+	 *            the tool label
+	 * @param type
+	 *            the resource type
+	 * @param resourceIdentifier
+	 *            the resource unique identifier
+	 * @param handler
+	 *            the handler to execute after the request
+	 */
+	public void getSingleResource(final String syscode, final String label,
+			final Class<? extends ModelBase> type,
 			final String resourceIdentifier,
 			final AsyncHttpResponseHandler handler) {
-		RequestParams p = ClarolineClient.getRequestParams(
-				Enum.valueOf(SupportedModules.class, list.getLabel()),
-				SupportedMethods.getSingleResource, cours.getSysCode(),
-				resourceIdentifier);
+		RequestParams p = ClarolineClient
+				.getRequestParams(Enum.valueOf(SupportedModules.class, label),
+						SupportedMethods.getSingleResource, syscode,
+						resourceIdentifier);
 		mClient.serviceQuery(p, new JsonHttpResponseHandler() {
 
 			@Override
@@ -205,16 +284,36 @@ public class ClarolineService {
 
 			@Override
 			public void onSuccess(final JSONObject response) {
-				ModelBase mb = App.getGSON().fromJson(response.toString(),
-						list.getResourceType());
-				mb.setLoadedDate(DateTime.now());
-				mb.save();
+				ModelBase mb;
+				try {
+					mb = new Select()
+							.from(type)
+							.where("List = ? AND ResourceString = ?",
+									response.get("resourceId")).executeSingle();
+					if (mb == null) {
+						mb = App.getGSON().fromJson(response.toString(), type);
+					} else {
+						mb.update(response);
+					}
+					mb.setLoadedDate(DateTime.now());
+					mb.save();
 
+				} catch (JSONException e1) {
+					e1.printStackTrace();
+				}
 				handler.onSuccess(response.toString());
 			}
 		});
 	}
 
+	/**
+	 * Gets the tool list for the given course.
+	 * 
+	 * @param cours
+	 *            the course to load
+	 * @param handler
+	 *            the handler to execute after the request
+	 */
 	public void getToolListForCours(final Cours cours,
 			final AsyncHttpResponseHandler handler) {
 		RequestParams rp = ClarolineClient.getRequestParams(
@@ -232,12 +331,21 @@ public class ClarolineService {
 				for (int i = 0; i < response.length(); i++) {
 					try {
 						JSONObject item = response.getJSONObject(i);
-						ResourceList rl = App.getGSON().fromJson(
-								item.toString(), ResourceList.class);
-						rl.setCours(cours);
+						ResourceList rl = new Select()
+								.from(ResourceList.class)
+								.where("Cours = ? AND label = ?", cours,
+										item.getString("label"))
+								.executeSingle();
+						if (rl == null) {
+							rl = App.getGSON().fromJson(item.toString(),
+									ResourceList.class);
+							rl.setCours(cours);
+							rl.setResourceType(SupportedModules
+									.getTypeForModule(rl.getLabel()));
+						} else {
+							rl.update(item);
+						}
 						rl.setUpdated(true);
-						rl.setResourceType(SupportedModules.getTypeForModule(rl
-								.getLabel()));
 						rl.save();
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -433,6 +541,17 @@ public class ClarolineService {
 		});
 	}
 
+	/**
+	 * Updates completely the course, loading first the Tool list, then the
+	 * resources for each tool.
+	 * 
+	 * @param cours
+	 *            the course to load
+	 * @param activity
+	 *            the calling activity
+	 * @param handler
+	 *            the handler to execute after the request
+	 */
 	public void updateCompleteCourse(final Cours cours,
 			final Activity activity, final AsyncHttpResponseHandler handler) {
 		getToolListForCours(cours, new AsyncHttpResponseHandler() {

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources> 
     
-    <!-- Nom de l'application --> 
-   <string name="app_name">ClaroMobile</string>
-    
     <!-- TextView's de l'activite about_us --> 
     <string name="about_us_contact_us">Contact us</string>
     <string name="about_us_remerciements">Special Thanks</string>
@@ -68,6 +65,7 @@
     <string name="download_finished_KO">Download failed</string>
     <string name="download_finished_OK">The file is downloaded into \'%1$s/%2$s/\'</string>
     <string name="app_not_found">Unable to find an app for that</string>
+    <string name="error_missing_mime">Sorry, this file cannot be opened&#8230;</string>
     <string name="failure_message">Would you like to go to Settings to check your identifiants ?</string>
     
     <!-- Dialogue -->

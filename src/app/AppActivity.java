@@ -135,7 +135,8 @@ public abstract class AppActivity extends FragmentActivity implements
 			mLastUpdate = new DateTime(
 					savedInstanceState.getLong(SIS_LAST_UPDATE));
 		} else {
-			mLastUpdate = new DateTime(0);
+			mLastUpdate = new DateTime(App.getPrefs().getLong(SIS_LAST_UPDATE,
+					0L));
 		}
 		super.onCreate(savedInstanceState);
 
@@ -220,6 +221,8 @@ public abstract class AppActivity extends FragmentActivity implements
 	@Override
 	protected void onSaveInstanceState(final Bundle outState) {
 		outState.putLong(SIS_LAST_UPDATE, mLastUpdate.getMillis());
+		App.getPrefs().edit().putLong(SIS_LAST_UPDATE, mLastUpdate.getMillis())
+				.apply();
 		super.onSaveInstanceState(outState);
 	}
 
@@ -311,7 +314,7 @@ public abstract class AppActivity extends FragmentActivity implements
 			setProgressBarIndeterminate(isIndeterminate);
 			mMax = max;
 		} else {
-			if (visible) {
+			if (visible && mProgress.getProgress() != mProgress.getMax()) {
 				if (mProgress == null) {
 					mProgress = new ProgressDialog(this);
 					mProgress.setCancelable(true);
