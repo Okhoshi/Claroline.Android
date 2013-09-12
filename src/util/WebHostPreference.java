@@ -12,11 +12,14 @@
 package util;
 
 import net.claroline.mobile.android.R;
+import activity.Settings;
+import activity.UrlBrowserSelectorActivity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -134,7 +137,12 @@ public class WebHostPreference extends EditTextPreference implements
 
 			@Override
 			public void onClick(final DialogInterface dialog, final int which) {
-
+				Intent data = new Intent(getContext(),
+						UrlBrowserSelectorActivity.class);
+				data.putExtra(UrlBrowserSelectorActivity.EXTRA_URL,
+						getEditText().getText().toString());
+				((AppPreferenceActivity) getContext()).startActivityForResult(
+						data, Settings.REQUEST_URL_BROWSER);
 			}
 		});
 

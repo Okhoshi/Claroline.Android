@@ -6,12 +6,10 @@ import java.util.regex.Pattern;
 import model.ResourceModel;
 import net.claroline.mobile.android.R;
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -39,19 +37,6 @@ public class GenericDetailFragment extends DetailFragment {
 	 * @version 1.0
 	 */
 	private class GenericWebViewClient extends WebViewClient {
-		@Override
-		public void onPageFinished(final WebView view, final String url) {
-			((AppActivity) getActivity()).setProgressIndicator(false);
-			super.onPageFinished(view, url);
-		}
-
-		@Override
-		public void onPageStarted(final WebView view, final String url,
-				final Bitmap favicon) {
-			((AppActivity) getActivity()).setProgressIndicator(true, false,
-					C100);
-			super.onPageStarted(view, url, favicon);
-		}
 
 		@Override
 		public boolean shouldOverrideUrlLoading(final WebView view,
@@ -142,13 +127,6 @@ public class GenericDetailFragment extends DetailFragment {
 		}
 
 		mWV2.getSettings().setJavaScriptEnabled(true);
-		mWV2.setWebChromeClient(new WebChromeClient() {
-			@Override
-			public void onProgressChanged(final WebView view,
-					final int newProgress) {
-				// ((AppActivity) getActivity()).incrementProgress(newProgress);
-			}
-		});
 
 		mWV2.setWebViewClient(new GenericWebViewClient());
 

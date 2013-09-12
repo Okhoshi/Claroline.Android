@@ -99,5 +99,8 @@
     
     <string name="used_library">"Librairies utilisées"</string>
     <string name="authors">"Auteurs"</string>
+    <string name="webhost_button_its_here">C\'est ici !</string>
+    <string name="webhost_button_go">Aller</string>
+    <string name="webhost_addressbar_hint">Entrez l\'url du site</string>
 
 </resources>

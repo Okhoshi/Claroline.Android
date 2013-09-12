@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import net.claroline.mobile.android.R;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -42,6 +43,36 @@ public class Settings extends AppPreferenceActivity implements
 	private static final ArrayList<String> ON_SCREEN_SETTINGS = new ArrayList<String>(
 			Arrays.asList(new String[] { App.SETTINGS_PLATFORM_HOST,
 					App.SETTINGS_PLATFORM_MODULE }));
+	/**
+	 * Activity Request Code.
+	 */
+	public static final int REQUEST_URL_BROWSER = 15;
+
+	@Override
+	protected void onActivityResult(final int requestCode,
+			final int resultCode, final Intent data) {
+		switch (requestCode) {
+		case REQUEST_URL_BROWSER:
+			if (resultCode == RESULT_OK) {
+				String url = data.getExtras().getString(
+						UrlBrowserSelectorActivity.EXTRA_URL);
+				if (url != null) {
+
+					getPreferenceScreen().getSharedPreferences()
+							.registerOnSharedPreferenceChangeListener(this);
+					App.getPrefs().edit()
+							.putString(App.SETTINGS_PLATFORM_HOST, url)
+							.commit();
+					getPreferenceScreen().getSharedPreferences()
+							.unregisterOnSharedPreferenceChangeListener(this);
+				}
+			}
+			break;
+		default:
+			super.onActivityResult(requestCode, resultCode, data);
+			break;
+		}
+	}
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -84,6 +115,15 @@ public class Settings extends AppPreferenceActivity implements
 			if (pref != null) {
 				// Set summary to be the user-description for the selected value
 				pref.setSummary(sharedPreferences.getString(key, ""));
+			}
+		}
+
+		if (App.SETTINGS_PLATFORM_HOST.equals(key)) {
+			String value = sharedPreferences.getString(key, "");
+			if (value.endsWith("/")) {
+				sharedPreferences.edit()
+						.putString(key, value.substring(0, value.length() - 1))
+						.commit();
 			}
 		}
 

@@ -70,7 +70,7 @@ public abstract class AppActivity extends FragmentActivity implements
 	/**
 	 * Current max for the ProgressBar. Only used when on API level > 14.
 	 */
-	private int mMax;
+	private int mMax = 1;
 
 	/**
 	 * 24 hours constant.
@@ -90,7 +90,9 @@ public abstract class AppActivity extends FragmentActivity implements
 	 */
 	public void incrementProgress(final int value) {
 		if (App.isNewerAPI(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
-			setProgress(value / mMax * MAX_PROGRESS_BAR_ACTIVITY);
+			if (mMax > 0) {
+				setProgress(value / mMax * MAX_PROGRESS_BAR_ACTIVITY);
+			}
 		} else {
 			if (mProgress != null && mProgress.isShowing()
 					&& !mProgress.isIndeterminate()) {
