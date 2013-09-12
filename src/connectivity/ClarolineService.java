@@ -78,7 +78,7 @@ public class ClarolineService {
 	private BinaryHttpResponseHandler mProfilePictureHandler = new BinaryHttpResponseHandler() {
 		@Override
 		public void onFailure(final Throwable error, final byte[] binaryData) {
-			System.out.println(error.getLocalizedMessage());
+			Log.e("ClarolineClient", error.getLocalizedMessage());
 		};
 
 		@Override
@@ -446,7 +446,8 @@ public class ClarolineService {
 
 			@Override
 			public void onFailure(final Throwable e, final String array) {
-				System.out.println("FAILURE ! :" + e.getLocalizedMessage());
+				Log.e("ClarolineClient",
+						"FAILURE ! :" + e.getLocalizedMessage());
 			}
 
 			@Override
@@ -606,7 +607,6 @@ public class ClarolineService {
 
 				String imgUrl = jsonUser.optString(App.SETTINGS_PICTURE, "");
 				if (!imgUrl.equals("") && !imgUrl.equals(previousPicture)) {
-					System.out.println("Profile : " + imgUrl);
 					mClient.get(imgUrl, mProfilePictureHandler);
 				}
 				handler.onSuccess(jsonUser.toString());

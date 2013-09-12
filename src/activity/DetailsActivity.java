@@ -40,6 +40,7 @@ import android.widget.Toast;
 import app.AppActivity;
 
 import com.activeandroid.query.Select;
+import com.activeandroid.util.Log;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import connectivity.SupportedModules;
@@ -199,16 +200,14 @@ public class DetailsActivity extends AppActivity {
 							@Override
 							public void onFailure(final Throwable error,
 									final String content) {
-								System.out.println(error.getLocalizedMessage()
-										+ " : " + content);
+								Log.e(error.getLocalizedMessage() + " : "
+										+ content);
 								super.onFailure(error, content);
 							}
 
 							@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 							@Override
 							public void onSuccess(final String content) {
-								System.out.println("Call with Tokenized : "
-										+ content);
 								Request request = new Request(Uri
 										.parse(content));
 
