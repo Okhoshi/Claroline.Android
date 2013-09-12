@@ -3,16 +3,19 @@
     android:id="@+id/linlay"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
 <ListView
     android:id="@id/android:list"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     />
+
 <TextView
     android:id="@id/android:empty"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:text="@string/list_no_items"/>
+    android:gravity="center"
+    android:text="@string/list_no_items" />
+
 </LinearLayout>

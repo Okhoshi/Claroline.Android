@@ -1,98 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Nom de l'application --> 
-   <string name="app_name">ClaroMobile</string>
-    <string name="version">1.0 - BETA</string>
- 
-    
-    <!-- TextView's de l'activite about_us --> 
-    <string name="about_us_authors">Auteurs : \n Devos Quentin \n Uytterhoeven Dimitri</string>
-    <string name="about_us_version">Version %1$s</string>
-    <string name="about_us_contact_us">Nous contacter :\n support.develop@live.be</string>
-    <string name="about_us_remerciements">Remerciements : \n G.-H. Leclercq (BetaTester) \n S. Sluysmans \n L. Delvaux \n Pr K. Mens (UCL) \n Claroline Dev Team</string>
-    <string name="about_us_mail_quentin">q.devos@student.uclouvain.be</string>
-    <string name="about_us_mail_dimitri">dimitri.uytterhoeven@student.uclouvain.be</string>
-    
-    
-    <!-- Boutons de l'action bar --> 
-    <string name="menu_about">A propos</string>
-    <string name="menu_help">Aide</string>
-    <string name="menu_refresh">Rafraîchir</string>
-    <string name="menu_search">Recherche</string>
-    <string name="menu_settings">Paramètres</string>
-    
-    
-    <!-- Strings des onglets Documents et Annonces -->
-    <string name="onglet_documents">Documents</string>
-    <string name="onglet_annonces">Annonces</string>
-    <string name="onglet_cours">Cours</string>
-    
-    
-    <!-- Menu contextuel -->
-    <string name="contextual_header">Actions</string>
-    <string name="contextual_mail">Envoyer un mail aux titulaires</string>
-    <string name="mail_titulars"> \n \n \n Envoyé depuis ClarolineMobile</string>
-    <string name="choose_activity_mail">Envoyer le mail avec :</string>
-    
-    
-    <!-- String concernant la searchView -->
-    <string name="search_hint">Tapez les mots-clés à chercher</string>
-    
-    
-     <!-- Shown above search results when we receive a search request. -->
-    <plurals name="search_results">
-      <item quantity="one">%1$d résultat pour \"%2$s\": </item>
-      <item quantity="other">%1$d résultat pour \"%2$s\": </item>
-    </plurals>
+<!-- TextView's de l'activite about_us -->
+<string name="about_us_contact_us">"Contact us"</string>
+<string name="about_us_remerciements">"Special Thanks"</string>
 
-    
-    <!-- General instructions in the main activity. -->
-    <string name="search_instructions">Utilisez la boîte de dialogue de la barre d\'action pour trouver un cours</string>
-    
-    <!-- Search failure message. -->
-    <string name="no_results">Aucun résultat pour \"%s\"</string>
-    
-    <!-- Settings -->
-    <string name="pref_cat_host">Paramètres de la plateforme</string>
-    <string name="pref_platform_host">Adresse de la plateforme</string>
-    <string name="pref_platform_module">Chemin du module</string>
-    <string name="pref_user_login">Nom d\'utilisateur</string>
-    <string name="pref_user_password">Mot de passe</string>
-    
-    <!-- Divers -->
-    <string name="list_no_items">Aucun élément dans cette liste</string>
-    <string name="extension_image_desc">Extension</string>
-    
-    <!-- Connectivité -->
-    <string name="loading_default">Chargement en cours&#8230;</string>
-    <string name="alert_auth_failed">L\'authentification a échoué</string>
-    <string name="download_finished_KO">Le téléchargement a échoué</string>
-    <string name="download_finished_OK">Le fichier a été téléchargé dans le dossier \'%1$s/%2$s/\'</string>
-    <string name="app_not_found">Aucune application trouvée pour ouvrir ce fichier</string>
-    <string name="failure_message">Voulez-vous vous rendre dans les préférences pour vérifier vos identifiants ?</string>
-    
-    <!-- Dialogue -->
-    <string name="save_or_open_dialog">Voulez vous ouvrir ou sauver ce document ?</string>
-    <string name="open_dialog">Ouvrir</string>
-    <string name="save_dialog">Sauver</string>
-    <string name="open_saved_doc_dialog">Voulez vous ouvrir ce document maintenant ?</string>
-    <string name="dialog_choose_app">Ouvrir avec</string>
-    <string name="no_network_title">Impossible d\'accéder à internet</string>
-    <string name="no_network">Veuillez vous connecter au réseau, puis réessayez</string>
+<!-- Boutons de l'action bar -->
+<string name="menu_about">"About"</string>
+<string name="menu_refresh">"Refresh"</string>
+<string name="menu_search">"Search"</string>
+<string name="menu_settings">"Settings"</string>
+<string name="actionbar_subtitle">"%1$s's Campus"</string>
 
-    <!-- Login Dialog -->
-    <string name="title_activity_login">Se connecter</string>
-    <string name="action_sign_in_register"><b>Se connecter</b></string>
-    <string name="action_sign_in_short">Se connecter</string>
-    <string name="login_progress_signing_in">Authentification&#8230;</string>
-    <string name="error_invalid_password">Le mot de passe est trop court</string>
-    <string name="error_incorrect_password">Le mot de passe est incorrect</string>
-    <string name="error_field_required">Ce champ est requis</string>
-        
-    <!-- a trier -->
-    <string name="menu_logout">Se déconnecter</string>
-    <string name="menu_login">Se connecter</string>
-    <string name="user_picture_desc">Image de profil</string>
+<!-- Strings des onglets Documents et Annonces -->
+<string name="onglet_documents">"Files"</string>
+<string name="onglet_annonces">"Announcements"</string>
+<string name="onglet_cours">"Courses"</string>
 
+<!-- Menu contextuel -->
+<string name="contextual_header">"Actions"</string>
+<string name="contextual_mail">"Send email to managers"</string>
+<string name="mail_titulars">"\n\n\nSend from ClaroMobile App"</string>
+<string name="choose_activity_mail">"Send email with :"</string>
+
+<!-- String concernant la searchView -->
+<string name="search_hint">"Type search key-words"</string>
+<plurals name="search_results">
+<item quantity="one">"%1$d match for \"%2$s\": "</item>
+<item quantity="other">"%1$d matches for \"%2$s\": "</item>
+</plurals>
+
+<!-- Search failure message. -->
+<string name="no_results">"No match for \"%s\""</string>
+<string name="pref_cat_host">"Platform Settings"</string>
+<string name="pref_platform_host">"Platform URL"</string>
+<string name="pref_platform_module">"Module path"</string>
+<string name="pref_user_login">"Username"</string>
+<string name="pref_user_password">"Password"</string>
+<string name="pref_error_invalid_adress">"This address is invalid"</string>
+<string name="pref_error_no_claro_platform">"Sorry, we found no Claroline platform here"</string>
+<string name="pref_error_server_error">"Sorry, an error occurred : %1$s"</string>
+<string name="pref_validate_host">"Validate"</string>
+
+<!-- Divers -->
+<string name="list_no_items">"This list is empty"</string>
+<string name="extension_image_desc">"Extension"</string>
+<string name="welcome">"Welcome, %1$s %2$s"</string>
+
+<!-- Connectivité -->
+<string name="loading_default">"Loading…"</string>
+<string name="app_not_found">"Unable to find an app for that"</string>
+<string name="dialog_choose_app">"Choose an app"</string>
+<string name="no_network">"Please connect to the network, then retry"</string>
+<string name="browse">"Browse&#8230;"</string>
+
+<!-- Login Dialog -->
+<string name="title_activity_login">"Login"</string>
+<string name="action_sign_in_register">"Login"</string>
+<string name="action_sign_in_short">"Login"</string>
+<string name="login_progress_signing_in">"Logging in&#8230;"</string>
+<string name="error_incorrect_password">"The password is incorrect"</string>
+<string name="error_field_required">"This field is required"</string>
+<string name="error_occured_retry">"An error occurred, please retry"</string>
+<string name="error_module_missing">"Sorry, we managed to log in you but something is missing on this platform. This application need this thing.
+Ask your platform manager to contact us for more infos."</string>
+<string name="error_module_bad_version">"Sorry, we managed to log in you but the module seems to be outdated. Tell your platform manager that an update is necessary to continue to use this application."</string>
+
+<!-- a trier -->
+<string name="menu_logout">"Logout"</string>
+<string name="menu_login">"Login"</string>
+<string name="user_picture_desc">"Profile picture"</string>
+<string name="used_library">"Used libraries"</string>
+<string name="authors">"Authors"</string>
+<string name="webhost_button_its_here">"It's here !"</string>
+<string name="webhost_button_go">"Go"</string>
+<string name="webhost_addressbar_hint">"Enter the URL"</string>
 </resources>

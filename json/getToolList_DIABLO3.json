@@ -1,0 +1,62 @@
+[
+	{
+		"label":"CLDSC",
+		"visibility":true,
+		"name":"Description du cours"
+	},
+	{
+		"label":"CLCAL",
+		"visibility":true,
+		"name":"Agenda"
+	},
+	{
+		"label":"CLANN",
+		"visibility":true,
+		"name":"Annonces"
+	},
+	{
+		"label":"CLDOC",
+		"visibility":true,
+		"name":"Documents et liens"
+	},
+	{
+		"label":"CLQWZ",
+		"visibility":true,
+		"name":"Exercices"
+	},
+	{
+		"label":"CLLNP",
+		"visibility":true,
+		"name":"Parcours p\u00e9dagogique"
+	},
+	{
+		"label":"CLWRK",
+		"visibility":true,
+		"name":"Travaux"
+	},
+	{
+		"label":"CLFRM",
+		"visibility":true,
+		"name":"Forums"
+	},
+	{
+		"label":"CLGRP",
+		"visibility":true,
+		"name":"Groupes"
+	},
+	{
+		"label":"CLUSR",
+		"visibility":true,
+		"name":"Utilisateurs"
+	},
+	{
+		"label":"CLWIKI",
+		"visibility":true,
+		"name":"Wiki"
+	},
+	{
+		"label":"CLCHAT",
+		"visibility":true,
+		"name":"Discussion"
+	}
+]

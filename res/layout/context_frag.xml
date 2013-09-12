@@ -16,19 +16,17 @@
         <ImageView
             android:id="@+id/user_image"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:baselineAlignBottom="false"
             android:contentDescription="@string/user_picture_desc"
-            android:maxHeight="50dp"
-            android:maxWidth="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/nopicture" />
 
        <LinearLayout
-            android:id="@+id/texts3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical" >
 
             <TextView
@@ -39,20 +37,6 @@
 
             <TextView
                 android:id="@+id/NOMA"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:gravity="center" />
-
-            <TextView
-                android:id="@+id/institutionName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center" />
-
-            <TextView
-                android:id="@+id/platformName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
