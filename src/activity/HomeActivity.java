@@ -57,7 +57,6 @@ public class HomeActivity extends AppActivity {
 
 		setActionBar(false);
 		refreshUI();
-		refresh(false, false, false);
 	}
 
 	@Override
@@ -73,6 +72,12 @@ public class HomeActivity extends AppActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		refresh(false, false, false);
 	}
 
 	/**
@@ -95,7 +100,8 @@ public class HomeActivity extends AppActivity {
 		if (!noDialog && !ClarolineClient.isValidAccount()) {
 			showLoginDialog();
 		} else if (ClarolineClient.isValidAccount()) {
-			if (forceUser || mustUpdate(SIX_HOURS) && !force) {
+			if (!App.getPrefs().contains(App.SETTINGS_FIRST_NAME) || forceUser
+					|| mustUpdate(SIX_HOURS) && !force) {
 				getService().getUserData(new AsyncHttpResponseHandler() {
 					@Override
 					public void onSuccess(final String response) {

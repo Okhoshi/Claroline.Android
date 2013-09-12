@@ -13,6 +13,8 @@ package connectivity;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import model.Cours;
 import model.ModelBase;
@@ -50,6 +52,11 @@ import com.loopj.android.http.RequestParams;
  */
 public class ClarolineService {
 
+	/**
+	 * Regex pattern.
+	 */
+	private static final Pattern PLATFORM_SETTINGS = Pattern
+			.compile("<!-- PLATFORM SETTINGS (.*) PLATFORM SETTINGS -->");
 	/**
 	 * Numeric Constant.
 	 */
@@ -102,6 +109,66 @@ public class ClarolineService {
 	 */
 	public ClarolineService() {
 		mClient = ClarolineClient.getInstance();
+	}
+
+	/**
+	 * Verify that the current host has a valid version of the module installed.
+	 * 
+	 * @param handler
+	 *            the handler to execute after the request
+	 */
+	public void checkForModuleValidity(final AsyncHttpResponseHandler handler) {
+		mClient.siteCall(mClient.getUrl(""), new AsyncHttpResponseHandler() {
+			@Override
+			public void onFailure(final Throwable error, final String content) {
+				handler.onFailure(error, content);
+			}
+
+			@Override
+			public void onFinish() {
+				handler.onFinish();
+			}
+
+			@Override
+			public void onSuccess(final String content) {
+				Matcher matches = PLATFORM_SETTINGS.matcher(content);
+				if (matches.find()) {
+					handler.onSuccess(matches.group(1));
+				} else {
+					handler.onSuccess("{}");
+				}
+			}
+		});
+	}
+
+	/**
+	 * Verify that the passed host is a valid Claroline platform.
+	 * 
+	 * @param hostURL
+	 *            the requested url
+	 * @param handler
+	 *            the handler to execute after the request
+	 */
+	public void checkHostValidity(final String hostURL,
+			final AsyncHttpResponseHandler handler) {
+		mClient.get(hostURL, new AsyncHttpResponseHandler() {
+			@Override
+			public void onFailure(final Throwable error, final String content) {
+				handler.onFailure(error, content);
+			}
+
+			@Override
+			public void onFinish() {
+				handler.onFinish();
+			}
+
+			@Override
+			public void onSuccess(final String content) {
+				handler.onSuccess(String.valueOf(content
+						.contains("<!-- - - - - - - - - - - Claroline "
+								+ "Body - - - - - - - - - -->")));
+			}
+		});
 	}
 
 	/**

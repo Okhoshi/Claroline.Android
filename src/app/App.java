@@ -13,20 +13,27 @@ package app;
 
 import java.io.File;
 
+import model.Cours;
 import net.claroline.mobile.android.R;
 
 import org.joda.time.DateTime;
 
 import util.UtilDateTimeTypeConverter;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import com.activeandroid.app.Application;
+import com.activeandroid.query.Delete;
 import com.activeandroid.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import connectivity.ClarolineClient;
 
 /**
  * Claroline Mobile - Android
@@ -132,6 +139,28 @@ public class App extends Application {
 	}
 
 	/**
+	 * Removes all settings related to the current account.
+	 * 
+	 * @param calledFromClient
+	 *            if it is called from client
+	 */
+	public static void invalidateUser(final boolean calledFromClient) {
+		if (!calledFromClient) {
+			ClarolineClient.getInstance().invalidateClient(true);
+		}
+		new Delete().from(Cours.class).execute();
+		getPrefs().edit().remove(App.SETTINGS_USER_LOGIN)
+				.remove(App.SETTINGS_USER_PASSWORD)
+				.remove(App.SETTINGS_FIRST_NAME).remove(App.SETTINGS_LAST_NAME)
+				.remove(App.SETTINGS_IS_PLATFORM_ADMIN)
+				.remove(App.SETTINGS_OFFICIAL_CODE)
+				.remove(App.SETTINGS_PLATFORM_NAME)
+				.remove(App.SETTINGS_INSTITUTION_NAME)
+				.remove(App.SETTINGS_USER_IMAGE).remove(App.SETTINGS_PICTURE)
+				.remove(App.SETTINGS_ACCOUNT_VERIFIED).apply();
+	}
+
+	/**
 	 * @param apiLevel
 	 *            the API level to test against
 	 * @return <code>true</code> if the current API level is greater of equal to
@@ -142,9 +171,24 @@ public class App extends Application {
 	}
 
 	/**
+	 * 
+	 * @return the Internet access state
+	 */
+	public static boolean isOnline() {
+		ConnectivityManager cm = (ConnectivityManager) getInstance()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Custom Gson JSON deserializer.
 	 */
 	private Gson mGson;
+	public static final int MIN_VERSION = 1;
 
 	@Override
 	public void onCreate() {

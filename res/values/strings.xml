@@ -50,6 +50,11 @@
     <string name="pref_platform_module">Chemin du module</string>
     <string name="pref_user_login">Nom d\'utilisateur</string>
     <string name="pref_user_password">Mot de passe</string>
+    <string name="pref_error_invalid_adress">Cette adresse est invalide</string>
+    <string name="pref_error_no_claro_platform">Désolé, nous n\'avons trouvé aucune plateforme Claroline à cette adresse</string>
+    <string name="pref_error_server_error">Désolé, un problème est survenu : %1$s</string>
+    <string name="pref_validate_host">Valider</string>
+
     
     <!-- Divers -->
     <string name="list_no_items">Aucun élément dans cette liste</string>
@@ -73,6 +78,7 @@
     <string name="dialog_choose_app">Ouvrir avec</string>
     <string name="no_network_title">Impossible d\'accéder à internet</string>
     <string name="no_network">Veuillez vous connecter au réseau, puis réessayez</string>
+    <string name="browse">Parcourir&#8230;</string>
 
     <!-- Login Dialog -->
     <string name="title_activity_login">Se connecter</string>
@@ -82,7 +88,9 @@
     <string name="error_incorrect_password">Le mot de passe est incorrect</string>
     <string name="error_field_required">Ce champ est requis</string>
     <string name="error_occured_retry">Une erreur s\'est produite, veuillez rééssayer</string>
-        
+    <string name="error_module_missing">Désolé, nous sommes arrivés à vous connecter mais un module est manquant sur la plateforme. Cette application ne peut fonctionner sans ce module.\nDemandez à votre gestionnaire de prendre contact avec nous pour de plus amples informations.</string>
+    <string name="error_module_bad_version">Désolé, nous sommes arrivés à vous connecter mais le module semble être obsolète.\nDemandez à votre gestionnnaire de le mettre à jour afin de pouvoir continuer à utiliser cette application.</string>   
+    
     <!-- a trier -->
     <string name="menu_logout">Se déconnecter</string>
     <string name="menu_login">Se connecter</string>

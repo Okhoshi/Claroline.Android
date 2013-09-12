@@ -14,11 +14,12 @@ package connectivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.claroline.mobile.android.R;
+
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.params.ClientPNames;
 import org.joda.time.DateTime;
 
-import android.accounts.AuthenticatorException;
 import android.util.Base64;
 import android.util.Log;
 import app.App;
@@ -205,48 +206,55 @@ public class ClarolineClient extends AsyncHttpClient {
 	 *            the handler to call when the process is finished
 	 */
 	public void connect(final AsyncHttpResponseHandler handler) {
-		RequestParams params = new RequestParams();
-		params.put("login",
-				App.getPrefs().getString(App.SETTINGS_USER_LOGIN, ""));
-		params.put("password",
-				App.getPrefs().getString(App.SETTINGS_USER_PASSWORD, ""));
-		params.put("sourceUrl",
-				Base64.encodeToString(getUrl("/").getBytes(), Base64.DEFAULT));
-		post(getUrl("/claroline/auth/login.php"), params,
-				new AsyncHttpResponseHandler() {
+		if (App.isOnline()) {
+			RequestParams params = new RequestParams();
+			params.put("login",
+					App.getPrefs().getString(App.SETTINGS_USER_LOGIN, ""));
+			params.put("password",
+					App.getPrefs().getString(App.SETTINGS_USER_PASSWORD, ""));
+			params.put("sourceUrl", Base64.encodeToString(getUrl("/")
+					.getBytes(), Base64.DEFAULT));
+			post(getUrl("/claroline/auth/login.php"), params,
+					new AsyncHttpResponseHandler() {
 
-					@Override
-					public void onFailure(final Throwable arg0,
-							final String arg1) {
-						Log.w(ClarolineClient.TAG, "Authentication failed !");
-						invalidateClient();
-						super.onFailure(arg0, arg1);
-						handler.onFailure(arg0, arg1);
-					}
-
-					@Override
-					public void onSuccess(final int arg0, final String arg1) {
-						onSuccess(arg1);
-					}
-
-					@Override
-					public void onSuccess(final String response) {
-						boolean authenticated = response
-								.contains("class=\"userName\"");
-						setValidAccount(authenticated);
-						if (authenticated) {
-							Log.d(ClarolineClient.TAG,
-									"Authentication passed !");
-							setExpirationTime(DateTime.now().plusHours(2));
-							handler.onSuccess(response);
-						} else {
+						@Override
+						public void onFailure(final Throwable arg0,
+								final String arg1) {
 							Log.w(ClarolineClient.TAG,
 									"Authentication failed !");
-							handler.onFailure(new AuthenticatorException(
-									"Authentication failed"), response);
+							invalidateClient(false);
+							handler.onFailure(arg0, arg1);
 						}
-					}
-				});
+
+						@Override
+						public void onFinish() {
+							handler.onFinish();
+						}
+
+						@Override
+						public void onSuccess(final String response) {
+							boolean authenticated = response
+									.contains("class=\"userName\"");
+							setValidAccount(authenticated);
+							if (authenticated) {
+								Log.d(ClarolineClient.TAG,
+										"Authentication passed !");
+								setExpirationTime(DateTime.now().plusHours(2));
+								handler.onSuccess(response);
+							} else {
+								Log.w(ClarolineClient.TAG,
+										"Authentication failed !");
+								handler.onFailure(new Throwable(
+										"Authentication failed"), response);
+							}
+						}
+					});
+		} else {
+			handler.onFinish();
+			handler.onFailure(
+					new Throwable(App.getInstance().getString(
+							R.string.no_network)), "");
+		}
 	}
 
 	/**
@@ -262,22 +270,19 @@ public class ClarolineClient extends AsyncHttpClient {
 
 	/**
 	 * Removes all settings related to the current account.
+	 * 
+	 * @param calledFromApp
+	 *            if it is called from App invalidate method
 	 */
-	public void invalidateClient() {
+	public void invalidateClient(final boolean calledFromApp) {
 		setExpirationTime(new DateTime(0L));
 		if (mCookies != null) {
 			mCookies.clear();
 		}
 		setValidAccount(false);
-		App.getPrefs().edit().remove(App.SETTINGS_USER_LOGIN)
-				.remove(App.SETTINGS_USER_PASSWORD)
-				.remove(App.SETTINGS_FIRST_NAME).remove(App.SETTINGS_LAST_NAME)
-				.remove(App.SETTINGS_IS_PLATFORM_ADMIN)
-				.remove(App.SETTINGS_OFFICIAL_CODE)
-				.remove(App.SETTINGS_PLATFORM_NAME)
-				.remove(App.SETTINGS_INSTITUTION_NAME)
-				.remove(App.SETTINGS_USER_IMAGE).remove(App.SETTINGS_PICTURE)
-				.remove(App.SETTINGS_ACCOUNT_VERIFIED).apply();
+		if (!calledFromApp) {
+			App.invalidateUser(true);
+		}
 	}
 
 	/**
@@ -303,17 +308,25 @@ public class ClarolineClient extends AsyncHttpClient {
 	 */
 	public void serviceQuery(final RequestParams parameters,
 			final JsonHttpResponseHandler handler) {
-		if (mExpires.isBeforeNow()) {
-			connect(new AsyncHttpResponseHandler() {
-				@Override
-				public void onSuccess(final String response) {
-					serviceQuery(parameters, handler);
-				}
-			});
+		if (App.isOnline()) {
+			if (mExpires.isBeforeNow()) {
+				connect(new AsyncHttpResponseHandler() {
+					@Override
+					public void onSuccess(final String response) {
+						serviceQuery(parameters, handler);
+					}
+				});
+			} else {
+				Log.d("Client", "Query " + parameters);
+				post(getUrl(App.getPrefs().getString(
+						App.SETTINGS_PLATFORM_MODULE, "/module/MOBILE/")),
+						parameters, handler);
+			}
 		} else {
-			Log.d("Client", "Query " + parameters);
-			post(getUrl(App.getPrefs().getString(App.SETTINGS_PLATFORM_MODULE,
-					"/module/MOBILE/")), parameters, handler);
+			handler.onFinish();
+			handler.onFailure(
+					new Throwable(App.getInstance().getString(
+							R.string.no_network)), "");
 		}
 	}
 
@@ -346,16 +359,23 @@ public class ClarolineClient extends AsyncHttpClient {
 	 */
 	public void siteCall(final String url,
 			final AsyncHttpResponseHandler handler) {
-		if (mExpires.isBeforeNow()) {
-			connect(new AsyncHttpResponseHandler() {
-				@Override
-				public void onSuccess(final String response) {
-					siteCall(url, handler);
-				}
-			});
+		if (App.isOnline()) {
+			if (mExpires.isBeforeNow()) {
+				connect(new AsyncHttpResponseHandler() {
+					@Override
+					public void onSuccess(final String response) {
+						siteCall(url, handler);
+					}
+				});
+			} else {
+				Log.d("Client", "Query " + url);
+				get(url, handler);
+			}
 		} else {
-			Log.d("Client", "Query " + url);
-			get(url, handler);
+			handler.onFinish();
+			handler.onFailure(
+					new Throwable(App.getInstance().getString(
+							R.string.no_network)), "");
 		}
 	}
 }

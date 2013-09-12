@@ -6,26 +6,20 @@ import net.claroline.mobile.android.R;
 
 import org.joda.time.DateTime;
 
-import activity.Settings;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.preference.PreferenceActivity;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.view.Window;
-import android.widget.SearchView;
 import connectivity.ClarolineClient;
 import connectivity.ClarolineClient.OnAccountStateChangedListener;
 import connectivity.ClarolineService;
-import fragments.AboutDialog;
 
 /**
  * Claroline Mobile - Android
@@ -35,8 +29,8 @@ import fragments.AboutDialog;
  * @author Devos Quentin
  * @version 1.0
  */
-public abstract class AppActivity extends FragmentActivity implements
-		OnAccountStateChangedListener {
+public abstract class AppPreferenceActivity extends PreferenceActivity
+		implements OnAccountStateChangedListener {
 
 	/**
 	 * Maximum bound of Activity ProgressBar.
@@ -146,58 +140,11 @@ public abstract class AppActivity extends FragmentActivity implements
 		setOverflowMenu();
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.actionbar, menu);
-
-		if (ClarolineClient.isValidAccount()) {
-			menu.findItem(R.id.menu_login).setVisible(false).setEnabled(false);
-		} else {
-			menu.findItem(R.id.menu_logout).setVisible(false).setEnabled(false);
-			menu.findItem(R.id.menu_refresh).setVisible(false)
-					.setEnabled(false);
-		}
-
-		if (App.isNewerAPI(Build.VERSION_CODES.HONEYCOMB)) {
-			// Get the SearchView and set the searchable configuration
-			SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-			SearchView searchView = (SearchView) menu
-					.findItem(R.id.menu_search).getActionView();
-			searchView.setSearchableInfo(searchManager
-					.getSearchableInfo(getComponentName()));
-			searchView.setIconifiedByDefault(false);
-			searchView.setSubmitButtonEnabled(true);
-		}
-		mMenu = menu;
-
-		return true;
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_about:
-			AboutDialog about = new AboutDialog();
-			about.show(getSupportFragmentManager(), "about");
-			break;
-		case R.id.menu_search:
-			onSearchRequested();
-			break;
-		case R.id.menu_settings:
-			Intent si = new Intent(this, Settings.class);
-			startActivity(si);
-			break;
-		case R.id.menu_logout:
-			App.invalidateUser(false);
-			break;
 		case android.R.id.home:
 			NavUtils.navigateUpFromSameTask(this);
-			break;
-		case R.id.menu_refresh:
-		case R.id.menu_login:
-			// Comportement du bouton "Rafraichir" et du bouton "Se connecter"
-			// Doit �tre impl�menter dans chaque activit� si besoin
 			break;
 		default:
 			return super.onOptionsItemSelected(item);

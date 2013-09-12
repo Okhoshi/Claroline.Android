@@ -16,18 +16,13 @@ import java.util.Arrays;
 import java.util.Map;
 
 import net.claroline.mobile.android.R;
-import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import app.App;
+import app.AppPreferenceActivity;
 
 /**
  * Claroline Mobile - Android
@@ -38,7 +33,7 @@ import app.App;
  * @version 1.0
  */
 @SuppressWarnings("deprecation")
-public class Settings extends PreferenceActivity implements
+public class Settings extends AppPreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
 	/**
@@ -52,9 +47,6 @@ public class Settings extends PreferenceActivity implements
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
-		if (App.isNewerAPI(Build.VERSION_CODES.HONEYCOMB)) {
-			setActionBar();
-		}
 
 		Map<String, ?> keys = App.getPrefs().getAll();
 
@@ -71,25 +63,14 @@ public class Settings extends PreferenceActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
-	protected void onPause() {
+	public void onPause() {
 		super.onPause();
 		getPreferenceScreen().getSharedPreferences()
 				.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		getPreferenceScreen().getSharedPreferences()
 				.registerOnSharedPreferenceChangeListener(this);
@@ -105,15 +86,14 @@ public class Settings extends PreferenceActivity implements
 				pref.setSummary(sharedPreferences.getString(key, ""));
 			}
 		}
+
+		if (ON_SCREEN_SETTINGS.contains(key)) {
+			App.invalidateUser(false);
+		}
 	}
 
-	/**
-	 * Sets up the ActionBar.
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void setActionBar() {
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
+	@Override
+	public void refreshUI() {
+		// Nothing to do
 	}
-
 }

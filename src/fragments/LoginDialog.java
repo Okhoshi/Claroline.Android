@@ -1,6 +1,10 @@
 package fragments;
 
 import net.claroline.mobile.android.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -15,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import app.App;
 
@@ -22,6 +27,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import connectivity.ClarolineClient;
 import connectivity.ClarolineClient.OnAccountStateChangedListener;
+import connectivity.ClarolineService;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -44,9 +50,18 @@ public class LoginDialog extends Dialog implements
 			ClarolineClient.getInstance().connect(
 					new AsyncHttpResponseHandler() {
 						@Override
-						public void onSuccess(final String response) {
+						public void onFailure(final Throwable error,
+								final String content) {
+							showMessage(error.getMessage());
+
 							synchronized (mAuthTask) {
-								System.out.println("Notify mAuthTask");
+								mAuthTask.notify();
+							}
+						}
+
+						@Override
+						public void onSuccess(final String content) {
+							synchronized (mAuthTask) {
 								mAuthTask.notify();
 							}
 						}
@@ -54,7 +69,6 @@ public class LoginDialog extends Dialog implements
 
 			try {
 				synchronized (mAuthTask) {
-					System.out.println("Wait mAuthTask");
 					mAuthTask.wait();
 				}
 			} catch (InterruptedException e) {
@@ -68,11 +82,48 @@ public class LoginDialog extends Dialog implements
 		@Override
 		protected void onPostExecute(final Boolean success) {
 			mAuthTask = null;
-			showProgress(false);
 
 			if (success) {
-				dismiss();
+				new ClarolineService()
+						.checkForModuleValidity(new AsyncHttpResponseHandler() {
+							@Override
+							public void onFailure(final Throwable error,
+									final String content) {
+								showMessage(getContext().getString(
+										R.string.pref_error_server_error,
+										error.getLocalizedMessage()));
+							}
+
+							@Override
+							public void onSuccess(final String content) {
+								JSONObject object;
+								try {
+									object = new JSONObject(content);
+									if (object.has("version")) {
+										int version = object.getInt("version");
+										if (version >= App.MIN_VERSION) {
+											App.getPrefs()
+													.edit()
+													.putString(
+															App.SETTINGS_PLATFORM_MODULE,
+															object.getString("path"))
+													.apply();
+											dismiss();
+										} else {
+											showMessage(R.string.error_module_bad_version);
+										}
+									} else {
+										showMessage(R.string.error_module_missing);
+									}
+								} catch (JSONException e) {
+									e.printStackTrace();
+									showMessage(R.string.error_module_missing);
+								}
+							}
+						});
 			} else {
+				showProgress(false);
+
 				Editor edit = App.getPrefs().edit();
 				edit.putString(App.SETTINGS_USER_LOGIN, "")
 						.putString(App.SETTINGS_USER_PASSWORD, "").apply();
@@ -124,6 +175,10 @@ public class LoginDialog extends Dialog implements
 	 */
 	private TextView mLoginStatusMessageView;
 
+	/**
+	 * UI references.
+	 */
+	private ProgressBar mLoginStatusProgressView;
 	/**
 	 * The current context.
 	 */
@@ -194,6 +249,48 @@ public class LoginDialog extends Dialog implements
 	}
 
 	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setTitle(R.string.title_activity_login);
+		setContentView(R.layout.dialog_login);
+		mLogin = App.getPrefs().getString(App.SETTINGS_USER_LOGIN, null);
+
+		// Set up the login form.
+		mLoginView = (EditText) findViewById(R.id.login_text);
+		if (mLogin != null) {
+			mLoginView.setText(mLogin);
+		}
+
+		mPasswordView = (EditText) findViewById(R.id.password);
+		mPasswordView
+				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+					@Override
+					public boolean onEditorAction(final TextView textView,
+							final int id, final KeyEvent keyEvent) {
+						if (id == R.id.login || id == EditorInfo.IME_NULL) {
+							attemptLogin();
+							return true;
+						}
+						return false;
+					}
+				});
+
+		mLoginFormView = findViewById(R.id.login_form);
+		mLoginStatusView = findViewById(R.id.login_status);
+		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+		mLoginStatusProgressView = (ProgressBar) findViewById(R.id.login_status_progressbar);
+
+		findViewById(R.id.sign_in_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(final View view) {
+						attemptLogin();
+					}
+				});
+	}
+
+	@Override
 	public void show() {
 		if (ClarolineClient.isValidAccount()
 				|| App.getPrefs().getString(App.SETTINGS_PLATFORM_HOST, "")
@@ -205,6 +302,30 @@ public class LoginDialog extends Dialog implements
 	}
 
 	/**
+	 * Shows a message on the popup.
+	 * 
+	 * @param messageId
+	 *            the id of the message to show
+	 */
+	private void showMessage(final int messageId) {
+		showProgress(true);
+		mLoginStatusProgressView.setVisibility(View.GONE);
+		mLoginStatusMessageView.setText(messageId);
+	}
+
+	/**
+	 * Shows a message on the popup.
+	 * 
+	 * @param message
+	 *            the message to show
+	 */
+	private void showMessage(final String message) {
+		showProgress(true);
+		mLoginStatusProgressView.setVisibility(View.GONE);
+		mLoginStatusMessageView.setText(message);
+	}
+
+	/**
 	 * Shows the progress UI and hides the login form.
 	 * 
 	 * @param show
@@ -213,6 +334,10 @@ public class LoginDialog extends Dialog implements
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	private void showProgress(final boolean show) {
+		// Revert changes made by showMessage
+		mLoginStatusProgressView.setVisibility(View.VISIBLE);
+		mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
+
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
 		// for very easy animations. If available, use these APIs to fade-in
 		// the progress spinner.
@@ -247,46 +372,5 @@ public class LoginDialog extends Dialog implements
 			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
-	}
-
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		setTitle(R.string.title_activity_login);
-		setContentView(R.layout.dialog_login);
-		mLogin = App.getPrefs().getString(App.SETTINGS_USER_LOGIN, null);
-
-		// Set up the login form.
-		mLoginView = (EditText) findViewById(R.id.login_text);
-		if (mLogin != null) {
-			mLoginView.setText(mLogin);
-		}
-
-		mPasswordView = (EditText) findViewById(R.id.password);
-		mPasswordView
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(final TextView textView,
-							final int id, final KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
-							attemptLogin();
-							return true;
-						}
-						return false;
-					}
-				});
-
-		mLoginFormView = findViewById(R.id.login_form);
-		mLoginStatusView = findViewById(R.id.login_status);
-		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
-
-		findViewById(R.id.sign_in_button).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(final View view) {
-						attemptLogin();
-					}
-				});
 	}
 }

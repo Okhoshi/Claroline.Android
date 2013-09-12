@@ -30,12 +30,22 @@ import com.activeandroid.query.Update;
  */
 public final class Tools {
 
+	/**
+	 * Deletes the remanent entries in db.
+	 * 
+	 * @param table
+	 *            the table class to clean
+	 * @param cond
+	 *            the condition to apply
+	 * @param args
+	 *            the arguments of the cond
+	 */
 	public static void cleanTableAfterUpdate(
 			final Class<? extends Model> table, final String cond,
 			final Object... args) {
 		new Delete().from(table).where("Updated = 0 AND " + cond, args)
 				.execute();
-		new Update(table).set("Updated = ?", false).execute();
+		new Update(table).set("Updated = ?", false).where(cond, args).execute();
 	}
 
 	/**
