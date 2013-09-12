@@ -37,8 +37,8 @@ public class AnnonceAdapter extends BaseAdapter {
 	 * Resource View to use for line.
 	 */
 	private static final int RESOURCE = R.layout.two_lines_item;
-	private List<Annonce> mListeAnnonce;
 	private Context mContext;
+	private List<Annonce> mListeAnnonce;
 
 	public AnnonceAdapter(final Context context,
 			final List<Annonce> listeAnnonce) {

@@ -25,8 +25,8 @@ public class GenericAdapter<T extends ModelBase> extends BaseAdapter {
 	 * Resource View to use for line.
 	 */
 	private static final int RESOURCE = R.layout.two_lines_item;
-	private List<T> mListeResource;
 	private Context mContext;
+	private List<T> mListeResource;
 
 	public GenericAdapter(final Context context, final List<T> listeResource) {
 		mListeResource = listeResource;

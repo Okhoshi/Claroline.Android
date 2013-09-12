@@ -61,6 +61,16 @@ public class ClarolineClient extends AsyncHttpClient {
 	private static final int C60 = 60 * 1000;
 
 	/**
+	 * Singleton instance.
+	 */
+	private static ClarolineClient sInstance;
+
+	/**
+	 * Debug tag.
+	 */
+	private static final String TAG = "ClaroClient";
+
+	/**
 	 * @return the Singleton instance
 	 */
 	public static ClarolineClient getInstance() {
@@ -174,16 +184,6 @@ public class ClarolineClient extends AsyncHttpClient {
 	 * State of account.
 	 */
 	private boolean mValidAccount;
-
-	/**
-	 * Debug tag.
-	 */
-	private static final String TAG = "ClaroClient";
-
-	/**
-	 * Singleton instance.
-	 */
-	private static ClarolineClient sInstance;
 
 	/**
 	 * Default constructor without arguments.

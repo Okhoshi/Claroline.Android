@@ -22,12 +22,12 @@ import android.widget.TextView;
 
 public class CoursAdapter extends BaseAdapter {
 
-	private List<Cours> mCoursList;
 	private Context mContext;
+	private List<Cours> mCoursList;
 
 	public CoursAdapter(final Context context, final List<Cours> listeCours) {
-		this.mContext = context;
-		this.mCoursList = listeCours;
+		mContext = context;
+		mCoursList = listeCours;
 	}
 
 	public Context getContext() {
@@ -82,7 +82,7 @@ public class CoursAdapter extends BaseAdapter {
 	}
 
 	public void setCours(final List<Cours> listeCours) {
-		this.mCoursList = listeCours;
+		mCoursList = listeCours;
 	}
 
 }

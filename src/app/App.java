@@ -45,14 +45,11 @@ import connectivity.ClarolineClient;
  */
 public class App extends Application {
 
+	public static final int MIN_VERSION = 1;
 	/**
 	 * Shared Preference tag.
 	 */
-	public static final String SETTINGS_USER_PASSWORD = "user_password";
-	/**
-	 * Shared Preference tag.
-	 */
-	public static final String SETTINGS_IS_PLATFORM_ADMIN = "isPlatformAdmin";
+	public static final String SETTINGS_ACCOUNT_VERIFIED = "account verified";
 	/**
 	 * Shared Preference tag.
 	 */
@@ -60,19 +57,15 @@ public class App extends Application {
 	/**
 	 * Shared Preference tag.
 	 */
-	public static final String SETTINGS_PICTURE = "picture";
-	/**
-	 * Shared Preference tag.
-	 */
-	public static final String SETTINGS_USER_IMAGE = "userImage";
-	/**
-	 * Shared Preference tag.
-	 */
 	public static final String SETTINGS_INSTITUTION_NAME = "institutionName";
 	/**
 	 * Shared Preference tag.
 	 */
-	public static final String SETTINGS_PLATFORM_NAME = "platformName";
+	public static final String SETTINGS_IS_PLATFORM_ADMIN = "isPlatformAdmin";
+	/**
+	 * Shared Preference tag.
+	 */
+	public static final String SETTINGS_LAST_NAME = "lastName";
 	/**
 	 * Shared Preference tag.
 	 */
@@ -80,7 +73,7 @@ public class App extends Application {
 	/**
 	 * Shared Preference tag.
 	 */
-	public static final String SETTINGS_LAST_NAME = "lastName";
+	public static final String SETTINGS_PICTURE = "picture";
 	/**
 	 * Shared Preference tag.
 	 */
@@ -92,12 +85,21 @@ public class App extends Application {
 	/**
 	 * Shared Preference tag.
 	 */
+	public static final String SETTINGS_PLATFORM_NAME = "platformName";
+	/**
+	 * Shared Preference tag.
+	 */
+	public static final String SETTINGS_USER_IMAGE = "userImage";
+
+	/**
+	 * Shared Preference tag.
+	 */
 	public static final String SETTINGS_USER_LOGIN = "user_login";
 
 	/**
 	 * Shared Preference tag.
 	 */
-	public static final String SETTINGS_ACCOUNT_VERIFIED = "account verified";
+	public static final String SETTINGS_USER_PASSWORD = "user_password";
 
 	/**
 	 * Singleton instance.
@@ -188,7 +190,6 @@ public class App extends Application {
 	 * Custom Gson JSON deserializer.
 	 */
 	private Gson mGson;
-	public static final int MIN_VERSION = 1;
 
 	@Override
 	public void onCreate() {

@@ -20,12 +20,10 @@ import android.widget.BaseAdapter;
 public class NotificationAdapter extends BaseAdapter {
 
 	private List<Notification> mNotificationList;
-	private Context mContext;
 
 	public NotificationAdapter(final Context context,
 			final List<Notification> listeNotification) {
 		mNotificationList = listeNotification;
-		mContext = context;
 	}
 
 	@Override

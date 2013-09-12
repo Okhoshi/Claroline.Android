@@ -30,33 +30,33 @@ import util.Tools;
  */
 public enum SupportedModules {
 	/**
+	 * Announcements plugin.
+	 */
+	CLANN,
+	/**
+	 * Calendar plugin.
+	 */
+	CLCAL,
+	/**
+	 * Documents plugin.
+	 */
+	CLDOC,
+	/**
+	 * Descriptions plugin.
+	 */
+	CLDSC,
+	/**
+	 * Forum plugin.
+	 */
+	CLFRM,
+	/**
 	 * Not in MOBILE module.
 	 */
 	NOMOD,
 	/**
 	 * Not plugin specific.
 	 */
-	USER,
-	/**
-	 * Documents plugin.
-	 */
-	CLDOC,
-	/**
-	 * Announcements plugin.
-	 */
-	CLANN,
-	/**
-	 * Forum plugin.
-	 */
-	CLFRM,
-	/**
-	 * Descriptions plugin.
-	 */
-	CLDSC,
-	/**
-	 * Calendar plugin.
-	 */
-	CLCAL;
+	USER;
 
 	/**
 	 * @param label

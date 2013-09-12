@@ -24,11 +24,15 @@ public enum SupportedMethods {
 	/**
 	 * in USER.
 	 */
-	getUserData,
-	/**
-	 * in USER.
-	 */
 	getCourseList,
+	/**
+	 * in CLXXX.
+	 */
+	getResourcesList,
+	/**
+	 * in CLXXX.
+	 */
+	getSingleResource,
 	/**
 	 * in USER.
 	 */
@@ -38,11 +42,7 @@ public enum SupportedMethods {
 	 */
 	getUpdates,
 	/**
-	 * in CLXXX.
+	 * in USER.
 	 */
-	getResourcesList,
-	/**
-	 * in CLXXX.
-	 */
-	getSingleResource
+	getUserData
 }

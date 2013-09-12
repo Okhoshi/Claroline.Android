@@ -79,11 +79,6 @@ public class UrlBrowserSelectorActivity extends AppActivity {
 	/**
 	 * UI reference.
 	 */
-	private EditText mET;
-
-	/**
-	 * UI reference.
-	 */
 	private Button mB1;
 
 	/**
@@ -94,7 +89,7 @@ public class UrlBrowserSelectorActivity extends AppActivity {
 	/**
 	 * UI reference.
 	 */
-	private WebView mWV;
+	private EditText mET;
 
 	/**
 	 * Current URL.
@@ -130,6 +125,11 @@ public class UrlBrowserSelectorActivity extends AppActivity {
 			}
 		}
 	};
+
+	/**
+	 * UI reference.
+	 */
+	private WebView mWV;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {

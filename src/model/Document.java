@@ -64,86 +64,11 @@ public class Document extends ModelBase {
 	}
 
 	/**
-	 * Title column.
-	 */
-	@SerializedName("title")
-	@Column(name = "Title")
-	private String mTitle;
-
-	/**
-	 * IsVisible column.
-	 */
-	@SerializedName("visibility")
-	@Column(name = "IsVisible")
-	private boolean mIsVisible;
-
-	/**
-	 * URL column.
-	 */
-	@SerializedName("url")
-	@Column(name = "URL")
-	private String mURL;
-
-	/**
-	 * Path column.
-	 */
-	@SerializedName("path")
-	@Column(name = "ResourceString", unique = true, onUniqueConflict = ConflictAction.IGNORE)
-	private String mPath;
-
-	/**
-	 * Updated column.
-	 */
-	@Column(name = "Updated")
-	private boolean mUpdated;
-
-	/**
-	 * SeenDate column.
-	 */
-	@SerializedName("seenDate")
-	@Column(name = "SeenDate")
-	private DateTime mSeenDate;
-
-	/**
-	 * List column.
-	 */
-	@Column(name = "List", onDelete = ForeignKeyAction.CASCADE)
-	private ResourceList mList;
-
-	/**
-	 * NotifiedDate column.
-	 */
-	@SerializedName("notifiedDate")
-	@Column(name = "NotifiedDate")
-	private DateTime mNotifiedDate;
-
-	/**
 	 * Date column.
 	 */
 	@SerializedName("date")
 	@Column(name = "Date")
 	private DateTime mDate;
-
-	/**
-	 * IsFolder column.
-	 */
-	@SerializedName("isFolder")
-	@Column(name = "IsFolder")
-	private boolean mIsFolder;
-
-	/**
-	 * Size column.
-	 */
-	@SerializedName("size")
-	@Column(name = "Size")
-	private long mSize;
-
-	/**
-	 * Extension column.
-	 */
-	@SerializedName("extension")
-	@Column(name = "Extension")
-	private String mExtension;
 
 	/**
 	 * Description column.
@@ -153,10 +78,85 @@ public class Document extends ModelBase {
 	private String mDescription;
 
 	/**
+	 * Extension column.
+	 */
+	@SerializedName("extension")
+	@Column(name = "Extension")
+	private String mExtension;
+
+	/**
+	 * IsFolder column.
+	 */
+	@SerializedName("isFolder")
+	@Column(name = "IsFolder")
+	private boolean mIsFolder;
+
+	/**
+	 * IsVisible column.
+	 */
+	@SerializedName("visibility")
+	@Column(name = "IsVisible")
+	private boolean mIsVisible;
+
+	/**
+	 * List column.
+	 */
+	@Column(name = "List", onDelete = ForeignKeyAction.CASCADE)
+	private ResourceList mList;
+
+	/**
 	 * LoadedDate column.
 	 */
 	@Column(name = "LoadedDate")
 	private DateTime mLoadedDate;
+
+	/**
+	 * NotifiedDate column.
+	 */
+	@SerializedName("notifiedDate")
+	@Column(name = "NotifiedDate")
+	private DateTime mNotifiedDate;
+
+	/**
+	 * Path column.
+	 */
+	@SerializedName("path")
+	@Column(name = "ResourceString", unique = true, onUniqueConflict = ConflictAction.IGNORE)
+	private String mPath;
+
+	/**
+	 * SeenDate column.
+	 */
+	@SerializedName("seenDate")
+	@Column(name = "SeenDate")
+	private DateTime mSeenDate;
+
+	/**
+	 * Size column.
+	 */
+	@SerializedName("size")
+	@Column(name = "Size")
+	private long mSize;
+
+	/**
+	 * Title column.
+	 */
+	@SerializedName("title")
+	@Column(name = "Title")
+	private String mTitle;
+
+	/**
+	 * Updated column.
+	 */
+	@Column(name = "Updated")
+	private boolean mUpdated;
+
+	/**
+	 * URL column.
+	 */
+	@SerializedName("url")
+	@Column(name = "URL")
+	private String mURL;
 
 	/**
 	 * @return the content of this folder

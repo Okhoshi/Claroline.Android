@@ -53,14 +53,14 @@ import com.loopj.android.http.RequestParams;
 public class ClarolineService {
 
 	/**
+	 * Numeric Constant.
+	 */
+	private static final int C100 = 100;
+	/**
 	 * Regex pattern.
 	 */
 	private static final Pattern PLATFORM_SETTINGS = Pattern
 			.compile("<!-- PLATFORM SETTINGS (.*) PLATFORM SETTINGS -->");
-	/**
-	 * Numeric Constant.
-	 */
-	private static final int C100 = 100;
 
 	/**
 	 * Debug tag.
@@ -71,6 +71,11 @@ public class ClarolineService {
 	 * {@link ClarolineClient}.
 	 */
 	private ClarolineClient mClient;
+
+	/**
+	 * Internal counter.
+	 */
+	private int mCounter = 0;
 
 	/**
 	 * Specific handler for the profile picture.
@@ -98,11 +103,6 @@ public class ClarolineService {
 									Base64.DEFAULT)).apply();
 		};
 	};
-
-	/**
-	 * Internal counter.
-	 */
-	private int mCounter = 0;
 
 	/**
 	 * Default constructor without arguments.

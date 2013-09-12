@@ -30,12 +30,6 @@ import com.activeandroid.annotation.Table;
 public class Notification extends Model {
 
 	/**
-	 * Resource column.
-	 */
-	@Column(name = "Resource")
-	private ModelBase mResource;
-
-	/**
 	 * Date column.
 	 */
 	@Column(name = "Date")
@@ -46,6 +40,12 @@ public class Notification extends Model {
 	 */
 	@Column(name = "IsOld")
 	private boolean mIsOld;
+
+	/**
+	 * Resource column.
+	 */
+	@Column(name = "Resource")
+	private ModelBase mResource;
 
 	/**
 	 * Default constructor without arguments. Required.

@@ -36,13 +36,6 @@ import com.google.gson.annotations.SerializedName;
 public class Cours extends Model {
 
 	/**
-	 * SysCode column.
-	 */
-	@SerializedName("sysCode")
-	@Column(name = "SysCode", unique = true, onUniqueConflict = ConflictAction.IGNORE)
-	private String mSysCode;
-
-	/**
 	 * CoursId column.
 	 */
 	@SerializedName("cours_id")
@@ -50,17 +43,10 @@ public class Cours extends Model {
 	private int mCoursId;
 
 	/**
-	 * Updated column.
+	 * LoadedDate column.
 	 */
-	@Column(name = "Updated")
-	private boolean mUpdated;
-
-	/**
-	 * OfficialCode column.
-	 */
-	@SerializedName("officialCode")
-	@Column(name = "OfficialCode")
-	private String mOfficialCode;
+	@Column(name = "LoadedDate")
+	private DateTime mLoadedDate = new DateTime(0L);
 
 	/**
 	 * Name column.
@@ -70,11 +56,11 @@ public class Cours extends Model {
 	private String mName;
 
 	/**
-	 * Titular column.
+	 * OfficialCode column.
 	 */
-	@SerializedName("titular")
-	@Column(name = "Titular")
-	private String mTitular;
+	@SerializedName("officialCode")
+	@Column(name = "OfficialCode")
+	private String mOfficialCode;
 
 	/**
 	 * OfficialEmail column.
@@ -84,10 +70,24 @@ public class Cours extends Model {
 	private String mOfficialEmail;
 
 	/**
-	 * LoadedDate column.
+	 * SysCode column.
 	 */
-	@Column(name = "LoadedDate")
-	private DateTime mLoadedDate = new DateTime(0L);
+	@SerializedName("sysCode")
+	@Column(name = "SysCode", unique = true, onUniqueConflict = ConflictAction.IGNORE)
+	private String mSysCode;
+
+	/**
+	 * Titular column.
+	 */
+	@SerializedName("titular")
+	@Column(name = "Titular")
+	private String mTitular;
+
+	/**
+	 * Updated column.
+	 */
+	@Column(name = "Updated")
+	private boolean mUpdated;
 
 	/**
 	 * Default constructor without arguments. Required.

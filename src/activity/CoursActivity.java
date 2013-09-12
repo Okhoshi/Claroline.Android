@@ -57,14 +57,14 @@ public class CoursActivity extends AppActivity {
 	 */
 	public class ResourcesListPagerAdapter extends FragmentStatePagerAdapter {
 		/**
-		 * Lists present in this course.
-		 */
-		private List<ResourceList> mCurrentList;
-
-		/**
 		 * Currently active fragment in ViewPager.
 		 */
 		private Map<String, Fragment> mActiveFragmentMap;
+
+		/**
+		 * Lists present in this course.
+		 */
+		private List<ResourceList> mCurrentList;
 
 		/**
 		 * Default constructor.
@@ -154,6 +154,10 @@ public class CoursActivity extends AppActivity {
 	}
 
 	/**
+	 * {@link ViewPager} Adapter.
+	 */
+	private ResourcesListPagerAdapter mAdapter;
+	/**
 	 * Current cours.
 	 */
 	private Cours mCurrentCours;
@@ -161,10 +165,6 @@ public class CoursActivity extends AppActivity {
 	 * UI reference.
 	 */
 	private ViewPager mViewPager;
-	/**
-	 * {@link ViewPager} Adapter.
-	 */
-	private ResourcesListPagerAdapter mAdapter;
 
 	@Override
 	public void onBackPressed() {

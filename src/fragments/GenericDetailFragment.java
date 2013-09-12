@@ -68,11 +68,6 @@ public class GenericDetailFragment extends DetailFragment {
 	}
 
 	/**
-	 * Numeric constant.
-	 */
-	private static final int C100 = 100;
-
-	/**
 	 * Regex pattern.
 	 */
 	private static final Pattern REGEX = Pattern

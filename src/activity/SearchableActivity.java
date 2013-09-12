@@ -44,11 +44,11 @@ public class SearchableActivity extends AppActivity implements
 	/**
 	 * ID.
 	 */
-	private static final int COURS = 0;
+	private static final int ANNONCE = 1;
 	/**
 	 * ID.
 	 */
-	private static final int ANNONCE = 1;
+	private static final int COURS = 0;
 	/**
 	 * ID.
 	 */

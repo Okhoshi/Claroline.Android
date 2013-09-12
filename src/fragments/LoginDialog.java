@@ -141,34 +141,19 @@ public class LoginDialog extends Dialog implements
 	private UserLoginTask mAuthTask = null;
 
 	/**
+	 * The current context.
+	 */
+	private Context mContext;
+
+	/**
 	 * User login for login attempt.
 	 */
 	private String mLogin;
 
 	/**
-	 * User password for login attempt.
-	 */
-	private String mPassword;
-
-	/**
-	 * UI references.
-	 */
-	private EditText mLoginView;
-
-	/**
-	 * UI references.
-	 */
-	private EditText mPasswordView;
-
-	/**
 	 * UI references.
 	 */
 	private View mLoginFormView;
-
-	/**
-	 * UI references.
-	 */
-	private View mLoginStatusView;
 
 	/**
 	 * UI references.
@@ -179,10 +164,25 @@ public class LoginDialog extends Dialog implements
 	 * UI references.
 	 */
 	private ProgressBar mLoginStatusProgressView;
+
 	/**
-	 * The current context.
+	 * UI references.
 	 */
-	private Context mContext;
+	private View mLoginStatusView;
+
+	/**
+	 * UI references.
+	 */
+	private EditText mLoginView;
+
+	/**
+	 * User password for login attempt.
+	 */
+	private String mPassword;
+	/**
+	 * UI references.
+	 */
+	private EditText mPasswordView;
 
 	/**
 	 * Default constructor.

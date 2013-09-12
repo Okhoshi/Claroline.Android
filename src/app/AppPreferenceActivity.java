@@ -38,14 +38,24 @@ public abstract class AppPreferenceActivity extends PreferenceActivity
 	private static final int MAX_PROGRESS_BAR_ACTIVITY = 10000;
 
 	/**
+	 * 24 hours constant.
+	 */
+	public static final int ONCE_PER_DAY = 24;
+
+	/**
 	 * SavedInstanceState key.
 	 */
 	private static final String SIS_LAST_UPDATE = "lastUpdate";
-
 	/**
 	 * The time of last update of the data.
 	 */
 	private DateTime mLastUpdate;
+
+	/**
+	 * Current max for the ProgressBar. Only used when on API level > 14.
+	 */
+	private int mMax;
+
 	/**
 	 * Menu instance.
 	 */
@@ -60,16 +70,6 @@ public abstract class AppPreferenceActivity extends PreferenceActivity
 	 * Web Service Client instance.
 	 */
 	private ClarolineService mService;
-
-	/**
-	 * Current max for the ProgressBar. Only used when on API level > 14.
-	 */
-	private int mMax;
-
-	/**
-	 * 24 hours constant.
-	 */
-	public static final int ONCE_PER_DAY = 24;
 
 	/**
 	 * @return the mService

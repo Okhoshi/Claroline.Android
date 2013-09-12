@@ -46,16 +46,6 @@ public class WebHostPreference extends EditTextPreference implements
 		TextWatcher {
 
 	/**
-	 * Validation listener.
-	 */
-	private View.OnClickListener mValidateOnClickListener = new View.OnClickListener() {
-		@Override
-		public void onClick(final View v) {
-			validateHost(getEditText().getText().toString());
-		}
-	};
-
-	/**
 	 * Ok listener.
 	 */
 	private View.OnClickListener mOkOnClickListener = new View.OnClickListener() {
@@ -63,6 +53,16 @@ public class WebHostPreference extends EditTextPreference implements
 		public void onClick(final View v) {
 			onDialogClosed(true);
 			getDialog().dismiss();
+		}
+	};
+
+	/**
+	 * Validation listener.
+	 */
+	private View.OnClickListener mValidateOnClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(final View v) {
+			validateHost(getEditText().getText().toString());
 		}
 	};
 

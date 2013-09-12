@@ -31,18 +31,10 @@ import com.google.gson.annotations.SerializedName;
 @Table(name = "ResourceModel")
 public class ResourceModel extends ModelBase {
 	/**
-	 * Title column.
+	 * Date column.
 	 */
-	@SerializedName("title")
-	@Column(name = "Title")
-	private String mTitle;
-
-	/**
-	 * ResourceString column.
-	 */
-	@SerializedName("resourceId")
-	@Column(name = "ResourceString")
-	private String mResourceString;
+	@Column(name = "Date")
+	private DateTime mDate;
 
 	/**
 	 * IsVisible column.
@@ -52,35 +44,16 @@ public class ResourceModel extends ModelBase {
 	private boolean mIsVisible;
 
 	/**
-	 * URL column.
-	 */
-	@SerializedName("url")
-	@Column(name = "URL")
-	private String mURL;
-
-	/**
-	 * Updated column.
-	 */
-	@Column(name = "Updated")
-	private boolean mUpdated;
-
-	/**
 	 * List column.
 	 */
 	@Column(name = "List", onDelete = ForeignKeyAction.CASCADE)
 	private ResourceList mList;
 
 	/**
-	 * SeenDate column.
+	 * LoadedDate column.
 	 */
-	@Column(name = "SeenDate")
-	private DateTime mSeenDate;
-
-	/**
-	 * Date column.
-	 */
-	@Column(name = "Date")
-	private DateTime mDate;
+	@Column(name = "LoadedDate")
+	private DateTime mLoadedDate;
 
 	/**
 	 * NotifiedDate column.
@@ -89,10 +62,37 @@ public class ResourceModel extends ModelBase {
 	private DateTime mNotifiedDate;
 
 	/**
-	 * LoadedDate column.
+	 * ResourceString column.
 	 */
-	@Column(name = "LoadedDate")
-	private DateTime mLoadedDate;
+	@SerializedName("resourceId")
+	@Column(name = "ResourceString")
+	private String mResourceString;
+
+	/**
+	 * SeenDate column.
+	 */
+	@Column(name = "SeenDate")
+	private DateTime mSeenDate;
+
+	/**
+	 * Title column.
+	 */
+	@SerializedName("title")
+	@Column(name = "Title")
+	private String mTitle;
+
+	/**
+	 * Updated column.
+	 */
+	@Column(name = "Updated")
+	private boolean mUpdated;
+
+	/**
+	 * URL column.
+	 */
+	@SerializedName("url")
+	@Column(name = "URL")
+	private String mURL;
 
 	/**
 	 * @return the Date

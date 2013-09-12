@@ -18,13 +18,13 @@ import android.widget.TextView;
 
 public class SearchListAdapter extends BaseExpandableListAdapter {
 
-	private List<SparseArray<List<?>>> mSearchList;
+	private static final int ANNONCE = 1;
+	private static final int COURS = 0;
+	private static final int DOCUMENTS = 2;
+
 	private Context mContext;
 	private String mQuery;
-
-	private static final int COURS = 0;
-	private static final int ANNONCE = 1;
-	private static final int DOCUMENTS = 2;
+	private List<SparseArray<List<?>>> mSearchList;
 
 	public SearchListAdapter(final Context context,
 			final List<SparseArray<List<?>>> searchList, final String query) {

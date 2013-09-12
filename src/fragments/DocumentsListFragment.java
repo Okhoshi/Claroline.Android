@@ -49,14 +49,14 @@ public class DocumentsListFragment extends ListFragment {
 	private ResourceList mCurrentList;
 
 	/**
-	 * Current document on root.
-	 */
-	private Document mCurrentRoot;
-
-	/**
 	 * UI references.
 	 */
 	private TextView mCurrentPath;
+
+	/**
+	 * Current document on root.
+	 */
+	private Document mCurrentRoot;
 
 	/**
 	 * Shows the content of the root of the current document.

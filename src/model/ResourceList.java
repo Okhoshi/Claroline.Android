@@ -43,24 +43,10 @@ public class ResourceList extends Model {
 	private Cours mCours;
 
 	/**
-	 * Name column.
-	 */
-	@SerializedName("name")
-	@Column(name = "Name")
-	private String mName;
-
-	/**
 	 * Index column.
 	 */
 	@Column(name = "UniqueIndex", unique = true, onUniqueConflict = ConflictAction.IGNORE)
 	private String mIndex;
-
-	/**
-	 * Label column.
-	 */
-	@SerializedName("label")
-	@Column(name = "Label")
-	private String mLabel;
 
 	/**
 	 * IsVisible column.
@@ -70,22 +56,36 @@ public class ResourceList extends Model {
 	private boolean mIsVisible;
 
 	/**
+	 * Label column.
+	 */
+	@SerializedName("label")
+	@Column(name = "Label")
+	private String mLabel;
+
+	/**
 	 * LoadedDate column.
 	 */
 	@Column(name = "LoadedDate")
 	private DateTime mLoadedDate;
 
 	/**
-	 * Updated column.
+	 * Name column.
 	 */
-	@Column(name = "Updated")
-	private boolean mUpdated;
+	@SerializedName("name")
+	@Column(name = "Name")
+	private String mName;
 
 	/**
 	 * ResourceType column.
 	 */
 	@Column(name = "ResourceType")
 	private Class<? extends ModelBase> mResourceType = ResourceModel.class;
+
+	/**
+	 * Updated column.
+	 */
+	@Column(name = "Updated")
+	private boolean mUpdated;
 
 	/**
 	 * Default constructor without arguments. Required.

@@ -32,57 +32,11 @@ import com.google.gson.annotations.SerializedName;
 @Table(name = "Annonce")
 public class Annonce extends ModelBase {
 	/**
-	 * Title column.
-	 */
-	@SerializedName("title")
-	@Column(name = "Title")
-	private String mTitle;
-
-	/**
-	 * ResourceString column.
-	 */
-	@SerializedName("resourceId")
-	@Column(name = "ResourceString")
-	private String mResourceString;
-
-	/**
-	 * IsVisible column.
-	 */
-	@SerializedName("visibility")
-	@Column(name = "IsVisible")
-	private boolean mIsVisible;
-
-	/**
-	 * URL column.
-	 */
-	@Column(name = "URL")
-	private String mURL;
-
-	/**
-	 * Updated column.
-	 */
-	@Column(name = "Updated")
-	private boolean mUpdated;
-
-	/**
-	 * List column.
-	 */
-	@Column(name = "List", onDelete = ForeignKeyAction.CASCADE)
-	private ResourceList mList;
-
-	/**
 	 * Content column.
 	 */
 	@SerializedName("content")
 	@Column(name = "Content")
 	private String mContent;
-
-	/**
-	 * Rank column.
-	 */
-	@SerializedName("rank")
-	@Column(name = "Rank")
-	private int mRank;
 
 	/**
 	 * Date column.
@@ -92,11 +46,23 @@ public class Annonce extends ModelBase {
 	private DateTime mDate;
 
 	/**
-	 * SeenDate column.
+	 * IsVisible column.
 	 */
-	@SerializedName("seenDate")
-	@Column(name = "SeenDate")
-	private DateTime mSeenDate;
+	@SerializedName("visibility")
+	@Column(name = "IsVisible")
+	private boolean mIsVisible;
+
+	/**
+	 * List column.
+	 */
+	@Column(name = "List", onDelete = ForeignKeyAction.CASCADE)
+	private ResourceList mList;
+
+	/**
+	 * LoadedDate column.
+	 */
+	@Column(name = "LoadedDate")
+	private DateTime mLoadedDate;
 
 	/**
 	 * NotifiedDate column.
@@ -106,10 +72,44 @@ public class Annonce extends ModelBase {
 	private DateTime mNotifiedDate;
 
 	/**
-	 * LoadedDate column.
+	 * Rank column.
 	 */
-	@Column(name = "LoadedDate")
-	private DateTime mLoadedDate;
+	@SerializedName("rank")
+	@Column(name = "Rank")
+	private int mRank;
+
+	/**
+	 * ResourceString column.
+	 */
+	@SerializedName("resourceId")
+	@Column(name = "ResourceString")
+	private String mResourceString;
+
+	/**
+	 * SeenDate column.
+	 */
+	@SerializedName("seenDate")
+	@Column(name = "SeenDate")
+	private DateTime mSeenDate;
+
+	/**
+	 * Title column.
+	 */
+	@SerializedName("title")
+	@Column(name = "Title")
+	private String mTitle;
+
+	/**
+	 * Updated column.
+	 */
+	@Column(name = "Updated")
+	private boolean mUpdated;
+
+	/**
+	 * URL column.
+	 */
+	@Column(name = "URL")
+	private String mURL;
 
 	/**
 	 * @return the Content

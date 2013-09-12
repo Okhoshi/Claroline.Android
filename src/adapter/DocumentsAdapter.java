@@ -26,8 +26,8 @@ import android.widget.TextView;
 public class DocumentsAdapter extends BaseAdapter {
 
 	private static final int RESOURCE = R.layout.doc_item;
-	private List<Document> mListeDocuments;
 	private Context mContext;
+	private List<Document> mListeDocuments;
 
 	public DocumentsAdapter(final Context context,
 			final List<Document> listeDocuments) {
