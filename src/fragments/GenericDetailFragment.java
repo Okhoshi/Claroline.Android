@@ -129,7 +129,7 @@ public class GenericDetailFragment extends DetailFragment {
 	}
 
 	@Override
-	public void refreshResource(final AsyncHttpResponseHandler handler) {
+	public void refresh(final AsyncHttpResponseHandler handler) {
 		((AppActivity) getActivity()).getService().getSingleResource(
 				mCurrentResource.getList().getCours().getSysCode(),
 				mCurrentResource.getList().getLabel(),

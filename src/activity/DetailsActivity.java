@@ -136,7 +136,7 @@ public class DetailsActivity extends AppActivity {
 			// Comportement du bouton "Rafraichir"
 			if (mFragment.isExpired()) {
 				setProgressIndicator(true);
-				mFragment.refreshResource(new AsyncHttpResponseHandler() {
+				mFragment.refresh(new AsyncHttpResponseHandler() {
 					@Override
 					public void onFinish() {
 						setProgressIndicator(false);

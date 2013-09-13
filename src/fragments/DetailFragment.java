@@ -19,7 +19,7 @@ public abstract class DetailFragment extends Fragment {
 	 * @param handler
 	 *            the handler to pass to the service call
 	 */
-	public abstract void refreshResource(AsyncHttpResponseHandler handler);
+	public abstract void refresh(AsyncHttpResponseHandler handler);
 
 	/**
 	 * Refreshes the UI.
