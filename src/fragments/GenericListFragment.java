@@ -6,6 +6,7 @@ import model.ModelBase;
 import model.ResourceList;
 import model.ResourceModel;
 import net.claroline.mobile.android.R;
+import activity.DetailsActivity;
 import adapter.GenericAdapter;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import app.App;
 import app.AppActivity;
 
 import com.activeandroid.query.Select;
@@ -85,11 +87,20 @@ public class GenericListFragment extends ListFragment {
 	public void onListItemClick(final ListView l, final View v,
 			final int position, final long id) {
 		ModelBase item = (ModelBase) getListAdapter().getItem(position);
-		Intent intent = new Intent(getActivity(),
-				activity.DetailsActivity.class);
-		intent.putExtra("resID", item.getId());
-		intent.putExtra("label", mCurrentList.getLabel());
-		startActivity(intent);
+		if (App.isTwoPane() && false) {
+			Bundle data = new Bundle();
+			data.putLong("resID", item.getId());
+			data.putString("label", mCurrentList.getLabel());
+
+			DetailFragment f = new GenericDetailFragment();
+			f.setArguments(data);
+			f.show(getActivity().getSupportFragmentManager(), "dialog");
+		} else {
+			Intent intent = new Intent(getActivity(), DetailsActivity.class);
+			intent.putExtra("resID", item.getId());
+			intent.putExtra("label", mCurrentList.getLabel());
+			startActivity(intent);
+		}
 	}
 
 	public void refreshUI() {

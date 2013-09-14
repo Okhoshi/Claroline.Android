@@ -18,6 +18,8 @@ import net.claroline.mobile.android.R;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import app.App;
 import app.AppActivity;
@@ -43,6 +45,18 @@ public class HomeActivity extends AppActivity {
 	 * Numeric constant.
 	 */
 	private static final int SIX_HOURS = 6;
+
+	@Override
+	public void onAccountStateChange(final boolean validity) {
+		super.onAccountStateChange(validity);
+
+		if (!validity) {
+			FragmentTransaction ft = getSupportFragmentManager()
+					.beginTransaction();
+			ft.replace(R.id.content_fragment, new Fragment());
+			ft.commit();
+		}
+	}
 
 	/**
 	 * Called when the activity is first created.
@@ -78,6 +92,20 @@ public class HomeActivity extends AppActivity {
 	public void onResume() {
 		super.onResume();
 		refresh(false, false, false);
+	}
+
+	@Override
+	public void refreshUI() {
+		setTitle(
+				App.getPrefs().getString(App.SETTINGS_PLATFORM_NAME,
+						getString(R.string.app_name)),
+				getString(R.string.actionbar_subtitle, App.getPrefs()
+						.getString(App.SETTINGS_INSTITUTION_NAME, "Claroline")));
+		CoursListFragment list = (CoursListFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.list_frag);
+		if (list != null) {
+			list.refreshUI();
+		}
 	}
 
 	/**
@@ -149,20 +177,6 @@ public class HomeActivity extends AppActivity {
 					});
 				}
 			}
-		}
-	}
-
-	@Override
-	public void refreshUI() {
-		setTitle(
-				App.getPrefs().getString(App.SETTINGS_PLATFORM_NAME,
-						getString(R.string.app_name)),
-				getString(R.string.actionbar_subtitle, App.getPrefs()
-						.getString(App.SETTINGS_INSTITUTION_NAME, "Claroline")));
-		CoursListFragment list = (CoursListFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.list_frag);
-		if (list != null) {
-			list.refreshUI();
 		}
 	}
 

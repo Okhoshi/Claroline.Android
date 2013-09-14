@@ -69,7 +69,7 @@ public class CoursActivity extends AppActivity {
 		mFragment.setArguments(extras);
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(android.R.id.content, mFragment);
+		ft.replace(android.R.id.content, mFragment);
 		ft.commit();
 	}
 

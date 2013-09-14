@@ -10,9 +10,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 import app.AppActivity;
 
 import com.activeandroid.query.Select;
@@ -50,16 +50,17 @@ public class GenericDetailFragment extends DetailFragment {
 
 							Matcher matcher = REGEX.matcher(content);
 							String data = matcher.replaceAll(REGEX_REPLACE);
-							data = data
-									.replace("</head>",
-											"<meta name=\"viewport\" content=\"width="
-													+ mWV2.getWidth()
-													+ "\"/>\n</head>");
+							data = data.replace("</head>",
+									"<meta name=\"viewport\" content=\"width="
+											+ mWV.getWidth() + "\"/>\n</head>");
 
-							mWV2.loadDataWithBaseURL(url, data, "text/html",
+							mWV.loadDataWithBaseURL(url, data, "text/html",
 									"utf-8", null);
-							((AppActivity) getActivity())
-									.setProgressIndicator(false);
+							if (getActivity() != null
+									&& getActivity() instanceof AppActivity) {
+								((AppActivity) getActivity())
+										.setProgressIndicator(false);
+							}
 						}
 					});
 
@@ -90,12 +91,7 @@ public class GenericDetailFragment extends DetailFragment {
 	/**
 	 * UI references.
 	 */
-	private TextView mTV1;
-
-	/**
-	 * UI references.
-	 */
-	private WebView mWV2;
+	private WebView mWV;
 
 	@Override
 	public boolean isExpired() {
@@ -110,8 +106,13 @@ public class GenericDetailFragment extends DetailFragment {
 		View view = inflater
 				.inflate(R.layout.details_generic, container, false);
 
-		mTV1 = (TextView) view.findViewById(R.id.details_generic_1);
-		mWV2 = (WebView) view.findViewById(R.id.details_generic_2);
+		mWV = (WebView) view.findViewById(R.id.details_generic_1);
+		mWV.getSettings().setJavaScriptEnabled(true);
+		mWV.setWebViewClient(new GenericWebViewClient());
+
+		LayoutParams params = mWV.getLayoutParams();
+		params.height = LayoutParams.MATCH_PARENT;
+		mWV.setLayoutParams(params);
 
 		Bundle extras = getArguments();
 		if (extras != null) {
@@ -120,10 +121,6 @@ public class GenericDetailFragment extends DetailFragment {
 
 			refreshUI();
 		}
-
-		mWV2.getSettings().setJavaScriptEnabled(true);
-
-		mWV2.setWebViewClient(new GenericWebViewClient());
 
 		return view;
 	}
@@ -139,9 +136,8 @@ public class GenericDetailFragment extends DetailFragment {
 
 	@Override
 	public void refreshUI() {
-		((AppActivity) getActivity()).setTitle(mCurrentResource.getTitle(),
-				mCurrentResource.getList().getCours().getName());
-		mTV1.setVisibility(View.GONE);
-		mWV2.loadUrl(mCurrentResource.getURL());
+		setTitle(mCurrentResource.getTitle(), mCurrentResource.getList()
+				.getCours().getName());
+		mWV.loadUrl(mCurrentResource.getURL());
 	}
 }

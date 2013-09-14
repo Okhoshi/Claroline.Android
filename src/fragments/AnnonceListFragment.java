@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import app.App;
 import app.AppActivity;
 
 import com.activeandroid.query.Select;
@@ -86,11 +87,21 @@ public class AnnonceListFragment extends ListFragment {
 	public void onListItemClick(final ListView l, final View v,
 			final int position, final long id) {
 		Annonce item = (Annonce) getListAdapter().getItem(position);
-		Intent intent = new Intent(getActivity(),
-				activity.DetailsActivity.class);
-		intent.putExtra("resID", item.getId());
-		intent.putExtra("label", "CLANN");
-		startActivity(intent);
+		if (App.isTwoPane()) {
+			Bundle data = new Bundle();
+			data.putLong("resID", item.getId());
+			data.putString("label", "CLANN");
+
+			DetailFragment f = new AnnonceDetailFragment();
+			f.setArguments(data);
+			f.show(getActivity().getSupportFragmentManager(), "dialog");
+		} else {
+			Intent intent = new Intent(getActivity(),
+					activity.DetailsActivity.class);
+			intent.putExtra("resID", item.getId());
+			intent.putExtra("label", "CLANN");
+			startActivity(intent);
+		}
 	}
 
 	public void refreshUI() {

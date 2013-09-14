@@ -1,10 +1,11 @@
 package fragments;
 
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
+import app.AppActivity;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-public abstract class DetailFragment extends Fragment {
+public abstract class DetailFragment extends DialogFragment {
 
 	/**
 	 * Checks if the resource is expired.
@@ -25,5 +26,13 @@ public abstract class DetailFragment extends Fragment {
 	 * Refreshes the UI.
 	 */
 	public abstract void refreshUI();
+
+	protected void setTitle(final String title, final String subTitle) {
+		if (getShowsDialog()) {
+			getDialog().setTitle(title);
+		} else {
+			((AppActivity) getActivity()).setTitle(title, subTitle);
+		}
+	}
 
 }

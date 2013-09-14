@@ -1,28 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/details_annonce"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="right"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/details_annonce_1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <View
-        android:id="@+id/Separator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#2B497B" />
-
     <ScrollView
         android:id="@+id/scroll_text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp" >
 
         <TextView
             android:id="@+id/details_annonce_2"
@@ -30,5 +18,19 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </ScrollView>
+
+    <View
+        android:id="@+id/Separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#2B497B" />
+
+    <TextView
+        android:id="@+id/details_annonce_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:layout_margin="10dp"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>

@@ -62,8 +62,8 @@ public class AnnonceDetailFragment extends DetailFragment {
 
 	@Override
 	public void refreshUI() {
-		((AppActivity) getActivity()).setTitle(mCurrentAnnonce.getTitle(),
-				mCurrentAnnonce.getList().getCours().getName());
+		setTitle(mCurrentAnnonce.getTitle(), mCurrentAnnonce.getList()
+				.getCours().getName());
 
 		mTV1.setText(mCurrentAnnonce.getDate().toString("E dd/MMM/y",
 				Locale.getDefault()));

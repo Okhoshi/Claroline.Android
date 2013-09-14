@@ -3,13 +3,13 @@
     android:id="@+id/linlay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    style="@style/List">
+    android:orientation="vertical">
 
 <ListView
     android:id="@id/android:list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    style="@style/MasterList" />
 
 <TextView
     android:id="@id/android:empty"

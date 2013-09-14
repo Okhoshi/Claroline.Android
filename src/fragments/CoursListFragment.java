@@ -4,9 +4,14 @@ import java.util.List;
 
 import model.Cours;
 import net.claroline.mobile.android.R;
+import activity.CoursActivity;
 import adapter.CoursAdapter;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -15,8 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
+import app.App;
 
 import com.activeandroid.query.Select;
 
@@ -30,6 +37,12 @@ public class CoursListFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(final Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
+		if (App.isTwoPane()) {
+			getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+		} else {
+			getListView().setChoiceMode(AbsListView.CHOICE_MODE_NONE);
+		}
 
 		refreshUI();
 		registerForContextMenu(getListView());
@@ -69,22 +82,36 @@ public class CoursListFragment extends ListFragment {
 	public View onCreateView(final LayoutInflater inflater,
 			final ViewGroup container, final Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		return inflater.inflate(R.layout.standard_list, container);
+		return inflater.inflate(R.layout.cours_list, container);
 	}
 
 	/*
 	 * All about the contextual menu
 	 */
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void onListItemClick(final ListView l, final View v,
 			final int position, final long id) {
 
 		Cours item = (Cours) getListAdapter().getItem(position);
 
-		Intent intent = new Intent(getActivity(), activity.CoursActivity.class);
-		intent.putExtra("coursID", item.getId());
-		startActivity(intent);
+		if (App.isTwoPane()) {
+			Bundle data = new Bundle();
+			data.putLong("coursID", item.getId());
+
+			Fragment tvpf = new ToolViewPagerFragment();
+			tvpf.setArguments(data);
+
+			FragmentTransaction ft = getActivity().getSupportFragmentManager()
+					.beginTransaction();
+			ft.replace(R.id.content_fragment, tvpf);
+			ft.commit();
+		} else {
+			Intent intent = new Intent(getActivity(), CoursActivity.class);
+			intent.putExtra("coursID", item.getId());
+			startActivity(intent);
+		}
 	}
 
 	/**

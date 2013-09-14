@@ -16,6 +16,13 @@
         class="fragments.ContextFragment"
         tools:layout="@layout/context_frag" />
 
+    <View
+        android:id="@+id/Separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="2dp"
+        android:background="#2B497B" />
+
     <fragment
         android:id="@+id/list_frag"
         android:layout_width="match_parent"

@@ -45,6 +45,9 @@ import connectivity.ClarolineClient;
  */
 public class App extends Application {
 
+	/**
+	 * Minimal module version needed.
+	 */
 	public static final int MIN_VERSION = 1;
 	/**
 	 * Shared Preference tag.
@@ -184,6 +187,13 @@ public class App extends Application {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * @return the Large mode status
+	 */
+	public static boolean isTwoPane() {
+		return getInstance().getResources().getBoolean(R.bool.isTwoPane);
 	}
 
 	/**
