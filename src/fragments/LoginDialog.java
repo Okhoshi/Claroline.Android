@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
@@ -52,11 +53,19 @@ public class LoginDialog extends Dialog implements
 						@Override
 						public void onFailure(final Throwable error,
 								final String content) {
-							showMessage(error.getMessage());
-
 							synchronized (mAuthTask) {
 								mAuthTask.notify();
 							}
+
+							((Activity) getContext())
+									.runOnUiThread(new Runnable() {
+
+										@Override
+										public void run() {
+											showMessage(error.getMessage());
+										}
+									});
+
 						}
 
 						@Override

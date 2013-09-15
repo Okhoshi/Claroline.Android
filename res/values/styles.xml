@@ -16,13 +16,14 @@
     <style name="AppTheme" parent="AppBaseTheme"></style>
 
     <style name="LoginFormContainer">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">400dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">center</item>
         <item name="android:padding">16dp</item>
     </style>
 
     <style name="MasterList"></style>
     <style name="List"></style>
-    <item format="boolean" type="bool" name="isTwoPane">true</item>
+    <bool name="isTwoPane">false</bool>
 
 </resources>

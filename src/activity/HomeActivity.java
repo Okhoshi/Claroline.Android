@@ -50,7 +50,7 @@ public class HomeActivity extends AppActivity {
 	public void onAccountStateChange(final boolean validity) {
 		super.onAccountStateChange(validity);
 
-		if (!validity) {
+		if (!validity && App.isTwoPane()) {
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
 			ft.replace(R.id.content_fragment, new Fragment());
@@ -92,20 +92,6 @@ public class HomeActivity extends AppActivity {
 	public void onResume() {
 		super.onResume();
 		refresh(false, false, false);
-	}
-
-	@Override
-	public void refreshUI() {
-		setTitle(
-				App.getPrefs().getString(App.SETTINGS_PLATFORM_NAME,
-						getString(R.string.app_name)),
-				getString(R.string.actionbar_subtitle, App.getPrefs()
-						.getString(App.SETTINGS_INSTITUTION_NAME, "Claroline")));
-		CoursListFragment list = (CoursListFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.list_frag);
-		if (list != null) {
-			list.refreshUI();
-		}
 	}
 
 	/**
@@ -177,6 +163,20 @@ public class HomeActivity extends AppActivity {
 					});
 				}
 			}
+		}
+	}
+
+	@Override
+	public void refreshUI() {
+		setTitle(
+				App.getPrefs().getString(App.SETTINGS_PLATFORM_NAME,
+						getString(R.string.app_name)),
+				getString(R.string.actionbar_subtitle, App.getPrefs()
+						.getString(App.SETTINGS_INSTITUTION_NAME, "Claroline")));
+		CoursListFragment list = (CoursListFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.list_frag);
+		if (list != null) {
+			list.refreshUI();
 		}
 	}
 

@@ -10,7 +10,6 @@
     <style name="MasterList">
         <item name="android:background">@drawable/list_item_activated_background</item>
     </style>
-    <item format="boolean" type="bool" name="isTwoPane">true</item>
     <style name="List">
         <item name="android:background">@android:color/white</item>
     </style>

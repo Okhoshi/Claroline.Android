@@ -68,7 +68,7 @@ public class ClarolineClient extends AsyncHttpClient {
 	/**
 	 * Debug tag.
 	 */
-	private static final String TAG = "ClaroClient";
+	private static final String TAG = "Claroline Client";
 
 	/**
 	 * @return the Singleton instance
