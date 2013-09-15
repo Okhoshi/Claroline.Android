@@ -5,7 +5,9 @@
         				android:key="pref_cat_platform">
         				
         <util.WebHostPreference android:key="platform_host" 
-            				android:title="@string/pref_platform_host"/>
+            				android:title="@string/pref_platform_host"
+            				android:defaultValue="http://" 
+            			 />
         <EditTextPreference android:key="platform_module"
             				android:title="@string/pref_platform_module"
             				android:defaultValue="/module/MOBILE/" android:summary="/module/MOBILE/"/>
