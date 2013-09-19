@@ -151,7 +151,7 @@ public class ClarolineService {
 	 */
 	public void checkHostValidity(final String hostURL,
 			final AsyncHttpResponseHandler handler) {
-		mClient.get(hostURL, new AsyncHttpResponseHandler() {
+		mClient.get(hostURL.replace(' ', '\0'), new AsyncHttpResponseHandler() {
 			@Override
 			public void onFailure(final Throwable error, final String content) {
 				handler.onFailure(error, content);
