@@ -176,7 +176,11 @@ public class DetailsActivity extends AppActivity {
 		final String mime = map.getMimeTypeFromExtension(item.getExtension());
 
 		if (mime != null) {
-			if (item.isOnMemory()) {
+			if (item.isOnMemory()
+					&& Environment.MEDIA_MOUNTED == Environment
+							.getExternalStorageState()
+					|| Environment.MEDIA_MOUNTED_READ_ONLY == Environment
+							.getExternalStorageState()) {
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setDataAndType(Uri.fromFile(new File(Environment
 						.getExternalStoragePublicDirectory(
@@ -191,7 +195,8 @@ public class DetailsActivity extends AppActivity {
 						.toLowerCase(Locale.US));
 				startActivity(Intent.createChooser(i,
 						getString(R.string.dialog_choose_app)));
-			} else {
+			} else if (Environment.MEDIA_MOUNTED == Environment
+					.getExternalStorageState()) {
 				getService().getDownloadTokenizedUrl(
 						item.getList().getCours().getSysCode(),
 						item.getResourceString(),
@@ -216,7 +221,10 @@ public class DetailsActivity extends AppActivity {
 									request.setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 								}
 								request.setDestinationInExternalPublicDir(
-										Environment.DIRECTORY_DOWNLOADS
+										Environment
+												.getExternalStoragePublicDirectory(
+														Environment.DIRECTORY_DOWNLOADS)
+												.getAbsolutePath()
 												+ "/"
 												+ getString(R.string.app_name)
 												+ "/"
@@ -253,7 +261,11 @@ public class DetailsActivity extends AppActivity {
 								item.setLoadedDate(DateTime.now());
 							}
 						});
+			} else {
+				Toast.makeText(this, R.string.error_sdcard, Toast.LENGTH_SHORT)
+						.show();
 			}
+
 		} else {
 			DetailsActivity.this.getService().getDownloadTokenizedUrl(
 					item.getList().getCours().getSysCode(),

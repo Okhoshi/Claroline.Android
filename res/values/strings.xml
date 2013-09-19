@@ -46,6 +46,7 @@
 <string name="list_no_items">"This list is empty"</string>
 <string name="extension_image_desc">"Extension"</string>
 <string name="welcome">"Welcome, %1$s %2$s"</string>
+<string name="error_sdcard">Sorry, we cannot access the storage folder</string>
 
 <!-- Connectivité -->
 <string name="loading_default">"Loading…"</string>
