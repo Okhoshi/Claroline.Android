@@ -55,6 +55,7 @@
     <string name="list_no_items">Aucun élément dans cette liste</string>
     <string name="extension_image_desc">Extension</string>
     <string name="welcome">Bienvenue, %1$s %2$s</string>
+<string name="error_sdcard">Désolé, nous ne pouvons accéder au dossier de stockage</string>
     
     <!-- Connectivité -->
     <string name="loading_default">Chargement en cours&#8230;</string>
