@@ -63,9 +63,9 @@
 <string name="error_incorrect_password">"The password is incorrect"</string>
 <string name="error_field_required">"This field is required"</string>
 <string name="error_occured_retry">"An error occurred, please retry"</string>
-<string name="error_module_missing">"Sorry, we managed to log in you but something is missing on this platform. This application need this thing.
+<string name="error_module_missing">"Sorry, we managed to log you in but something is missing on this platform. This application need this thing.
 Ask your platform manager to contact us for more infos."</string>
-<string name="error_module_bad_version">"Sorry, we managed to log in you but the module seems to be outdated. Tell your platform manager that an update is necessary to continue to use this application."</string>
+<string name="error_module_bad_version">"Sorry, we managed to log you in but the module seems to be outdated. Tell your platform manager that an update is necessary to continue to use this application."</string>
 
 <!-- a trier -->
 <string name="menu_logout">"Logout"</string>
