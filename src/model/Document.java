@@ -15,15 +15,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.claroline.mobile.android.R;
-
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Environment;
 import android.util.Log;
-import app.App;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Column.ConflictAction;
@@ -368,11 +365,7 @@ public class Document extends ModelBase {
 			File root = Environment
 					.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
-			File file = new File(root.getAbsolutePath()
-					+ "/"
-					+ App.getInstance().getResources()
-							.getString(R.string.app_name) + "/"
-					+ mList.getCours().getOfficialCode(), getTitle() + "."
+			File file = new File(root.getAbsolutePath(), getTitle() + "."
 					+ getExtension());
 			return file.exists() && file.canRead();
 		}

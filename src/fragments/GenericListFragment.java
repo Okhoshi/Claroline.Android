@@ -57,7 +57,9 @@ public class GenericListFragment extends ListFragment {
 							@Override
 							public void onSuccess(final String content) {
 								refreshUI();
-								((AppActivity) getActivity()).updatesNow();
+								if (getActivity() != null) {
+									((AppActivity) getActivity()).updatesNow();
+								}
 							}
 						});
 			} else if (mCurrentList.isTimeToUpdate()) {
@@ -88,6 +90,7 @@ public class GenericListFragment extends ListFragment {
 			final int position, final long id) {
 		ModelBase item = (ModelBase) getListAdapter().getItem(position);
 		if (App.isTwoPane() && false) {
+			// TODO Check what's best ?
 			Bundle data = new Bundle();
 			data.putLong("resID", item.getId());
 			data.putString("label", mCurrentList.getLabel());
