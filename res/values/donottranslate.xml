@@ -3,7 +3,7 @@
     <string name="imgdsc_logo">Claroline Logo</string>
     <!-- Nom de l'application --> 
     <string name="app_name">Claroline Mobile</string>
-    <string name="version">1.6.3</string>
+    <string name="version">1.6.4</string>
     <string name="authors_names">Devos Quentin\nUytterhoeven Dimitri</string>
     <string name="about_us_mail_quentin">q.devos@student.uclouvain.be</string>
     <string name="about_us_mail_dimitri">dimitri.uytterhoeven@student.uclouvain.be</string>

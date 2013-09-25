@@ -1,44 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- TextView's de l'activite about_us --> 
+
+    <!-- TextView's de l'activite about_us -->
     <string name="about_us_contact_us">Nous contacter</string>
     <string name="about_us_remerciements">Remerciements</string>
-    
-    
-    <!-- Boutons de l'action bar --> 
+
+    <!-- Boutons de l'action bar -->
     <string name="menu_about">A propos</string>
     <string name="menu_refresh">Rafraîchir</string>
     <string name="menu_search">Recherche</string>
     <string name="menu_settings">Paramètres</string>
     <string name="actionbar_subtitle">Campus de %1$s</string>
-    
-    
+
     <!-- Strings des onglets Documents et Annonces -->
     <string name="onglet_documents">Documents</string>
     <string name="onglet_annonces">Annonces</string>
     <string name="onglet_cours">Cours</string>
-    
-    
+
     <!-- Menu contextuel -->
     <string name="contextual_header">Actions</string>
     <string name="contextual_mail">Envoyer un mail aux titulaires</string>
     <string name="mail_titulars"> \n \n \n Envoyé depuis ClarolineMobile</string>
     <string name="choose_activity_mail">Envoyer le mail avec :</string>
-    
-    
+
     <!-- String concernant la searchView -->
     <string name="search_hint">Tapez les mots-clés à chercher</string>
-    
-    
-     <!-- Shown above search results when we receive a search request. -->
+
+    <!-- Shown above search results when we receive a search request. -->
     <plurals name="search_results">
-      <item quantity="one">%1$d résultat pour \"%2$s\": </item>
-      <item quantity="other">%1$d résultat pour \"%2$s\": </item>
+        <item quantity="one">%1$d résultat pour \"%2$s\": </item>
+        <item quantity="other">%1$d résultat pour \"%2$s\": </item>
     </plurals>
-    
+
     <!-- Search failure message. -->
     <string name="no_results">Aucun résultat pour \"%s\"</string>
-    
+
     <!-- Settings -->
     <string name="pref_cat_host">Paramètres de la plateforme</string>
     <string name="pref_platform_host">Adresse de la plateforme</string>
@@ -50,17 +46,16 @@
     <string name="pref_error_server_error">Désolé, un problème est survenu : %1$s</string>
     <string name="pref_validate_host">Valider</string>
 
-    
     <!-- Divers -->
     <string name="list_no_items">Aucun élément dans cette liste</string>
     <string name="extension_image_desc">Extension</string>
     <string name="welcome">Bienvenue, %1$s %2$s</string>
-<string name="error_sdcard">Désolé, nous ne pouvons accéder au dossier de stockage</string>
-    
+    <string name="error_sdcard">Désolé, nous ne pouvons accéder au dossier de stockage</string>
+
     <!-- Connectivité -->
     <string name="loading_default">Chargement en cours&#8230;</string>
     <string name="app_not_found">Aucune application trouvée pour ouvrir ce fichier</string>
-    
+
     <!-- Dialogue -->
     <string name="dialog_choose_app">Ouvrir avec</string>
     <string name="no_network">Veuillez vous connecter au réseau, puis réessayez</string>
@@ -75,21 +70,20 @@
     <string name="error_field_required">Ce champ est requis</string>
     <string name="error_occured_retry">Une erreur s\'est produite, veuillez rééssayer</string>
     <string name="error_module_missing">Désolé, nous sommes arrivés à vous connecter mais un module est manquant sur la plateforme. Cette application ne peut fonctionner sans ce module.\nDemandez à votre gestionnaire de prendre contact avec nous pour de plus amples informations.</string>
-    <string name="error_module_bad_version">Désolé, nous sommes arrivés à vous connecter mais le module semble être obsolète.\nDemandez à votre gestionnnaire de le mettre à jour afin de pouvoir continuer à utiliser cette application.</string>   
-    
+    <string name="error_module_bad_version">Désolé, nous sommes arrivés à vous connecter mais le module semble être obsolète.\nDemandez à votre gestionnnaire de le mettre à jour afin de pouvoir continuer à utiliser cette application.</string>
+
     <!-- a trier -->
     <string name="menu_logout">Se déconnecter</string>
     <string name="menu_login">Se connecter</string>
     <string name="user_picture_desc">Image de profil</string>
-    
-    
     <string name="used_library">"Librairies utilisées"</string>
     <string name="authors">"Auteurs"</string>
     <string name="webhost_button_its_here">C\'est ici !</string>
     <string name="webhost_button_go">Aller</string>
     <string name="webhost_addressbar_hint">Entrez l\'url du site</string>
-<string name="pref_use_ssl">Utiliser une connexion SSL</string>
-<string name="pref_ssl_summary_on">Passe par une connexion SSL si le serveur le permet, repasse à HTTP sinon</string>
-<string name="pref_ssl_summary_off">Mode manuel ( ne tente pas automatiquement d\'utiliser SSL et ne repasse pas à HTTP si SSL n\'est pas disponible )</string>
+    <string name="pref_cat_advanced">Réglages avancés</string>
+    <string name="pref_use_ssl">Utiliser une connexion SSL</string>
+    <string name="pref_ssl_summary_on">Passe par une connexion SSL si le serveur le permet, repasse à HTTP sinon</string>
+    <string name="pref_ssl_summary_off">Mode manuel ( ne tente pas automatiquement d\'utiliser SSL et ne repasse pas à HTTP si SSL n\'est pas disponible )</string>
 
 </resources>
