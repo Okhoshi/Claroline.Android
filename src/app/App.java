@@ -200,6 +200,10 @@ public class App extends Application {
 	 * Custom Gson JSON deserializer.
 	 */
 	private Gson mGson;
+	/**
+	 * 
+	 */
+	public static final String SETTINGS_USE_SSL = "use_ssl";
 
 	@Override
 	public void onCreate() {

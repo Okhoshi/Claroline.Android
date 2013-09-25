@@ -88,5 +88,8 @@
     <string name="webhost_button_its_here">C\'est ici !</string>
     <string name="webhost_button_go">Aller</string>
     <string name="webhost_addressbar_hint">Entrez l\'url du site</string>
+<string name="pref_use_ssl">Utiliser une connexion SSL</string>
+<string name="pref_ssl_summary_on">Passe par une connexion SSL si le serveur le permet, repasse à HTTP sinon</string>
+<string name="pref_ssl_summary_off">Mode manuel ( ne tente pas automatiquement d\'utiliser SSL et ne repasse pas à HTTP si SSL n\'est pas disponible )</string>
 
 </resources>

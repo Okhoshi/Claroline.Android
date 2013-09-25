@@ -190,6 +190,7 @@ public class ClarolineClient extends AsyncHttpClient {
 	 */
 	public ClarolineClient() {
 		super();
+		// TODO Do some HTTPS stuff
 		setCookieStore(mCookies);
 		mExpires = new DateTime(0L);
 		mValidAccount = App.getPrefs().getBoolean(
@@ -286,20 +287,6 @@ public class ClarolineClient extends AsyncHttpClient {
 	}
 
 	/**
-	 * Notify the {@link OnAccountStateChangedListener} registered.
-	 * 
-	 * @param newValidity
-	 *            new account state
-	 */
-	protected void notifyAccountStateListener(final boolean newValidity) {
-		if (mListeners != null && mListeners.size() > 0) {
-			for (OnAccountStateChangedListener listener : mListeners) {
-				listener.onAccountStateChange(newValidity);
-			}
-		}
-	}
-
-	/**
 	 * @param parameters
 	 *            the RequestParams to use for this query
 	 * @param handler
@@ -331,25 +318,6 @@ public class ClarolineClient extends AsyncHttpClient {
 	}
 
 	/**
-	 * @param pExpirationTime
-	 *            the ExpirationTime to set
-	 */
-	private void setExpirationTime(final DateTime pExpirationTime) {
-		mExpires = pExpirationTime;
-	}
-
-	/**
-	 * @param isValid
-	 *            the Account state to set
-	 */
-	protected void setValidAccount(final boolean isValid) {
-		mValidAccount = isValid;
-		App.getPrefs().edit()
-				.putBoolean(App.SETTINGS_ACCOUNT_VERIFIED, isValid).apply();
-		notifyAccountStateListener(isValid);
-	}
-
-	/**
 	 * Makes a GET request on url with authentication for Claroline.
 	 * 
 	 * @param url
@@ -377,5 +345,38 @@ public class ClarolineClient extends AsyncHttpClient {
 					new Throwable(App.getInstance().getString(
 							R.string.no_network)), "");
 		}
+	}
+
+	/**
+	 * @param pExpirationTime
+	 *            the ExpirationTime to set
+	 */
+	private void setExpirationTime(final DateTime pExpirationTime) {
+		mExpires = pExpirationTime;
+	}
+
+	/**
+	 * Notify the {@link OnAccountStateChangedListener} registered.
+	 * 
+	 * @param newValidity
+	 *            new account state
+	 */
+	protected void notifyAccountStateListener(final boolean newValidity) {
+		if (mListeners != null && mListeners.size() > 0) {
+			for (OnAccountStateChangedListener listener : mListeners) {
+				listener.onAccountStateChange(newValidity);
+			}
+		}
+	}
+
+	/**
+	 * @param isValid
+	 *            the Account state to set
+	 */
+	protected void setValidAccount(final boolean isValid) {
+		mValidAccount = isValid;
+		App.getPrefs().edit()
+				.putBoolean(App.SETTINGS_ACCOUNT_VERIFIED, isValid).apply();
+		notifyAccountStateListener(isValid);
 	}
 }

@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    
-    <PreferenceCategory android:title="@string/pref_cat_host"
-        				android:key="pref_cat_platform">
-        				
-        <util.WebHostPreference android:key="platform_host" 
-            				android:title="@string/pref_platform_host"
-            				android:defaultValue="http://" 
-            			 />
-        <EditTextPreference android:key="platform_module"
-            				android:title="@string/pref_platform_module"
-            				android:defaultValue="/module/MOBILE/" android:summary="/module/MOBILE/"/>
-        
-        
+
+    <PreferenceCategory
+        android:key="pref_cat_platform"
+        android:title="@string/pref_cat_host" >
+        <util.WebHostPreference
+            android:defaultValue="https://"
+            android:key="platform_host"
+            android:title="@string/pref_platform_host" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="use_ssl"
+            android:summaryOff="@string/pref_ssl_summary_off"
+            android:summaryOn="@string/pref_ssl_summary_on"
+            android:title="@string/pref_use_ssl" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_cat_advanced"
+        android:title="@string/pref_cat_advanced" >
+        <EditTextPreference
+            android:defaultValue="/module/MOBILE/"
+            android:key="platform_module"
+            android:summary="/module/MOBILE/"
+            android:title="@string/pref_platform_module" />
     </PreferenceCategory>
 
 </PreferenceScreen>

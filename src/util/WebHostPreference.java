@@ -28,6 +28,7 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+import app.App;
 import app.AppPreferenceActivity;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -62,6 +63,11 @@ public class WebHostPreference extends EditTextPreference implements
 	private View.OnClickListener mValidateOnClickListener = new View.OnClickListener() {
 		@Override
 		public void onClick(final View v) {
+			if (App.getPrefs().getBoolean(App.SETTINGS_USE_SSL, true)) {
+				getEditText().setText(
+						getEditText().getText().toString()
+								.replace("http://", "https://"));
+			}
 			validateHost(getEditText().getText().toString());
 		}
 	};
@@ -131,41 +137,9 @@ public class WebHostPreference extends EditTextPreference implements
 	}
 
 	@Override
-	protected void onPrepareDialogBuilder(final Builder builder) {
-
-		builder.setNeutralButton(R.string.browse, new OnClickListener() {
-
-			@Override
-			public void onClick(final DialogInterface dialog, final int which) {
-				Intent data = new Intent(getContext(),
-						UrlBrowserSelectorActivity.class);
-				data.putExtra(UrlBrowserSelectorActivity.EXTRA_URL,
-						getEditText().getText().toString());
-				((AppPreferenceActivity) getContext()).startActivityForResult(
-						data, Settings.REQUEST_URL_BROWSER);
-			}
-		});
-
-		super.onPrepareDialogBuilder(builder);
-	}
-
-	@Override
 	public void onTextChanged(final CharSequence s, final int start,
 			final int before, final int count) {
 		// Ignore
-	}
-
-	@Override
-	protected void showDialog(final Bundle state) {
-		super.showDialog(state);
-
-		Button button = ((AlertDialog) getDialog())
-				.getButton(DialogInterface.BUTTON_POSITIVE);
-		if (button != null) {
-			button.setText(R.string.pref_validate_host);
-			button.setOnClickListener(mValidateOnClickListener);
-		}
-		getEditText().addTextChangedListener(this);
 	}
 
 	/**
@@ -199,7 +173,9 @@ public class WebHostPreference extends EditTextPreference implements
 
 						@Override
 						public void onSuccess(final String content) {
-							boolean result = Boolean.parseBoolean(content);
+							String[] values = content.split("#", 2);
+							boolean result = Boolean.parseBoolean(values[0]);
+							getEditText().setText(values[1]);
 							if (result) {
 								getEditText().setError(null);
 								Drawable icon = getContext()
@@ -226,5 +202,37 @@ public class WebHostPreference extends EditTextPreference implements
 						}
 					});
 		}
+	}
+
+	@Override
+	protected void onPrepareDialogBuilder(final Builder builder) {
+
+		builder.setNeutralButton(R.string.browse, new OnClickListener() {
+
+			@Override
+			public void onClick(final DialogInterface dialog, final int which) {
+				Intent data = new Intent(getContext(),
+						UrlBrowserSelectorActivity.class);
+				data.putExtra(UrlBrowserSelectorActivity.EXTRA_URL,
+						getEditText().getText().toString());
+				((AppPreferenceActivity) getContext()).startActivityForResult(
+						data, Settings.REQUEST_URL_BROWSER);
+			}
+		});
+
+		super.onPrepareDialogBuilder(builder);
+	}
+
+	@Override
+	protected void showDialog(final Bundle state) {
+		super.showDialog(state);
+
+		Button button = ((AlertDialog) getDialog())
+				.getButton(DialogInterface.BUTTON_POSITIVE);
+		if (button != null) {
+			button.setText(R.string.pref_validate_host);
+			button.setOnClickListener(mValidateOnClickListener);
+		}
+		getEditText().addTextChangedListener(this);
 	}
 }

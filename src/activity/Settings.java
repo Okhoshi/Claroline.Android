@@ -38,41 +38,15 @@ public class Settings extends AppPreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
 	/**
-	 * On Screen settings.
+	 * On Screen String-based settings.
 	 */
-	private static final ArrayList<String> ON_SCREEN_SETTINGS = new ArrayList<String>(
+	private static final ArrayList<String> ON_SCREEN_STR_SETTINGS = new ArrayList<String>(
 			Arrays.asList(new String[] { App.SETTINGS_PLATFORM_HOST,
 					App.SETTINGS_PLATFORM_MODULE }));
 	/**
 	 * Activity Request Code.
 	 */
 	public static final int REQUEST_URL_BROWSER = 15;
-
-	@Override
-	protected void onActivityResult(final int requestCode,
-			final int resultCode, final Intent data) {
-		switch (requestCode) {
-		case REQUEST_URL_BROWSER:
-			if (resultCode == RESULT_OK) {
-				String url = data.getExtras().getString(
-						UrlBrowserSelectorActivity.EXTRA_URL);
-				if (url != null) {
-
-					getPreferenceScreen().getSharedPreferences()
-							.registerOnSharedPreferenceChangeListener(this);
-					App.getPrefs().edit()
-							.putString(App.SETTINGS_PLATFORM_HOST, url)
-							.commit();
-					getPreferenceScreen().getSharedPreferences()
-							.unregisterOnSharedPreferenceChangeListener(this);
-				}
-			}
-			break;
-		default:
-			super.onActivityResult(requestCode, resultCode, data);
-			break;
-		}
-	}
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -82,7 +56,7 @@ public class Settings extends AppPreferenceActivity implements
 		Map<String, ?> keys = App.getPrefs().getAll();
 
 		for (Map.Entry<String, ?> entry : keys.entrySet()) {
-			if (ON_SCREEN_SETTINGS.contains(entry.getKey())) {
+			if (ON_SCREEN_STR_SETTINGS.contains(entry.getKey())) {
 				Log.d("map values", entry.getKey() + ": "
 						+ entry.getValue().toString());
 				Preference pref = findPreference(entry.getKey());
@@ -110,7 +84,8 @@ public class Settings extends AppPreferenceActivity implements
 	@Override
 	public void onSharedPreferenceChanged(
 			final SharedPreferences sharedPreferences, final String key) {
-		if (!key.contains("password")) {
+		if (!key.contains("password") && !key.equals(App.SETTINGS_USE_SSL)
+				&& !key.equals("show_cat_advanced")) {
 			Preference pref = findPreference(key);
 			if (pref != null) {
 				// Set summary to be the user-description for the selected value
@@ -127,7 +102,7 @@ public class Settings extends AppPreferenceActivity implements
 			}
 		}
 
-		if (ON_SCREEN_SETTINGS.contains(key)) {
+		if (ON_SCREEN_STR_SETTINGS.contains(key)) {
 			App.invalidateUser(false);
 		}
 	}
@@ -135,5 +110,31 @@ public class Settings extends AppPreferenceActivity implements
 	@Override
 	public void refreshUI() {
 		// Nothing to do
+	}
+
+	@Override
+	protected void onActivityResult(final int requestCode,
+			final int resultCode, final Intent data) {
+		switch (requestCode) {
+		case REQUEST_URL_BROWSER:
+			if (resultCode == RESULT_OK) {
+				String url = data.getExtras().getString(
+						UrlBrowserSelectorActivity.EXTRA_URL);
+				if (url != null) {
+
+					getPreferenceScreen().getSharedPreferences()
+							.registerOnSharedPreferenceChangeListener(this);
+					App.getPrefs().edit()
+							.putString(App.SETTINGS_PLATFORM_HOST, url)
+							.commit();
+					getPreferenceScreen().getSharedPreferences()
+							.unregisterOnSharedPreferenceChangeListener(this);
+				}
+			}
+			break;
+		default:
+			super.onActivityResult(requestCode, resultCode, data);
+			break;
+		}
 	}
 }

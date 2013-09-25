@@ -126,10 +126,15 @@ public class DetailsActivity extends AppActivity {
 				request.setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 			}
 
-			request.setDestinationInExternalPublicDir(
-					Environment.getExternalStoragePublicDirectory(
-							Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(),
-					mSubPath);
+			request.setTitle(mItem.getTitle());
+			request.setDescription(mItem.getExtension());
+
+			if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+				request.setDestinationInExternalPublicDir(
+						Environment.getExternalStoragePublicDirectory(
+								Environment.DIRECTORY_DOWNLOADS)
+								.getAbsolutePath(), mSubPath);
+			}
 
 			final DownloadManager mg = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 			final long id = mg.enqueue(request);
@@ -143,7 +148,10 @@ public class DetailsActivity extends AppActivity {
 						Bundle extras = intent.getExtras();
 						if (id == extras
 								.getLong(DownloadManager.EXTRA_DOWNLOAD_ID)) {
-							openFileInMemory(mItem);
+							if (Environment.MEDIA_MOUNTED.equals(Environment
+									.getExternalStorageState())) {
+								openFileInMemory(mItem);
+							}
 							unregisterReceiver(this);
 						}
 					}
@@ -254,14 +262,10 @@ public class DetailsActivity extends AppActivity {
 				startActivity(Intent.createChooser(i,
 						getString(R.string.dialog_choose_app)));
 
-			} else if (Environment.MEDIA_MOUNTED == Environment
-					.getExternalStorageState()) {
+			} else {
 				getService().getDownloadTokenizedUrl(
 						item.getList().getCours().getSysCode(),
 						item.getResourceString(), mDwlManagerHandler);
-			} else {
-				Toast.makeText(this, R.string.error_sdcard, Toast.LENGTH_SHORT)
-						.show();
 			}
 
 		} else {

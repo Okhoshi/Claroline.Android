@@ -16,6 +16,8 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.SSLException;
+
 import model.Cours;
 import model.ModelBase;
 import model.ResourceList;
@@ -154,7 +156,14 @@ public class ClarolineService {
 		mClient.get(hostURL.replace(' ', '\0'), new AsyncHttpResponseHandler() {
 			@Override
 			public void onFailure(final Throwable error, final String content) {
-				handler.onFailure(error, content);
+				if (error.getCause() instanceof SSLException
+						&& App.getPrefs()
+								.getBoolean(App.SETTINGS_USE_SSL, true)) {
+					checkHostValidity(hostURL.replace("https://", "http://"),
+							handler);
+				} else {
+					handler.onFailure(error, content);
+				}
 			}
 
 			@Override
@@ -166,7 +175,8 @@ public class ClarolineService {
 			public void onSuccess(final String content) {
 				handler.onSuccess(String.valueOf(content
 						.contains("<!-- - - - - - - - - - - Claroline "
-								+ "Body - - - - - - - - - -->")));
+								+ "Body - - - - - - - - - -->"))
+						+ "#" + hostURL);
 			}
 		});
 	}
