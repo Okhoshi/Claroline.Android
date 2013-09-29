@@ -80,4 +80,5 @@ Ask your platform manager to contact us for more infos."</string>
 <string name="pref_use_ssl">Use SSL connection</string>
 <string name="pref_ssl_summary_on">Use a SSL connection if the server provides any and fallback on HTTP if SSL is unavailable</string>
 <string name="pref_ssl_summary_off">Manual mode ( doesn\'t try to use SSL automatically or to fallback on HTTP if no SSL is available )</string>
+<string name="menu_facebook">Facebook Page</string>
 </resources>

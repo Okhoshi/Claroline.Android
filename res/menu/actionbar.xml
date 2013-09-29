@@ -29,6 +29,7 @@
         android:title="@string/menu_settings"
         android:showAsAction="never"
         android:icon="@drawable/ic_action_settings"/>
+    <item android:id="@+id/facebook_page" android:title="@string/menu_facebook" android:showAsAction="ifRoom" android:icon="@drawable/ic_facebook"></item>
     
     
     

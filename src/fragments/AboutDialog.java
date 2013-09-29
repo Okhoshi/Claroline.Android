@@ -15,10 +15,12 @@ import net.claroline.mobile.android.R;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 /**
  * Claroline Mobile - Android
@@ -38,6 +40,14 @@ public class AboutDialog extends DialogFragment {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		// we keep the view to update UI
 		View inflator = inflater.inflate(R.layout.dialog_about, null);
+		try {
+			((TextView) inflator.findViewById(R.id.dialog_application_version))
+					.setText(getActivity().getPackageManager().getPackageInfo(
+							getActivity().getPackageName(), 0).versionName);
+		} catch (NameNotFoundException e) {
+			// Never used, targeting itself
+			e.printStackTrace();
+		}
 
 		// we change the default view and we implement a simple close button
 		builder.setView(inflator).setPositiveButton("Close",

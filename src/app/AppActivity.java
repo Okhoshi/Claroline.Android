@@ -13,6 +13,8 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -196,6 +198,20 @@ public abstract class AppActivity extends FragmentActivity implements
 		case android.R.id.home:
 			NavUtils.navigateUpFromSameTask(this);
 			break;
+		case R.id.facebook_page:
+			String facebookPackageName = "com.facebook.katana";
+			try {
+				// check if facebook app installed
+				getPackageManager().getApplicationInfo(facebookPackageName, 0);
+				Intent intent = new Intent(Intent.ACTION_VIEW,
+						Uri.parse("fb://page/656027581078062"));
+				startActivity(intent);
+			} catch (NameNotFoundException e) {
+				Intent intent = new Intent(Intent.ACTION_VIEW,
+						Uri.parse("https://www.facebook.com/Claroline.mobile"));
+				startActivity(intent);
+			}
+			break;
 		case R.id.menu_refresh:
 		case R.id.menu_login:
 			// Comportement du bouton "Rafraichir" et du bouton "Se connecter"
@@ -217,14 +233,6 @@ public abstract class AppActivity extends FragmentActivity implements
 	public void onResume() {
 		ClarolineClient.registerOnAccountStateChangedListener(this);
 		super.onResume();
-	}
-
-	@Override
-	protected void onSaveInstanceState(final Bundle outState) {
-		outState.putLong(SIS_LAST_UPDATE, mLastUpdate.getMillis());
-		App.getPrefs().edit().putLong(SIS_LAST_UPDATE, mLastUpdate.getMillis())
-				.apply();
-		super.onSaveInstanceState(outState);
 	}
 
 	/**
@@ -390,5 +398,13 @@ public abstract class AppActivity extends FragmentActivity implements
 	 */
 	public void updatesNow() {
 		mLastUpdate = DateTime.now();
+	}
+
+	@Override
+	protected void onSaveInstanceState(final Bundle outState) {
+		outState.putLong(SIS_LAST_UPDATE, mLastUpdate.getMillis());
+		App.getPrefs().edit().putLong(SIS_LAST_UPDATE, mLastUpdate.getMillis())
+				.apply();
+		super.onSaveInstanceState(outState);
 	}
 }
