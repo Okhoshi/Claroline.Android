@@ -85,5 +85,6 @@
     <string name="pref_use_ssl">Utiliser une connexion SSL</string>
     <string name="pref_ssl_summary_on">Passe par une connexion SSL si le serveur le permet, repasse à HTTP sinon</string>
     <string name="pref_ssl_summary_off">Mode manuel ( ne tente pas automatiquement d\'utiliser SSL et ne repasse pas à HTTP si SSL n\'est pas disponible )</string>
-
+<string name="menu_facebook">Page Facebook</string>
+<string name="news_last_title">%1$d derniers %2$s</string>
 </resources>

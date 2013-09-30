@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import app.App;
@@ -33,6 +34,11 @@ public class CoursListFragment extends ListFragment {
 	 * Contextual Menu ID.
 	 */
 	private static final int MAIL_ID = 0;
+
+	/**
+	 * Currently selected position.
+	 */
+	private int mPosition = ListView.INVALID_POSITION;
 
 	@Override
 	public void onActivityCreated(final Bundle savedInstanceState) {
@@ -97,21 +103,34 @@ public class CoursListFragment extends ListFragment {
 		Cours item = (Cours) getListAdapter().getItem(position);
 
 		if (App.isTwoPane()) {
-			Bundle data = new Bundle();
-			data.putLong("coursID", item.getId());
+			if (position != mPosition) {
+				Bundle data = new Bundle();
+				data.putLong("coursID", item.getId());
 
-			Fragment tvpf = new ToolViewPagerFragment();
-			tvpf.setArguments(data);
+				Fragment tvpf = new ToolViewPagerFragment();
+				tvpf.setArguments(data);
 
-			FragmentTransaction ft = getActivity().getSupportFragmentManager()
-					.beginTransaction();
-			ft.replace(R.id.content_fragment, tvpf);
-			ft.commit();
+				FragmentTransaction ft = getActivity()
+						.getSupportFragmentManager().beginTransaction();
+				ft.replace(R.id.content_fragment, tvpf);
+				ft.commit();
+				mPosition = position;
+			} else {
+				getListView().setItemChecked(position, false);
+
+				FragmentTransaction ft = getActivity()
+						.getSupportFragmentManager().beginTransaction();
+				ft.replace(R.id.content_fragment, new NewsFragment());
+				ft.commit();
+				mPosition = AdapterView.INVALID_POSITION;
+			}
+
 		} else {
 			Intent intent = new Intent(getActivity(), CoursActivity.class);
 			intent.putExtra("coursID", item.getId());
 			startActivity(intent);
 		}
+
 	}
 
 	/**

@@ -25,5 +25,6 @@
     <style name="MasterList"></style>
     <style name="List"></style>
     <bool name="isTwoPane">false</bool>
+    <dimen name="ResourceListsPaddingLeft">0dp</dimen>
 
 </resources>

@@ -50,8 +50,10 @@ public class GenericListFragment extends ListFragment {
 						mCurrentList, new AsyncHttpResponseHandler() {
 							@Override
 							public void onFinish() {
-								((AppActivity) getActivity())
-										.setProgressIndicator(false);
+								if (getActivity() != null) {
+									((AppActivity) getActivity())
+											.setProgressIndicator(false);
+								}
 							}
 
 							@Override
@@ -70,7 +72,9 @@ public class GenericListFragment extends ListFragment {
 								if (!content.equals("[]")) {
 									refreshUI();
 								}
-								((AppActivity) getActivity()).updatesNow();
+								if (getActivity() != null) {
+									((AppActivity) getActivity()).updatesNow();
+								}
 							}
 						});
 			}

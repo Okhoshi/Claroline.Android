@@ -39,8 +39,7 @@
             android:id="@+id/content_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:paddingLeft="10dp" >
+            android:background="@android:color/white" >
         </FrameLayout>
     </LinearLayout>
 
