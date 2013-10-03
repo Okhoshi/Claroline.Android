@@ -15,6 +15,6 @@
     <string name="asynchttp_version"></string>
     <string name="activeandroid">ActiveAndroid</string>
     <string name="activeandroid_version"></string>
-    <string name="thanks_names">G.-H. Leclercq (BetaTester) \nS. Sluysmans \nL. Delvaux \nPr K. Mens (UCL) \nClaroline Dev Team</string>
+    <string name="thanks_names">S. Sluysmans \nL. Delvaux \nzefredz (Claroline Dev Team)</string>
     <string name="about_us_contact_us_email">support.develop@live.be</string>
 </resources>

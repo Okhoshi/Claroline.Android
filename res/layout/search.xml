@@ -3,7 +3,7 @@
         android:id="@+id/header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/title_bar"
+        android:background="@drawable/ab_solid"
         android:paddingLeft="40dp"
         android:orientation="vertical" >
 

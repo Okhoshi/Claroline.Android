@@ -144,8 +144,7 @@ public class HomeActivity extends AppActivity {
 				});
 			} else if (force || mustUpdate(1)) {
 				setProgressIndicator(true);
-				if (new Select(new Select.Column("Name", "Name"))
-						.from(Cours.class).execute().size() == 0) {
+				if (new Select().from(Cours.class).execute().size() == 0) {
 					getService().getCourseList(new AsyncHttpResponseHandler() {
 						@Override
 						public void onFinish() {

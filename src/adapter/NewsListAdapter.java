@@ -128,7 +128,7 @@ public class NewsListAdapter extends BaseExpandableListAdapter {
 			if (name != null) {
 				name.setText(mb.getTitle());
 			}
-			if (detail1 != null) {
+			if (detail1 != null && mb.getDate() != null) {
 				detail1.setText(mb.getDate().toString("E MMM y dd",
 						Locale.getDefault()));
 			}

@@ -101,14 +101,18 @@ public class DocumentsListFragment extends ListFragment {
 						mCurrentList, new AsyncHttpResponseHandler() {
 							@Override
 							public void onFinish() {
-								((AppActivity) getActivity())
-										.setProgressIndicator(false);
+								if (getActivity() != null) {
+									((AppActivity) getActivity())
+											.setProgressIndicator(false);
+								}
 							}
 
 							@Override
 							public void onSuccess(final String content) {
 								refreshUI();
-								((AppActivity) getActivity()).updatesNow();
+								if (getActivity() != null) {
+									((AppActivity) getActivity()).updatesNow();
+								}
 							}
 						});
 			} else if (mCurrentList.isTimeToUpdate()) {
@@ -119,7 +123,9 @@ public class DocumentsListFragment extends ListFragment {
 								if (!content.equals("[]")) {
 									refreshUI();
 								}
-								((AppActivity) getActivity()).updatesNow();
+								if (getActivity() != null) {
+									((AppActivity) getActivity()).updatesNow();
+								}
 							}
 						});
 			}

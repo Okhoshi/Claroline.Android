@@ -59,6 +59,45 @@ import fragments.GenericDetailFragment;
 public class DetailsActivity extends AppActivity {
 
 	/**
+	 * Claroline Mobile - Android
+	 * 
+	 * TODO Description here.
+	 * 
+	 * 
+	 * @author Devos Quentin
+	 * @version 1.0
+	 */
+	private final class DownloadReceiver extends BroadcastReceiver {
+		/**
+		 * The download id.
+		 */
+		private final long mId;
+
+		/**
+		 * @param id
+		 *            the download id
+		 */
+		private DownloadReceiver(final long id) {
+			mId = id;
+		}
+
+		@Override
+		public void onReceive(final Context context, final Intent intent) {
+			String action = intent.getAction();
+			if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+				Bundle extras = intent.getExtras();
+				if (mId == extras.getLong(DownloadManager.EXTRA_DOWNLOAD_ID)) {
+					if (Environment.MEDIA_MOUNTED.equals(Environment
+							.getExternalStorageState())) {
+						openFileInMemory(mItem);
+					}
+					unregisterReceiver(DownloadReceiver.this);
+				}
+			}
+		}
+	}
+
+	/**
 	 * @param label
 	 *            the requested module label
 	 * @return the fragment class name for the label module
@@ -129,36 +168,16 @@ public class DetailsActivity extends AppActivity {
 			request.setTitle(mItem.getTitle());
 			request.setDescription(mItem.getExtension());
 
-			if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+			if (Environment.getExternalStorageState().equals(
+					Environment.MEDIA_MOUNTED)) {
 				request.setDestinationInExternalPublicDir(
-						Environment.getExternalStoragePublicDirectory(
-								Environment.DIRECTORY_DOWNLOADS)
-								.getAbsolutePath(), mSubPath);
+						Environment.DIRECTORY_DOWNLOADS, mSubPath);
 			}
 
 			final DownloadManager mg = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 			final long id = mg.enqueue(request);
 
-			BroadcastReceiver bcr = new BroadcastReceiver() {
-
-				@Override
-				public void onReceive(final Context context, final Intent intent) {
-					String action = intent.getAction();
-					if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
-						Bundle extras = intent.getExtras();
-						if (id == extras
-								.getLong(DownloadManager.EXTRA_DOWNLOAD_ID)) {
-							if (Environment.MEDIA_MOUNTED.equals(Environment
-									.getExternalStorageState())) {
-								openFileInMemory(mItem);
-							}
-							unregisterReceiver(this);
-						}
-					}
-				}
-			};
-
-			registerReceiver(bcr, new IntentFilter(
+			registerReceiver(new DownloadReceiver(id), new IntentFilter(
 					DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 			mItem.setLoadedDate(DateTime.now());
 		}
@@ -244,20 +263,20 @@ public class DetailsActivity extends AppActivity {
 		mItem = item;
 		MimeTypeMap map = MimeTypeMap.getSingleton();
 		final String mime = map.getMimeTypeFromExtension(item.getExtension());
-		mSubPath = "/" + item.getTitle() + "." + item.getExtension();
+		mSubPath = item.getTitle() + "." + item.getExtension();
 
 		if (mime != null) {
 			if (item.isOnMemory()
-					&& Environment.MEDIA_MOUNTED == Environment
-							.getExternalStorageState()
-					|| Environment.MEDIA_MOUNTED_READ_ONLY == Environment
-							.getExternalStorageState()) {
+					&& Environment.MEDIA_MOUNTED.equals(Environment
+							.getExternalStorageState())
+					|| Environment.MEDIA_MOUNTED_READ_ONLY.equals(Environment
+							.getExternalStorageState())) {
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setDataAndType(Uri.fromFile(new File(Environment
 						.getExternalStoragePublicDirectory(
 								Environment.DIRECTORY_DOWNLOADS)
 						.getAbsolutePath()
-						+ mSubPath)), mime.toLowerCase(Locale.US));
+						+ "/" + mSubPath)), mime.toLowerCase(Locale.US));
 
 				startActivity(Intent.createChooser(i,
 						getString(R.string.dialog_choose_app)));
