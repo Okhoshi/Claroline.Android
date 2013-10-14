@@ -31,6 +31,7 @@ import connectivity.ClarolineClient;
 import fragments.CoursListFragment;
 import fragments.LoginDialog;
 import fragments.NewsFragment;
+import fragments.ToolViewPagerFragment;
 
 /**
  * Claroline Mobile - Android
@@ -62,6 +63,20 @@ public class HomeActivity extends AppActivity {
 			ft.replace(R.id.content_fragment, new NewsFragment());
 			ft.commit();
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (App.isTwoPane()) {
+			Fragment f = getSupportFragmentManager().findFragmentById(
+					R.id.content_fragment);
+			if (f instanceof ToolViewPagerFragment) {
+				((CoursListFragment) getSupportFragmentManager()
+						.findFragmentById(R.id.list_frag)).dismissSelection();
+				return;
+			}
+		}
+		super.onBackPressed();
 	}
 
 	/**

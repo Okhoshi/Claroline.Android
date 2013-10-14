@@ -41,30 +41,34 @@ public class GenericDetailFragment extends DetailFragment {
 		@Override
 		public boolean shouldOverrideUrlLoading(final WebView view,
 				final String url) {
+			if (getActivity() != null) {
+				((AppActivity) getActivity()).setProgressIndicator(true);
+				((AppActivity) getActivity()).getService().getPageFor(url,
+						new AsyncHttpResponseHandler() {
+							@Override
+							public void onSuccess(final String content) {
 
-			((AppActivity) getActivity()).setProgressIndicator(true);
-			((AppActivity) getActivity()).getService().getPageFor(url,
-					new AsyncHttpResponseHandler() {
-						@Override
-						public void onSuccess(final String content) {
+								Matcher matcher = REGEX.matcher(content);
+								String data = matcher.replaceAll(REGEX_REPLACE);
+								data = data.replace("</head>",
+										"<meta name=\"viewport\" content=\"width="
+												+ mWV.getWidth()
+												+ "\"/>\n</head>");
 
-							Matcher matcher = REGEX.matcher(content);
-							String data = matcher.replaceAll(REGEX_REPLACE);
-							data = data.replace("</head>",
-									"<meta name=\"viewport\" content=\"width="
-											+ mWV.getWidth() + "\"/>\n</head>");
-
-							mWV.loadDataWithBaseURL(url, data, "text/html",
-									"utf-8", null);
-							if (getActivity() != null
-									&& getActivity() instanceof AppActivity) {
-								((AppActivity) getActivity())
-										.setProgressIndicator(false);
+								mWV.loadDataWithBaseURL(url, data, "text/html",
+										"utf-8", null);
+								if (getActivity() != null
+										&& getActivity() instanceof AppActivity) {
+									((AppActivity) getActivity())
+											.setProgressIndicator(false);
+								}
 							}
-						}
-					});
+						});
 
-			return true;
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 

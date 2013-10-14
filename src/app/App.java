@@ -93,17 +93,23 @@ public class App extends Application {
 	 * Shared Preference tag.
 	 */
 	public static final String SETTINGS_USER_IMAGE = "userImage";
-
 	/**
 	 * Shared Preference tag.
 	 */
 	public static final String SETTINGS_USER_LOGIN = "user_login";
-
 	/**
 	 * Shared Preference tag.
 	 */
 	public static final String SETTINGS_USER_PASSWORD = "user_password";
 
+	/**
+	 * 
+	 */
+	public static final String SETTINGS_HTTP_NO_SSL = "use_http_no_ssl";
+	/**
+	 * 
+	 */
+	public static final String SETTINGS_USE_SSL = "use_ssl";
 	/**
 	 * Singleton instance.
 	 */
@@ -200,10 +206,6 @@ public class App extends Application {
 	 * Custom Gson JSON deserializer.
 	 */
 	private Gson mGson;
-	/**
-	 * 
-	 */
-	public static final String SETTINGS_USE_SSL = "use_ssl";
 
 	@Override
 	public void onCreate() {

@@ -82,9 +82,14 @@
     <string name="webhost_button_go">Aller</string>
     <string name="webhost_addressbar_hint">Entrez l\'url du site</string>
     <string name="pref_cat_advanced">Réglages avancés</string>
-    <string name="pref_use_ssl">Utiliser une connexion SSL</string>
-    <string name="pref_ssl_summary_on">Passe par une connexion SSL si le serveur le permet, repasse à HTTP sinon</string>
-    <string name="pref_ssl_summary_off">Mode manuel ( ne tente pas automatiquement d\'utiliser SSL et ne repasse pas à HTTP si SSL n\'est pas disponible )</string>
-<string name="menu_facebook">Page Facebook</string>
-<string name="news_last_title">%1$d derniers %2$s</string>
+    <string name="pref_use_ssl">Connexion sécurisée</string>
+    <string name="pref_ssl_summary_on">Passe par une connexion sécurisée et échoue si le serveur ne le permet pas ( hautement recommandé )</string>
+    <string name="pref_ssl_summary_off">Mode manuel ( ne tente pas automatiquement d\'utiliser une connexion sécurisée )</string>
+    <string name="menu_facebook">Page Facebook</string>
+    <string name="news_last_title">%1$d derniers %2$s</string>
+    <string name="pref_cat_ssl">Réglages de sécurité</string>
+    <string name="pref_use_http_no_ssl">Connexion non-sécurisée</string>
+    <string name="pref_http_no_ssl_summary_on">Passe par une connexion non-sécurisée si le serveur ne supporte pas les connexions non-sécurisées (hautement déconseillé)</string>
+    <string name="pref_http_no_ssl_summary_off">Les connexions échouent si le serveur ne propose pas une connexion sécurisée</string>
+<string name="no_ssl_error">Connexion sécurisée indisponible</string>
 </resources>

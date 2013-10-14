@@ -29,6 +29,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import app.App;
 import app.AppActivity;
 
 import com.activeandroid.query.Select;
@@ -104,28 +105,6 @@ public class ToolViewPagerFragment extends Fragment {
 			return mActiveFragmentMap.get(label);
 		}
 
-		/**
-		 * @param label
-		 *            the label of the resource type to load
-		 * @return the Fragment instance of the resource type to load
-		 */
-		private Fragment getFragmentForLabel(final String label) {
-			if (Arrays.asList(
-					Tools.enumValuesToStrings(SupportedModules.values()))
-					.contains(label)) {
-				switch (SupportedModules.valueOf(label)) {
-				case CLANN:
-					return new AnnonceListFragment();
-				case CLDOC:
-					return new DocumentsListFragment();
-				default:
-					return new GenericListFragment();
-				}
-			} else {
-				return new GenericListFragment();
-			}
-		}
-
 		@Override
 		public Fragment getItem(final int position) {
 			Fragment fragment = getFragmentForLabel(mCurrentList.get(position)
@@ -152,6 +131,28 @@ public class ToolViewPagerFragment extends Fragment {
 		public void refresh(final Cours cours) {
 			mCurrentList = cours.lists();
 			notifyDataSetChanged();
+		}
+
+		/**
+		 * @param label
+		 *            the label of the resource type to load
+		 * @return the Fragment instance of the resource type to load
+		 */
+		private Fragment getFragmentForLabel(final String label) {
+			if (Arrays.asList(
+					Tools.enumValuesToStrings(SupportedModules.values()))
+					.contains(label)) {
+				switch (SupportedModules.valueOf(label)) {
+				case CLANN:
+					return new AnnonceListFragment();
+				case CLDOC:
+					return new DocumentsListFragment();
+				default:
+					return new GenericListFragment();
+				}
+			} else {
+				return new GenericListFragment();
+			}
 		}
 	}
 
@@ -196,7 +197,7 @@ public class ToolViewPagerFragment extends Fragment {
 					.where("Id = ?", extras.get("coursID")).executeSingle();
 			tabIndex = extras.getInt("tab", -1);
 		}
-		if (mCurrentCours == null) {
+		if (mCurrentCours == null && !App.isTwoPane()) {
 			a.finish();
 		}
 		mViewPager = (ViewPager) v.findViewById(R.id.pager);

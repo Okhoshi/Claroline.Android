@@ -77,9 +77,14 @@ Ask your platform manager to contact us for more infos."</string>
 <string name="webhost_button_go">"Go"</string>
 <string name="webhost_addressbar_hint">"Enter the URL"</string>
 <string name="pref_cat_advanced">Advanced Settings</string>
-<string name="pref_use_ssl">Use SSL connection</string>
-<string name="pref_ssl_summary_on">Use a SSL connection if the server provides any and fallback on HTTP if SSL is unavailable</string>
-<string name="pref_ssl_summary_off">Manual mode ( doesn\'t try to use SSL automatically or to fallback on HTTP if no SSL is available )</string>
+<string name="pref_use_ssl">Secured connection</string>
+<string name="pref_ssl_summary_on">Always use a secured connection ( highly recommended )</string>
+<string name="pref_ssl_summary_off">Manual mode ( doesn\'t try to use secured connection automatically )</string>
 <string name="menu_facebook">Facebook Page</string>
 <string name="news_last_title">Last %1$d %2$s</string>
+<string name="pref_cat_ssl">Security Settings</string>
+<string name="pref_use_http_no_ssl">Unsecured connection</string>
+<string name="pref_http_no_ssl_summary_on">Use a unsecured connection if the server does not provide any secured connection ( highly unrecommended )</string>
+<string name="pref_http_no_ssl_summary_off">Connections fails if the server does not provide a secure connection</string>
+<string name="no_ssl_error">No secured connection</string>
 </resources>

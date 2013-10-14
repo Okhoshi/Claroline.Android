@@ -40,6 +40,21 @@ public class CoursListFragment extends ListFragment {
 	 */
 	private int mPosition = ListView.INVALID_POSITION;
 
+	/**
+	 * Dismiss the TwoPane selection.
+	 */
+	public void dismissSelection() {
+		if (App.isTwoPane()) {
+			getListView().setItemChecked(mPosition, false);
+
+			FragmentTransaction ft = getActivity().getSupportFragmentManager()
+					.beginTransaction();
+			ft.replace(R.id.content_fragment, new NewsFragment());
+			ft.commit();
+			mPosition = AdapterView.INVALID_POSITION;
+		}
+	}
+
 	@Override
 	public void onActivityCreated(final Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -84,16 +99,16 @@ public class CoursListFragment extends ListFragment {
 				getString(R.string.contextual_mail));
 	}
 
+	/*
+	 * All about the contextual menu
+	 */
+
 	@Override
 	public View onCreateView(final LayoutInflater inflater,
 			final ViewGroup container, final Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		return inflater.inflate(R.layout.cours_list, container);
 	}
-
-	/*
-	 * All about the contextual menu
-	 */
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
@@ -116,13 +131,7 @@ public class CoursListFragment extends ListFragment {
 				ft.commit();
 				mPosition = position;
 			} else {
-				getListView().setItemChecked(position, false);
-
-				FragmentTransaction ft = getActivity()
-						.getSupportFragmentManager().beginTransaction();
-				ft.replace(R.id.content_fragment, new NewsFragment());
-				ft.commit();
-				mPosition = AdapterView.INVALID_POSITION;
+				dismissSelection();
 			}
 
 		} else {

@@ -157,8 +157,8 @@ public class ClarolineService {
 			@Override
 			public void onFailure(final Throwable error, final String content) {
 				if (error.getCause() instanceof SSLException
-						&& App.getPrefs()
-								.getBoolean(App.SETTINGS_USE_SSL, true)) {
+						&& App.getPrefs().getBoolean(App.SETTINGS_HTTP_NO_SSL,
+								false)) {
 					checkHostValidity(hostURL.replace("https://", "http://"),
 							handler);
 				} else {

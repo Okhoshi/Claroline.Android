@@ -85,6 +85,7 @@ public class Settings extends AppPreferenceActivity implements
 	public void onSharedPreferenceChanged(
 			final SharedPreferences sharedPreferences, final String key) {
 		if (!key.contains("password") && !key.equals(App.SETTINGS_USE_SSL)
+				&& !key.equals(App.SETTINGS_HTTP_NO_SSL)
 				&& !key.equals("show_cat_advanced")) {
 			Preference pref = findPreference(key);
 			if (pref != null) {

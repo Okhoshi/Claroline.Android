@@ -11,6 +11,8 @@
  */
 package util;
 
+import javax.net.ssl.SSLException;
+
 import net.claroline.mobile.android.R;
 import activity.Settings;
 import activity.UrlBrowserSelectorActivity;
@@ -158,9 +160,15 @@ public class WebHostPreference extends EditTextPreference implements
 						public void onFailure(final Throwable error,
 								final String content) {
 							if (getEditText() != null) {
-								String textError = getContext().getString(
-										R.string.pref_error_server_error,
-										error.getMessage());
+								CharSequence textError;
+								if (error.getCause() instanceof SSLException) {
+									textError = getContext().getString(
+											R.string.no_ssl_error);
+								} else {
+									textError = getContext().getString(
+											R.string.pref_error_server_error,
+											error.getMessage());
+								}
 								getEditText().setError(textError);
 							}
 						}

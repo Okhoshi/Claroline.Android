@@ -8,13 +8,22 @@
             android:defaultValue="https://"
             android:key="platform_host"
             android:title="@string/pref_platform_host" />
-
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_cat_ssl"
+        android:title="@string/pref_cat_ssl" >
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="use_ssl"
             android:summaryOff="@string/pref_ssl_summary_off"
             android:summaryOn="@string/pref_ssl_summary_on"
             android:title="@string/pref_use_ssl" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="use_http_no_ssl"
+            android:summaryOff="@string/pref_http_no_ssl_summary_off"
+            android:summaryOn="@string/pref_http_no_ssl_summary_on"
+            android:title="@string/pref_use_http_no_ssl" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_cat_advanced"
