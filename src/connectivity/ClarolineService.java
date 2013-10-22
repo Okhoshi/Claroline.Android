@@ -13,7 +13,6 @@ package connectivity;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLException;
@@ -119,28 +118,14 @@ public class ClarolineService {
 	 * @param handler
 	 *            the handler to execute after the request
 	 */
-	public void checkForModuleValidity(final AsyncHttpResponseHandler handler) {
-		mClient.siteCall(mClient.getUrl(""), new AsyncHttpResponseHandler() {
-			@Override
-			public void onFailure(final Throwable error, final String content) {
-				handler.onFailure(error, content);
-			}
-
-			@Override
-			public void onFinish() {
-				handler.onFinish();
-			}
-
-			@Override
-			public void onSuccess(final String content) {
-				Matcher matches = PLATFORM_SETTINGS.matcher(content);
-				if (matches.find()) {
-					handler.onSuccess(matches.group(1));
-				} else {
-					handler.onSuccess("{}");
-				}
-			}
-		});
+	public void checkForModuleValidity(final JsonHttpResponseHandler handler) {
+		mClient.siteCall(
+				mClient.getUrl(App.getPrefs().getString(
+						App.SETTINGS_PLATFORM_MODULE, "/module/MODULE/")),
+				handler);
+		RequestParams p = ClarolineClient.getRequestParams(
+				SupportedModules.USER, SupportedMethods.getPlatformData);
+		mClient.serviceQuery(p, handler);
 	}
 
 	/**
@@ -478,14 +463,14 @@ public class ClarolineService {
 				while (iterOnCours.hasNext()) {
 					final String syscode = iterOnCours.next();
 					final Cours upCours = new Select().from(Cours.class)
-							.where("Syscode = ", syscode).executeSingle();
+							.where("Syscode = ?", syscode).executeSingle();
 
 					if (upCours == null) {
 						getCourseList(new AsyncHttpResponseHandler() {
 							@Override
 							public void onSuccess(final String content) {
 								Cours cours = new Select().from(Cours.class)
-										.where("Syscode = ", syscode)
+										.where("Syscode = ?", syscode)
 										.executeSingle();
 
 								if (cours != null) {

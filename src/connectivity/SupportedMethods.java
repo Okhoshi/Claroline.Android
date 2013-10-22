@@ -44,5 +44,9 @@ public enum SupportedMethods {
 	/**
 	 * in USER.
 	 */
-	getUserData
+	getUserData,
+	/**
+	 * in USER.
+	 */
+	getPlatformData
 }

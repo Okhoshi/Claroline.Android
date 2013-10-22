@@ -25,6 +25,7 @@ import android.widget.TextView;
 import app.App;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import connectivity.ClarolineClient;
 import connectivity.ClarolineClient.OnAccountStateChangedListener;
@@ -94,28 +95,24 @@ public class LoginDialog extends Dialog implements
 
 			if (success) {
 				new ClarolineService()
-						.checkForModuleValidity(new AsyncHttpResponseHandler() {
+						.checkForModuleValidity(new JsonHttpResponseHandler() {
 							@Override
 							public void onFailure(final Throwable error,
-									final String content) {
-								showMessage(getContext().getString(
-										R.string.pref_error_server_error,
-										error.getLocalizedMessage()));
+									final JSONObject response) {
+								showMessage(R.string.error_module_missing);
 							}
 
 							@Override
-							public void onSuccess(final String content) {
-								JSONObject object;
+							public void onSuccess(final JSONObject content) {
 								try {
-									object = new JSONObject(content);
-									if (object.has("version")) {
-										int version = object.getInt("version");
+									if (content.has("version")) {
+										int version = content.getInt("version");
 										if (version >= App.MIN_VERSION) {
 											App.getPrefs()
 													.edit()
 													.putString(
 															App.SETTINGS_PLATFORM_MODULE,
-															object.getString("path"))
+															content.getString("path"))
 													.apply();
 											dismiss();
 										} else {
