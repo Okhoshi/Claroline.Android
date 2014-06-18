@@ -83,7 +83,7 @@ public class ClarolineService {
 	 */
 	private BinaryHttpResponseHandler mProfilePictureHandler = new BinaryHttpResponseHandler() {
 		@Override
-		public void onFailure(final Throwable error, final byte[] binaryData) {
+		public void onFailure(final Throwable error) {
 			Log.e("ClarolineClient", error.getLocalizedMessage());
 		};
 
